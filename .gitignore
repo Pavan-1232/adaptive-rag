@@ -1,0 +1,30 @@
+# Local data: uploads, SQLite, Chroma. Never commit.
+data/
+*.sqlite
+*.sqlite3
+*.db
+chroma/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Tools
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Editor and OS
+.vscode/
+.idea/
+.DS_Store
