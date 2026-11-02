@@ -1,0 +1,51 @@
+# Benchmark documents. The PDFs are not committed; download them with:
+#   python -m adaptive_rag.evaluation download
+documents:
+  - file: dev/tesla_10k.pdf
+    set: dev
+    title: Tesla, Inc. Form 10-K for fiscal 2024
+    url: https://ir.tesla.com/_flysystem/s3/sec/000162828025003063/tsla-20241231-gen.pdf
+    licence: Company filing; link only
+    sha256: 2957d89daa2066035df5cf56f3586dd3c25a20a8e366fcf4da866e7e48c1a504
+  - file: dev/nist_ai_rmf.pdf
+    set: dev
+    title: NIST AI Risk Management Framework 1.0 (NIST AI 100-1)
+    url: https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf
+    licence: NIST public information; credit requested
+    sha256: 7576edb531d9848825814ee88e28b1795d3a84b435b4b797d3670eafdc4a89f1
+  - file: dev/ragas.pdf
+    set: dev
+    title: "Ragas: Automated Evaluation of Retrieval Augmented Generation (arXiv 2309.15217)"
+    url: https://arxiv.org/pdf/2309.15217
+    licence: CC BY 4.0
+    sha256: 6c24762a3f277fd120ed1adf34b01420ecf92f18ff6d1b5435fa0a09cb804ecb
+  - file: test/apple_10k.pdf
+    set: test
+    title: Apple Inc. Form 10-K for fiscal 2024
+    url: https://s2.q4cdn.com/470004039/files/doc_earnings/2024/q4/filing/10-Q4-2024-As-Filed.pdf
+    licence: Company filing; link only
+    sha256: 319e1217afe72f194575e63350ea6c813eaf5caf0c24e59ce8b221fc1b3ea0d4
+  - file: test/fed_mpr.pdf
+    set: test
+    title: Federal Reserve Monetary Policy Report, June 2025
+    url: https://www.federalreserve.gov/monetarypolicy/files/20250620_mprfullreport.pdf
+    licence: Federal Reserve public domain; cite the Board
+    sha256: 6f8538cb4ce2902ac35cc9ec8311feda6c5c94953b76db50de94192741bb07f4
+  - file: test/nist_csf.pdf
+    set: test
+    title: NIST Cybersecurity Framework 2.0 (NIST CSWP 29)
+    url: https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf
+    licence: NIST public information; credit requested
+    sha256: 3c31f46fee98cac0c4323453e5109291a213b4de7fef8c058af9bf67f717433c
+  - file: test/raptor.pdf
+    set: test
+    title: "RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval (arXiv 2401.18059)"
+    url: https://arxiv.org/pdf/2401.18059
+    licence: CC BY 4.0
+    sha256: 01319e2e6e6ecfd504ee1bbda41d023f9e060bd3505ab3c161baa1d6d696cf75
+  - file: test/best_practices.pdf
+    set: test
+    title: Searching for Best Practices in Retrieval-Augmented Generation (arXiv 2407.01219)
+    url: https://arxiv.org/pdf/2407.01219
+    licence: CC BY 4.0
+    sha256: f39143713115935afbe8620a47261dc6ae37a80a88c236dfa3d15d97e7abb1fb

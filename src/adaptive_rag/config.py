@@ -25,8 +25,14 @@ class Settings(BaseSettings):
     # Hard maximum. The 2500 target is for adaptive retrieval (Stage 5); baseline top-5 uses this.
     evidence_max_tokens: int = 4000
     evidence_target_tokens: int = 2500
-    # Starting value, not calibrated. Stage 5 tunes it on dev questions, per embedding model.
+    # Used when a model has no entry in score_floors. Not calibrated.
     score_floor: float = 0.2
+    # Calibrated on dev questions, per embedding model. Scores don't carry across models.
+    # Set inside the gap between out-of-scope and terse answerable top scores (2026-11-02).
+    score_floors: dict[str, float] = {"embeddinggemma:300m": 0.25, "bge-m3:latest": 0.47}
+
+    def floor_for(self, embedding_model: str) -> float:
+        return self.score_floors.get(embedding_model, self.score_floor)
 
     @property
     def db_path(self) -> Path:

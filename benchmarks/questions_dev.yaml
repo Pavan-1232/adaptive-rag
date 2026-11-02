@@ -1,0 +1,479 @@
+# Dev questions. Reviewed by the assistant, not a human: LLM-generated, plus assistant-written
+# table and unanswerable questions. For tuning only; the test set is separate and human-written.
+# Alternatives added 2026-11-02 for facts stated in several places; the user confirmed these labels.
+# Pages are physical PDF pages.
+- id: tesla_10k-gen-001
+  document: tesla_10k.pdf
+  type: conceptual
+  question: How does a company manage the risk associated with relying on single suppliers
+    for key components?
+  answerable: true
+  evidence:
+  - page: 10
+    quote: Where multiple sources are available for certain key components, we work
+      to qualify multiple suppliers for them where it is sensible to do so in order
+      to minimize potential production risks due to disruptions in their supply. We
+      also mitigate risk by maintaining safety stock for key parts and assemblies
+      and die banks for components with lengthy procurement lead times.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: tesla_10k-gen-002
+  document: tesla_10k.pdf
+  type: multi_part
+  question: How does Tesla ensure employee safety and address misconduct while also
+    managing its talent strategy?
+  answerable: true
+  evidence:
+  - page: 16
+    quote: The safety and health of our employees is a core value. Everyone across
+      Tesla works to ensure a healthy and safe workplace. Employees are encouraged
+      to speak up regarding misconduct or safety concerns and can do so by contacting
+      the integrity line, submitting concerns through our Take Charge process, or
+      notifying their Human Resource Partner or any member of management.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: tesla_10k-gen-005
+  document: tesla_10k.pdf
+  type: multi_part
+  question: How does the organization structure its approach to handling cybersecurity
+    threats and ensuring regulatory compliance?
+  answerable: true
+  evidence:
+  - page: 31
+    quote: 'We have implemented incident response and breach management processes
+      which have four overarching and interconnected stages: 1) preparation for a
+      cybersecurity incident, 2) detection and analysis of a security incident, 3)
+      containment, eradication and recovery, and 4) post-incident analysis. Such incident
+      responses are overseen by leaders from our Information Security, Product Security,
+      Compliance and Legal teams regarding matters of cybersecurity.'
+  notes: ''
+  source: llm, reviewed by assistant
+- id: tesla_10k-gen-006
+  document: tesla_10k.pdf
+  type: factual
+  question: How is warranty expense categorized within the company's financial statements?
+  answerable: true
+  evidence:
+  - page: 39
+    quote: Warranty expense is recorded as a component of Cost of revenues in the
+      consolidated statements of operations.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: tesla_10k-gen-009
+  document: tesla_10k.pdf
+  type: table
+  question: How many millions of weighted average shares were added to the basic count
+    due to convertible senior notes for the year ended December 31, 2024?
+  answerable: true
+  evidence:
+  - page: 65
+    quote: 'Add:
+
+      Stock-based awards 292 298 310
+
+      Convertible senior notes 1 2 3
+
+      Warrants 8 11 32
+
+      Weighted average shares used in computing net income per share of common stock,
+
+      diluted 3,498 3,485 3,475'
+  notes: ''
+  source: llm, reviewed by assistant
+- id: tesla_10k-gen-015
+  document: tesla_10k.pdf
+  type: factual
+  question: Are personal emergencies or financial hardships considered valid reasons
+    to ignore trading blackout restrictions?
+  answerable: true
+  evidence:
+  - page: 124
+    quote: Personal financial emergency or other personal circumstances are not mitigating
+      factors under securities laws and will not excuse a failure to comply with this
+      Policy.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: tesla_10k-gen-016
+  document: tesla_10k.pdf
+  type: conceptual
+  question: Under what specific circumstances would a transfer of company securities
+    not be considered a violation of the trading restrictions?
+  answerable: true
+  evidence:
+  - page: 132
+    quote: The trading restrictions under this Policy do not apply to transfers by
+      will or the laws of descent and distribution. In addition, bona fide gifts involving
+      Company securities are not transactions subject to this policy, unless you have
+      reason to believe that the recipient intends to sell the Company securities
+      while you are aware of material nonpublic information.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: nist_ai_rmf-gen-004
+  document: nist_ai_rmf.pdf
+  type: conceptual
+  question: Why is it necessary for organizations to integrate AI risk management
+    into their broader enterprise strategies rather than handling it separately?
+  answerable: true
+  evidence:
+  - page: 13
+    quote: AI risks should not be considered in isolation. Different AI actors have
+      different responsibilities and awareness depending on their roles in the lifecycle.
+      For example, organizations developing an AI system often will not have information
+      about how the system may be used.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: nist_ai_rmf-gen-007
+  document: nist_ai_rmf.pdf
+  type: conceptual
+  question: How can developers balance the need for transparency with the requirement
+    to protect proprietary information when building AI systems?
+  answerable: true
+  evidence:
+  - page: 21
+    quote: Measures to enhance transparency and accountability should also consider
+      the impact of these efforts on the implementing entity, including the level
+      of necessary resources and the need to safeguard proprietary information.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: nist_ai_rmf-gen-009
+  document: nist_ai_rmf.pdf
+  type: factual
+  question: What role does senior leadership play in shaping an organization's approach
+    to managing risks associated with artificial intelligence?
+  answerable: true
+  evidence:
+  - page: 27
+    quote: Senior leadership sets the tone for risk management within an organization,
+      and with it, organizational culture.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: nist_ai_rmf-gen-012
+  document: nist_ai_rmf.pdf
+  type: factual
+  question: Who should be involved in regularly assessing and updating AI metrics
+    and controls?
+  answerable: true
+  evidence:
+  - page: 34
+    quote: Internal experts who did not serve as front-line developers for the system
+      and/or independent assessors are involved in regular assessments and updates.
+      Domain experts, users, AI actors external to the team that developed or deployed
+      the AI system, and affected communities are consulted in support of assessments
+      as necessary per organizational risk tolerance.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: nist_ai_rmf-gen-015
+  document: nist_ai_rmf.pdf
+  type: factual
+  question: What types of entities might provide formal or quasi-formal norms to help
+    manage risks associated with artificial intelligence?
+  answerable: true
+  evidence:
+  - page: 42
+    quote: Other AI actors may provide formal or quasi-formal norms or guidance for
+      specifying and managing AI risks. They can include trade associations, standards
+      developing organizations, advocacy groups, researchers, environmental groups,
+      and civil society organizations.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: nist_ai_rmf-gen-016
+  document: nist_ai_rmf.pdf
+  type: conceptual
+  question: How does the process of converting complex human behaviors into mathematical
+    models potentially hinder efforts to manage AI risks?
+  answerable: true
+  evidence:
+  - page: 45
+    quote: Many of the data-driven approaches that AI systems rely on attempt to convert
+      or represent individual and social observational and decision-making practices
+      into measurable quantities. Representing complex human phenomena with mathematical
+      models can come at the cost of removing necessary context. This loss of context
+      may in turn make it difficult to understand individual and societal impacts
+      that are key to AI risk management efforts.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: ragas-gen-000
+  document: ragas.pdf
+  type: factual
+  question: How can one assess the performance of Retrieval Augmented Generation systems
+    without relying on human annotations?
+  answerable: true
+  evidence:
+  - page: 1
+    quote: With Ragas, we put forward a suite of metrics which can be used to evaluate
+      these different dimensions without having to rely on ground truth human annotations.
+    alternatives:
+    - page: 3
+      quote: 'metrics that are fully self-contained and reference-free'
+  notes: ''
+  source: llm, reviewed by assistant
+- id: ragas-gen-001
+  document: ragas.pdf
+  type: conceptual
+  question: How does a system overcome an LLM's inability to answer questions about
+    recent events or obscure facts?
+  answerable: true
+  evidence:
+  - page: 1
+    quote: The standard solution to these issues is to rely on Retrieval Augmented
+      Generation (RAG) (Lee et al., 2019; Lewis et al., 2020; Guu et al., 2020). Answering
+      a question then essentially involves retrieving relevant passages from a corpus
+      and feeding these passages, along with the original question, to the LM.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: ragas-gen-003
+  document: ragas.pdf
+  type: factual
+  question: How does the SelfCheckGPT method determine if an answer is factual when
+    a model does not provide access to token probabilities?
+  answerable: true
+  evidence:
+  - page: 2
+    quote: 'SelfCheckGPT (Manakul et al., 2023) addresses this problem by instead
+      sampling multiple answers. Their core idea is that factual answers are more
+      stable: when an answer is factual, we can expect that different samples will
+      tend to be semantically similar, whereas this is less likely to be the case
+      for hallucinated answers.'
+  notes: ''
+  source: llm, reviewed by assistant
+- id: ragas-gen-004
+  document: ragas.pdf
+  type: conceptual
+  question: How do methods like BERTScore and MoverScore measure the quality of a
+    generated response?
+  answerable: true
+  evidence:
+  - page: 2
+    quote: For instance, BERTScore (Zhang et al., 2020) and MoverScore (Zhao et al.,
+      2019) use contextualised embeddings, produced by a pre-trained BERT model, to
+      compare the similarity between the generated answer and the reference answers.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: ragas-gen-007
+  document: ragas.pdf
+  type: conceptual
+  question: How does the system determine whether a question's context contains only
+    necessary information or includes redundant details?
+  answerable: true
+  evidence:
+  - page: 3
+    quote: 'In particular, this metric aims to penalise the inclusion of redundant
+      information. To estimate context relevance, given a question q and its context
+      c(q), the LLM extracts a subset of sentences, S , from c(q) that are crucial
+      to answer q, using ext the following prompt: Please extract relevant sentences
+      from the provided context that can potentially help answer the following question.'
+  notes: ''
+  source: llm, reviewed by assistant
+- id: ragas-gen-009
+  document: ragas.pdf
+  type: factual
+  question: How did the researchers handle Wikipedia pages that had no back-links
+    when trying to measure context relevance?
+  answerable: true
+  evidence:
+  - page: 5
+    quote: For the few pages without any back-links, we instead used ChatGPT to complete
+      the given context.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: ragas-gen-010
+  document: ragas.pdf
+  type: conceptual
+  question: How does one determine if an AI's response accurately reflects the provided
+    source material without making up unsupported claims?
+  answerable: true
+  evidence:
+  - page: 5
+    quote: Faithfulness measures the information consistency of the answer against
+      the given context. Any claims that are made in the answer that cannot be deduced
+      from context should be penalized.
+    alternatives:
+    - page: 3
+      quote: 'can be inferred from the context'
+  notes: ''
+  source: llm, reviewed by assistant
+- id: ragas-gen-011
+  document: ragas.pdf
+  type: multi_part
+  question: How do the automated metrics compare to human judgments across different
+    quality dimensions, and which specific aspect proves most difficult for current
+    models to evaluate?
+  answerable: true
+  evidence:
+  - page: 5
+    quote: We found context relevance to be the hardest quality dimension to evaluate.
+      In particular, we observed that ChatGPT often struggles with the task of selecting
+      the sentences from the context that are crucial, especially for longer contexts.
+  notes: ''
+  source: llm, reviewed by assistant
+- id: tesla-a1
+  document: tesla_10k.pdf
+  type: table
+  question: How much did Tesla spend on R&D in 2024?
+  answerable: true
+  evidence:
+  - page: 43
+    quote: Research and development $ 4,540 $ 3,969 $ 3,075 $ 571 14 % $ 894 29 %
+    alternatives:
+    - page: 52
+      quote: 'Research and development 4,540 3,969 3,075'
+  expected_answer: $4,540 million
+  source: assistant
+- id: tesla-a2
+  document: tesla_10k.pdf
+  type: table
+  question: What were Tesla total liabilities at the end of 2024?
+  answerable: true
+  evidence:
+  - page: 51
+    quote: Total liabilities 48,390 43,009
+  expected_answer: $48,390 million
+  source: assistant
+- id: tesla-a3
+  document: tesla_10k.pdf
+  type: table
+  question: How much cash and cash equivalents did Tesla hold at year end 2024?
+  answerable: true
+  evidence:
+  - page: 51
+    quote: Cash and cash equivalents $ 16,139 $ 16,398
+  expected_answer: $16,139 million
+  source: assistant
+- id: tesla-a4
+  document: tesla_10k.pdf
+  type: table
+  question: By how much did car sales revenue fall in 2024 compared with 2023?
+  answerable: true
+  evidence:
+  - page: 40
+    quote: Automotive sales $ 72,480 $ 78,509 $ 67,210 $ (6,029) (8)%
+    alternatives:
+    - page: 40
+      quote: 'Automotive sales revenue decreased $6.03 billion, or 8%'
+  expected_answer: $6,029 million, 8%
+  source: assistant
+- id: tesla-a5
+  document: tesla_10k.pdf
+  type: factual
+  question: How many stockholders of record did Tesla have in January 2025?
+  answerable: true
+  evidence:
+  - page: 33
+    quote: As of January 22, 2025, there were 9,512 holders of record of our common
+      stock.
+  expected_answer: 9,512
+  source: assistant
+- id: nist-a1
+  document: nist_ai_rmf.pdf
+  type: factual
+  question: Which four functions make up the core of the AI risk framework?
+  answerable: true
+  evidence:
+  - page: 25
+    quote: 'composed of four functions: GOVERN, MAP, MEASURE, and MANAGE.'
+    alternatives:
+    - page: 8
+      quote: 'These functions – GOVERN, MAP, MEASURE, and MANAGE'
+  expected_answer: Govern, Map, Measure, Manage
+  source: assistant
+- id: nist-a2
+  document: nist_ai_rmf.pdf
+  type: conceptual
+  question: Is an organization legally required to adopt the framework?
+  answerable: true
+  evidence:
+  - page: 7
+    quote: Framework is intended to be voluntary, rights-preserving, non-sector-specific,
+      and use-case agnostic
+  expected_answer: No, it is intended to be voluntary
+  source: assistant
+- id: ragas-a1
+  document: ragas.pdf
+  type: factual
+  question: How many Wikipedia articles were picked to build the evaluation dataset?
+  answerable: true
+  evidence:
+  - page: 4
+    quote: we first selected 50 Wikipedia pages
+  expected_answer: '50'
+  source: assistant
+- id: tesla-u1
+  document: tesla_10k.pdf
+  type: near_miss
+  question: What base salary did Tesla pay its CEO in 2024?
+  answerable: false
+  evidence: []
+  notes: Compensation is deferred to the proxy statement
+  source: assistant
+- id: tesla-u2
+  document: tesla_10k.pdf
+  type: near_miss
+  question: How many Cybertrucks did Tesla deliver in 2024?
+  answerable: false
+  evidence: []
+  notes: Model-level deliveries are not given
+  source: assistant
+- id: tesla-u3
+  document: tesla_10k.pdf
+  type: near_miss
+  question: What will Tesla's revenue be in fiscal 2026?
+  answerable: false
+  evidence: []
+  notes: No forecast
+  source: assistant
+- id: nist-u1
+  document: nist_ai_rmf.pdf
+  type: near_miss
+  question: What fines does NIST impose on companies that violate the AI RMF?
+  answerable: false
+  evidence: []
+  notes: Framework is voluntary; no penalties
+  source: assistant
+- id: nist-u2
+  document: nist_ai_rmf.pdf
+  type: near_miss
+  question: How much money did Congress allocate to develop the AI RMF?
+  answerable: false
+  evidence: []
+  notes: No funding figure
+  source: assistant
+- id: ragas-u1
+  document: ragas.pdf
+  type: near_miss
+  question: How much did the ChatGPT API calls cost during the Ragas experiments?
+  answerable: false
+  evidence: []
+  notes: No cost given
+  source: assistant
+- id: ragas-u2
+  document: ragas.pdf
+  type: near_miss
+  question: What learning rate was used to train the Ragas metrics?
+  answerable: false
+  evidence: []
+  notes: Metrics are not trained
+  source: assistant
+- id: oos-1
+  document: tesla_10k.pdf
+  type: out_of_scope
+  question: What is the capital of France?
+  answerable: false
+  evidence: []
+  notes: Unrelated
+  source: assistant
+- id: oos-2
+  document: nist_ai_rmf.pdf
+  type: out_of_scope
+  question: What is the boiling point of liquid nitrogen?
+  answerable: false
+  evidence: []
+  notes: Unrelated
+  source: assistant
+- id: oos-3
+  document: ragas.pdf
+  type: out_of_scope
+  question: How long should sourdough dough proof before baking?
+  answerable: false
+  evidence: []
+  notes: Unrelated
+  source: assistant

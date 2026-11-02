@@ -21,11 +21,12 @@ class OllamaEmbeddings:
     """EmbeddingGemma needs task prompts on every input. Ollama does not add them."""
 
     id = "ollama"
-    prompt_version = "gemma-task-1"
 
     def __init__(self, model: str, host: str, batch_size: int = 32):
         self.model = model
         self.batch_size = batch_size
+        self.uses_task_prompts = model.startswith("embeddinggemma")
+        self.prompt_version = "gemma-task-1" if self.uses_task_prompts else "plain-1"
         self._client = ollama.Client(host=host)
         self._dimensions: int | None = None
 
@@ -46,17 +47,20 @@ class OllamaEmbeddings:
         return self._dimensions
 
     def embed_documents(self, texts: list[str], titles: list[str]) -> list[list[float]]:
-        prompts = [
-            f"title: {' '.join(title.split())[:MAX_TITLE_CHARS] or 'none'} | text: {text}"
-            for text, title in zip(texts, titles, strict=True)
-        ]
+        prompts = list(texts)
+        if self.uses_task_prompts:
+            prompts = [
+                f"title: {' '.join(title.split())[:MAX_TITLE_CHARS] or 'none'} | text: {text}"
+                for text, title in zip(texts, titles, strict=True)
+            ]
         vectors: list[list[float]] = []
         for start in range(0, len(prompts), self.batch_size):
             vectors.extend(self._embed(prompts[start : start + self.batch_size]))
         return vectors
 
     def embed_query(self, text: str) -> list[float]:
-        return self._embed([f"task: search result | query: {text}"])[0]
+        prompt = f"task: search result | query: {text}" if self.uses_task_prompts else text
+        return self._embed([prompt])[0]
 
     def _embed(self, inputs: list[str]) -> list[list[float]]:
         try:

@@ -47,6 +47,8 @@ def retrieve_baseline(
             locator_start=by_id[hit.chunk_id]["locator_start"],
             locator_end=by_id[hit.chunk_id]["locator_end"],
             section_heading=by_id[hit.chunk_id]["section_heading"],
+            start_char=by_id[hit.chunk_id]["start_char"],
+            end_char=by_id[hit.chunk_id]["end_char"],
         )
         for hit in hits
         if hit.chunk_id in by_id

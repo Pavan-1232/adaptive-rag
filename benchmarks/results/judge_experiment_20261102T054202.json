@@ -1,0 +1,2080 @@
+[
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "clean:tesla-a2",
+  "category": "clean",
+  "seconds": 29.0548435410019,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Tesla's total liabilities at the end of 2024 were $48,390 million",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "clean:tesla-a5",
+  "category": "clean",
+  "seconds": 18.07958629197674,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "As of January 22, 2025, there were 9,512 holders of record of Tesla's common stock",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "clean:ragas-a1",
+  "category": "clean",
+  "seconds": 15.395025875011925,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "50 Wikipedia pages were selected to construct the WikiEval dataset",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "clean:tesla_10k-gen-009",
+  "category": "clean",
+  "seconds": 18.226737625023816,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "For the year ended December 31, 2024, 1 million weighted average shares were added to the basic count due to convertible senior notes",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "clean:ragas-gen-004",
+  "category": "clean",
+  "seconds": 16.074001875007525,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "BERTScore and MoverScore use contextualised embeddings, produced by a pre-trained BERT model, to compare the similarity between the generated answer and the reference answers.",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "clean:ragas-gen-009",
+  "category": "clean",
+  "seconds": 15.50809937500162,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "For the few pages without any back-links, the researchers used ChatGPT to complete the given context.",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "clean:nist_ai_rmf-gen-016",
+  "category": "clean",
+  "seconds": 17.896651582967024,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "The process of converting complex human behaviors into mathematical models can hinder AI risk management efforts.",
+     "supported": true
+    },
+    {
+     "claim": "This hindrance occurs because it may come at the cost of removing necessary context.",
+     "supported": true
+    },
+    {
+     "claim": "This loss of context makes it difficult to understand individual and societal impacts that are key to AI risk management efforts.",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "clean:nist_ai_rmf-gen-012",
+  "category": "clean",
+  "seconds": 15.629752624954563,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Internal experts who did not serve as front-line developers for the system and/or independent assessors should be involved in regular assessments and updates",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "clean:tesla_10k-gen-006",
+  "category": "clean",
+  "seconds": 15.564068667008542,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "clean:tesla-a4",
+  "category": "clean",
+  "seconds": 18.83366299996851,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Automotive sales revenue decreased $6.03 billion, or 8%, in the year ended December 31, 2024 as compared to the year ended December 31, 2023.",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "clean:ragas-gen-003",
+  "category": "clean",
+  "seconds": 17.728096542006824,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "For models that do not provide access to token probabilities, the SelfCheckGPT method addresses the problem by sampling multiple answers.",
+     "supported": true
+    },
+    {
+     "claim": "Factual answers are more stable: different samples will tend to be semantically similar, whereas this is less likely for hallucinated answers.",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "number:tesla-a2",
+  "category": "number",
+  "seconds": 4.990142875001766,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Tesla's total liabilities at the end of 2024 were $58,390 million",
+     "supported": false
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [
+   "58390"
+  ]
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "number:tesla-a5",
+  "category": "number",
+  "seconds": 5.3636994999833405,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "As of January 22, 2025, there were 12,512 holders of record of Tesla's common stock",
+     "supported": false
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [
+   "12512"
+  ]
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "number:ragas-a1",
+  "category": "number",
+  "seconds": 15.620124125038274,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "150 Wikipedia pages were selected to construct the WikiEval dataset",
+     "supported": false
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [
+   "150"
+  ]
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "number:tesla_10k-gen-009",
+  "category": "number",
+  "seconds": 5.407007333997171,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "For the year ended December 31, 2024, 3 million weighted average shares were added to the basic count due to convertible senior notes",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "number:tesla-a4",
+  "category": "number",
+  "seconds": 6.635470458015334,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Automotive sales revenue decreased $7.03 billion in 2024 compared to 2023.",
+     "supported": true
+    },
+    {
+     "claim": "The decrease in automotive sales revenue was 11% in 2024 compared to 2023.",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [
+   "11",
+   "7.03"
+  ]
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "contradiction:tesla_10k-gen-006",
+  "category": "contradiction",
+  "seconds": 4.6360264999675564,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Warranty expense is recorded as a component of Operating expenses in the consolidated statements of operations",
+     "supported": false
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "contradiction:ragas-gen-004",
+  "category": "contradiction",
+  "seconds": 5.169127082976047,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "BERTScore and MoverScore use contextualised embeddings, produced by a pre-trained GPT model, to compare the similarity between the generated answer and the question",
+     "supported": false
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "contradiction:ragas-gen-009",
+  "category": "contradiction",
+  "seconds": 15.602681666961871,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "For the few pages without any back-links, the researchers asked Wikipedia editors to complete the given context.",
+     "supported": false
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "contradiction:nist_ai_rmf-gen-012",
+  "category": "contradiction",
+  "seconds": 6.453976332966704,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "The front-line developers of the system should lead regular assessments and updates.",
+     "supported": false
+    },
+    {
+     "claim": "Independent assessors should not be involved in regular assessments and updates.",
+     "supported": false
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "contradiction:nist_ai_rmf-gen-016",
+  "category": "contradiction",
+  "seconds": 5.150651916977949,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Representing human behaviors with mathematical models preserves necessary context.",
+     "supported": false
+    },
+    {
+     "claim": "Preserving necessary context makes individual and societal impacts easier to understand.",
+     "supported": false
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "fabrication:tesla-a5",
+  "category": "fabrication",
+  "seconds": 6.457842542033177,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "As of January 22, 2025, there were 9,512 holders of record of Tesla's common stock",
+     "supported": true
+    },
+    {
+     "claim": "This was up 12% from the prior year",
+     "supported": false
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "fabrication:ragas-gen-003",
+  "category": "fabrication",
+  "seconds": 5.8229840840213,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "The SelfCheckGPT method samples multiple answers.",
+     "supported": true
+    },
+    {
+     "claim": "It was developed at Stanford University.",
+     "supported": false
+    },
+    {
+     "claim": "It reaches 94% accuracy.",
+     "supported": false
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [
+   "94"
+  ]
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "fabrication:nist_ai_rmf-gen-012",
+  "category": "fabrication",
+  "seconds": 4.334819916984998,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Independent assessors should be involved in regular assessments",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "fabrication:tesla_10k-gen-006",
+  "category": "fabrication",
+  "seconds": 5.403249082970433,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Warranty expense is recorded as a component of Cost of revenues",
+     "supported": true
+    },
+    {
+     "claim": "SEC rules cap it at 3% of revenues",
+     "supported": false
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [
+   "3"
+  ]
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "real_misattribution:nist_ai_rmf-gen-015",
+  "category": "real_misattribution",
+  "seconds": 17.15691529097967,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Formal or quasi-formal norms to help manage AI risks may be provided by organizations, industries, communities, and policy makers.",
+     "supported": true
+    },
+    {
+     "claim": "Sectors or industries may have established definitions of harm or requirements for documentation, reporting, and disclosure.",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "real_lost_table_title:tesla-a1",
+  "category": "real_lost_table_title",
+  "seconds": 17.121948208950926,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Tesla spent $832 million on research and development in 2024.",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "real_lost_table_title:tesla-a3",
+  "category": "real_lost_table_title",
+  "seconds": 17.915698458033148,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Tesla held $49 million in cash and cash equivalents at year end 2024.",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "offtopic_subtle:tesla-a2",
+  "category": "offtopic_subtle",
+  "seconds": 5.335572458978277,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Tesla's total assets at the end of 2024 were $122,070 million",
+     "supported": true
+    }
+   ],
+   "addresses_question": false
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": true,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "offtopic_subtle:tesla-a4",
+  "category": "offtopic_subtle",
+  "seconds": 5.160811749985442,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Cost of automotive sales revenue decreased $3.25 billion, or 5%, in 2024 compared with 2023",
+     "supported": true
+    }
+   ],
+   "addresses_question": true
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "offtopic_obvious:tesla-a5",
+  "category": "offtopic_obvious",
+  "seconds": 4.650810082966927,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations",
+     "supported": true
+    }
+   ],
+   "addresses_question": false
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": true,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "offtopic_obvious:ragas-a1",
+  "category": "offtopic_obvious",
+  "seconds": 4.258526541001629,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "The SelfCheckGPT method addresses the problem by sampling multiple answers",
+     "supported": false
+    }
+   ],
+   "addresses_question": false
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": true,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "offtopic_obvious:nist_ai_rmf-gen-012",
+  "category": "offtopic_obvious",
+  "seconds": 4.431327750033233,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "Representing complex human phenomena with mathematical models can come at the cost of removing necessary context.",
+     "supported": true
+    }
+   ],
+   "addresses_question": false
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": true,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v1",
+  "probe": "offtopic_obvious:ragas-gen-009",
+  "category": "offtopic_obvious",
+  "seconds": 4.729307208035607,
+  "finish": "stop",
+  "output": {
+   "claims": [
+    {
+     "claim": "BERTScore and MoverScore use contextualised embeddings to compare the generated answer and the reference answers",
+     "supported": true
+    }
+   ],
+   "addresses_question": false
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": true,
+  "numbers_missing": []
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "clean:tesla-a2",
+  "category": "clean",
+  "seconds": 25.568615749944,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "Tesla total liabilities at the end of 2024",
+   "answer_gives": "Tesla's total liabilities at the end of 2024 were $48,390 million",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "Tesla's total liabilities at the end of 2024 were $48,390 million",
+     "evidence_quote": "Total liabilities 48,390 43,009",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "clean:tesla-a5",
+  "category": "clean",
+  "seconds": 22.798136583005544,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "number of stockholders of record for Tesla in January 2025",
+   "answer_gives": "9,512 holders of record of Tesla's common stock as of January 22, 2025",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "As of January 22, 2025, there were 9,512 holders of record of Tesla's common stock",
+     "evidence_quote": "As of January 22, 2025, there were 9,512 holders of record of our common stock.",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "clean:ragas-a1",
+  "category": "clean",
+  "seconds": 21.30706195801031,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "number of Wikipedia articles picked to build the evaluation dataset",
+   "answer_gives": "50 Wikipedia pages were selected to construct the WikiEval dataset",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "50 Wikipedia pages were selected to construct the WikiEval dataset",
+     "evidence_quote": "To construct the dataset, we first selected 50 Wikipedia pages covering events that have happened since the start of 20225.",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "clean:tesla_10k-gen-009",
+  "category": "clean",
+  "seconds": 29.39808879100019,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "weighted average shares added to the basic count due to convertible senior notes for the year ended December 31, 2024 (in millions)",
+   "answer_gives": "1 million weighted average shares were added to the basic count due to convertible senior notes for the year ended December 31, 2024",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "For the year ended December 31, 2024, 1 million weighted average shares were added to the basic count due to convertible senior notes",
+     "evidence_quote": "Convertible senior notes 1",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": true
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "clean:ragas-gen-004",
+  "category": "clean",
+  "seconds": 29.265021250001155,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "How methods like BERTScore and MoverScore measure the quality of a generated response?",
+   "answer_gives": "BERTScore and MoverScore use contextualised embeddings, produced by a pre-trained BERT model, to compare the similarity between the generated answer and the reference answers.",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "BERTScore and MoverScore use contextualised embeddings, produced by a pre-trained BERT model, to compare the similarity between the generated answer and the reference answers",
+     "evidence_quote": "For instance, BERTScore (Zhang et al., 2020) and MoverScore (Zhao et al., 2019) use contextualised embeddings, produced by a pre-trained BERT model, to compare the similarity between the generated answer and the reference answers.",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "clean:ragas-gen-009",
+  "category": "clean",
+  "seconds": 25.212899416976143,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "How the researchers handled Wikipedia pages that had no back-links when trying to measure context relevance.",
+   "answer_gives": "For the few pages without any back-links, the researchers used ChatGPT to complete the given context.",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "For the few pages without any back-links, the researchers used ChatGPT to complete the given context.",
+     "evidence_quote": "For the few pages without any back-links, we instead used ChatGPT to complete the given context.",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "clean:nist_ai_rmf-gen-016",
+  "category": "clean",
+  "seconds": 29.690483334008604,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "How the process of converting complex human behaviors into mathematical models potentially hinders efforts to manage AI risks.",
+   "answer_gives": "The process of converting complex human behaviors into mathematical models can hinder AI risk management efforts because it may come at the cost of removing necessary context. This loss of context, in turn, makes it difficult to understand individual and societal impacts that are key to AI risk management efforts.",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "The process of converting complex human behaviors into mathematical models can hinder AI risk management efforts because it may come at the cost of removing necessary context.",
+     "evidence_quote": "Many of the data-driven approaches that AI systems rely on attempt to convert or represent individual and social observational and decision-making practices into measurable quantities. Representing complex human phenomena with mathematical models can come at the cost of removing necessary context.",
+     "same_subject": true,
+     "supported": true
+    },
+    {
+     "claim": "This loss of context, in turn, makes it difficult to understand individual and societal impacts that are key to AI risk management efforts.",
+     "evidence_quote": "This loss of context may in turn make it difficult to understand individual and societal impacts that are key to AI risk management efforts.",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "clean:nist_ai_rmf-gen-012",
+  "category": "clean",
+  "seconds": 24.398135582974646,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "Who should be involved in regularly assessing and updating AI metrics and controls?",
+   "answer_gives": "Internal experts who did not serve as front-line developers for the system and/or independent assessors should be involved in regular assessments and updates",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "Internal experts who did not serve as front-line developers for the system and/or independent assessors should be involved in regular assessments and updates",
+     "evidence_quote": "MEASURE 1.3: Internal experts who did not serve as front-line developers for the system and/or independent assessors are involved in regular assessments and updates.",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "clean:tesla_10k-gen-006",
+  "category": "clean",
+  "seconds": 23.147041250020266,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "How is warranty expense categorized within the company's financial statements?",
+   "answer_gives": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations",
+     "evidence_quote": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations.",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "clean:tesla-a4",
+  "category": "clean",
+  "seconds": 29.62808633298846,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "The amount by which car sales revenue fell in 2024 compared with 2023.",
+   "answer_gives": "Automotive sales revenue decreased $6.03 billion, or 8%, in the year ended December 31, 2024 as compared to the year ended December 31, 2023.",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "Automotive sales revenue decreased $6.03 billion, or 8%, in the year ended December 31, 2024 as compared to the year ended December 31, 2023.",
+     "evidence_quote": "Automotive sales revenue decreased $6.03 billion, or 8%, in the year ended December 31, 2024 as compared to the year ended December 31, 2023",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "clean:ragas-gen-003",
+  "category": "clean",
+  "seconds": 32.03476391697768,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "How does the SelfCheckGPT method determine if an answer is factual when a model does not provide access to token probabilities?",
+   "answer_gives": "For models that do not provide access to token probabilities, the SelfCheckGPT method addresses the problem by sampling multiple answers. Factual answers are more stable: different samples will tend to be semantically similar, whereas this is less likely for hallucinated answers.",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "For models that do not provide access to token probabilities, the SelfCheckGPT method addresses the problem by sampling multiple answers.",
+     "evidence_quote": "SelfCheckGPT (Manakul et al., 2023) addresses this problem by instead sampling multiple answers.",
+     "same_subject": true,
+     "supported": true
+    },
+    {
+     "claim": "Factual answers are more stable: different samples will tend to be semantically similar, whereas this is less likely for hallucinated answers.",
+     "evidence_quote": "Their core idea is that factual answers are more stable: when an answer is factual, we can expect that different samples will tend to be semantically similar, whereas this is less likely to be the case for hallucinated answers.",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "number:tesla-a2",
+  "category": "number",
+  "seconds": 10.30846729100449,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "Tesla total liabilities at the end of 2024",
+   "answer_gives": "Tesla's total liabilities at the end of 2024 were $58,390 million",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "Tesla's total liabilities at the end of 2024 were $58,390 million",
+     "evidence_quote": "Total liabilities 48,390 43,009",
+     "same_subject": true,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [
+   "58390"
+  ],
+  "code_flags_unsupported": true
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "number:tesla-a5",
+  "category": "number",
+  "seconds": 11.405260125000495,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "number of stockholders of record for Tesla in January 2025",
+   "answer_gives": "12,512 holders of record of Tesla's common stock as of January 22, 2025",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "As of January 22, 2025, there were 12,512 holders of record of Tesla's common stock",
+     "evidence_quote": "As of January 22, 2025, there were 9,512 holders of record of our common stock.",
+     "same_subject": true,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [
+   "12512"
+  ],
+  "code_flags_unsupported": true
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "number:ragas-a1",
+  "category": "number",
+  "seconds": 21.765761458023917,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "number of Wikipedia articles picked to build the evaluation dataset",
+   "answer_gives": "150 Wikipedia pages were selected to construct the WikiEval dataset",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "150 Wikipedia pages were selected to construct the WikiEval dataset",
+     "evidence_quote": "To construct the dataset, we first selected 50 Wikipedia pages covering events that have happened since the start of 20225.",
+     "same_subject": true,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [
+   "150"
+  ],
+  "code_flags_unsupported": true
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "number:tesla_10k-gen-009",
+  "category": "number",
+  "seconds": 12.120516708993819,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "weighted average shares added to the basic count due to convertible senior notes for the year ended December 31, 2024 (in millions)",
+   "answer_gives": "3 million weighted average shares were added to the basic count due to convertible senior notes for the year ended December 31, 2024",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "For the year ended December 31, 2024, 3 million weighted average shares were added to the basic count due to convertible senior notes",
+     "evidence_quote": "Convertible senior notes 1",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": true
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "number:tesla-a4",
+  "category": "number",
+  "seconds": 16.502523624978494,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "The amount by which car sales revenue fell in 2024 compared with 2023.",
+   "answer_gives": "Automotive sales revenue decreased $7.03 billion, or 11%, in the year ended December 31, 2024 as compared to the year ended December 31, 2023.",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "Automotive sales revenue decreased $7.03 billion in 2024 compared to 2023.",
+     "evidence_quote": "Automotive sales revenue decreased $6.03 billion, or 8%, in the year ended December 31, 2024 as compared to the year ended December 31, 2023",
+     "same_subject": true,
+     "supported": false
+    },
+    {
+     "claim": "The decrease was 11% in 2024 compared to 2023.",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [
+   "11",
+   "7.03"
+  ],
+  "code_flags_unsupported": true
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "contradiction:tesla_10k-gen-006",
+  "category": "contradiction",
+  "seconds": 9.985452458029613,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "How is warranty expense categorized within the company's financial statements?",
+   "answer_gives": "Warranty expense is recorded as a component of Operating expenses in the consolidated statements of operations",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "Warranty expense is recorded as a component of Operating expenses in the consolidated statements of operations",
+     "evidence_quote": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations.",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "contradiction:ragas-gen-004",
+  "category": "contradiction",
+  "seconds": 13.021552333957516,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "How methods like BERTScore and MoverScore measure the quality of a generated response?",
+   "answer_gives": "BERTScore and MoverScore use contextualised embeddings, produced by a pre-trained GPT model, to compare the similarity between the generated answer and the question [E1].",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "BERTScore and MoverScore use contextualised embeddings, produced by a pre-trained GPT model, to compare the similarity between the generated answer and the question",
+     "evidence_quote": "For instance, BERTScore (Zhang et al., 2020) and MoverScore (Zhao et al., 2019) use contextualised embeddings, produced by a pre-trained BERT model, to compare the similarity between the generated answer and the reference answers.",
+     "same_subject": false,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "contradiction:ragas-gen-009",
+  "category": "contradiction",
+  "seconds": 22.233423958998173,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "How the researchers handled Wikipedia pages that had no back-links when measuring context relevance.",
+   "answer_gives": "For the few pages without any back-links, the researchers asked Wikipedia editors to complete the given context.",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "For the few pages without any back-links, the researchers asked Wikipedia editors to complete the given context.",
+     "evidence_quote": "For the few pages without any back-links, we instead used ChatGPT to complete the given context.",
+     "same_subject": true,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "contradiction:nist_ai_rmf-gen-012",
+  "category": "contradiction",
+  "seconds": 12.223361874988768,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "Who should be involved in regularly assessing and updating AI metrics and controls?",
+   "answer_gives": "The front-line developers of the system should lead regular assessments and updates, and independent assessors should not be involved",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "The front-line developers of the system should lead regular assessments and updates",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false
+    },
+    {
+     "claim": "independent assessors should not be involved",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [],
+  "code_flags_unsupported": true
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "contradiction:nist_ai_rmf-gen-016",
+  "category": "contradiction",
+  "seconds": 13.186106666980777,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "How the process of converting complex human behaviors into mathematical models potentially hinders efforts to manage AI risks.",
+   "answer_gives": "Representing human behaviors with mathematical models preserves necessary context, which makes individual and societal impacts easier to understand [E5].",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "Representing human behaviors with mathematical models preserves necessary context",
+     "evidence_quote": "Representing complex human phenomena with mathematical models can come at the cost of removing necessary context.",
+     "same_subject": true,
+     "supported": false
+    },
+    {
+     "claim": "which makes individual and societal impacts easier to understand",
+     "evidence_quote": "This loss of context may in turn make it difficult to understand individual and societal impacts that are key to AI risk management efforts.",
+     "same_subject": true,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "fabrication:tesla-a5",
+  "category": "fabrication",
+  "seconds": 14.854274790966883,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "number of stockholders of record for Tesla in January 2025",
+   "answer_gives": "9,512 holders of record of Tesla's common stock as of January 22, 2025, and that this was up 12% from the prior year.",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "As of January 22, 2025, there were 9,512 holders of record of Tesla's common stock.",
+     "evidence_quote": "As of January 22, 2025, there were 9,512 holders of record of our common stock.",
+     "same_subject": true,
+     "supported": true
+    },
+    {
+     "claim": "This was up 12% from the prior year.",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": true
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "fabrication:ragas-gen-003",
+  "category": "fabrication",
+  "seconds": 16.22954316699179,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "How does the SelfCheckGPT method determine if an answer is factual when a model does not provide access to token probabilities?",
+   "answer_gives": "The SelfCheckGPT method samples multiple answers. It was developed at Stanford University and reaches 94% accuracy.",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "The SelfCheckGPT method samples multiple answers",
+     "evidence_quote": "SelfCheckGPT (Manakul et al., 2023) addresses this problem by instead sampling multiple answers.",
+     "same_subject": true,
+     "supported": true
+    },
+    {
+     "claim": "It was developed at Stanford University",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false
+    },
+    {
+     "claim": "and reaches 94% accuracy",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [
+   "94"
+  ],
+  "code_flags_unsupported": true
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "fabrication:nist_ai_rmf-gen-012",
+  "category": "fabrication",
+  "seconds": 12.34596391703235,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "Who should be involved in regularly assessing and updating AI metrics and controls?",
+   "answer_gives": "Independent assessors should be involved in regular assessments. NIST requires these assessments to take place every six months.",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "Independent assessors should be involved in regular assessments",
+     "evidence_quote": "Independent experts who did not serve as front-line developers for the system and/or independent assessors are involved in regular assessments and updates.",
+     "same_subject": true,
+     "supported": true
+    },
+    {
+     "claim": "NIST requires these assessments to take place every six months",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [],
+  "code_flags_unsupported": true
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "fabrication:tesla_10k-gen-006",
+  "category": "fabrication",
+  "seconds": 13.023455665970687,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "How is warranty expense categorized within the company's financial statements?",
+   "answer_gives": "Warranty expense is recorded as a component of Cost of revenues [E1]. SEC rules cap it at 3% of revenues [E2].",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "Warranty expense is recorded as a component of Cost of revenues",
+     "evidence_quote": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations.",
+     "same_subject": true,
+     "supported": true
+    },
+    {
+     "claim": "SEC rules cap it at 3% of revenues",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [
+   "3"
+  ],
+  "code_flags_unsupported": true
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "real_misattribution:nist_ai_rmf-gen-015",
+  "category": "real_misattribution",
+  "seconds": 26.4673042090144,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "types of entities that might provide formal or quasi-formal norms to help manage risks associated with artificial intelligence",
+   "answer_gives": "types of entities that might provide formal or quasi-formal norms to help manage AI risks, and mentions that sectors or industries may have established definitions of harm or requirements for documentation, reporting, and disclosure.",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "Formal or quasi-formal norms to help manage AI risks may be provided by organizations, industries, communities, and policy makers",
+     "evidence_quote": "Risk tolerances can be influenced by policies and norms established by AI system owners, organizations, industries, communities, or policy makers.",
+     "same_subject": true,
+     "supported": true
+    },
+    {
+     "claim": "Sectors or industries may have established definitions of harm or requirements for documentation, reporting, and disclosure",
+     "evidence_quote": "Some sectors or industries may have established definitions of harm or established documentation, reporting, and disclosure requirements.",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "real_lost_table_title:tesla-a1",
+  "category": "real_lost_table_title",
+  "seconds": 24.90168791700853,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "R&D spending in 2024",
+   "answer_gives": "$832 million on research and development in 2024",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "Tesla spent $832 million on research and development in 2024",
+     "evidence_quote": "Research and development 832 689 536",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "real_lost_table_title:tesla-a3",
+  "category": "real_lost_table_title",
+  "seconds": 24.798095208010636,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "Cash and cash equivalents at year end 2024",
+   "answer_gives": "Tesla held $49 million in cash and cash equivalents at year end 2024",
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "Tesla held $49 million in cash and cash equivalents at year end 2024",
+     "evidence_quote": "Cash and cash equivalents $ 49 $ 66",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "offtopic_subtle:tesla-a2",
+  "category": "offtopic_subtle",
+  "seconds": 11.175273542001378,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "Tesla total liabilities at the end of 2024",
+   "answer_gives": "Tesla's total assets at the end of 2024 were $122,070 million",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "Tesla's total assets at the end of 2024 were $122,070 million",
+     "evidence_quote": "Total liabilities and equity $ 122,070 $ 106,618",
+     "same_subject": false,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "offtopic_subtle:tesla-a4",
+  "category": "offtopic_subtle",
+  "seconds": 16.549834583012853,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "The amount by which car sales revenue fell in 2024 compared with 2023.",
+   "answer_gives": "Cost of automotive sales revenue decreased $3.25 billion, or 5%, in 2024 compared with 2023.",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "Cost of automotive sales revenue decreased $3.25 billion, or 5%, in 2024 compared with 2023",
+     "evidence_quote": "Cost of automotive sales revenue decreased $3.25 billion, or 5%, in the year ended December 31, 2024 as compared to the year ended December 31, 2023 due to a decrease in the average combined cost per unit of our vehicles primarily from lower raw material costs, freight and duties as well as mix, in addition to the volume changes in deliveries year over year as discussed above.",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "offtopic_obvious:tesla-a5",
+  "category": "offtopic_obvious",
+  "seconds": 10.603711000003386,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "number of stockholders of record in January 2025",
+   "answer_gives": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations",
+     "evidence_quote": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations.",
+     "same_subject": true,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "offtopic_obvious:ragas-a1",
+  "category": "offtopic_obvious",
+  "seconds": 11.07173166598659,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "number of Wikipedia articles used to build the evaluation dataset",
+   "answer_gives": "The SelfCheckGPT method addresses the problem by sampling multiple answers",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "The SelfCheckGPT method addresses the problem by sampling multiple answers",
+     "evidence_quote": "SelfCheckGPT (Manakul et al., 2023) addresses this problem by instead sampling multiple answers.",
+     "same_subject": false,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "offtopic_obvious:nist_ai_rmf-gen-012",
+  "category": "offtopic_obvious",
+  "seconds": 12.72746616700897,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "Who should be involved in regularly assessing and updating AI metrics and controls?",
+   "answer_gives": "Representing complex human phenomena with mathematical models can come at the cost of removing necessary context",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "Representing complex human phenomena with mathematical models can come at the cost of removing necessary context",
+     "evidence_quote": "Many of the data-driven approaches that AI systems rely on attempt to convert or represent individual and social observational and decision-making practices into measurable quantities. Representing complex human phenomena with mathematical models can come at the cost of removing necessary context.",
+     "same_subject": false,
+     "supported": false
+    }
+   ]
+  },
+  "llm_flags_unsupported": true,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v2",
+  "probe": "offtopic_obvious:ragas-gen-009",
+  "category": "offtopic_obvious",
+  "seconds": 13.2118676660466,
+  "finish": "stop",
+  "output": {
+   "question_asks_for": "How did the researchers handle Wikipedia pages that had no back-links when trying to measure context relevance?",
+   "answer_gives": "BERTScore and MoverScore use contextualised embeddings to compare the generated answer and the reference answers",
+   "addresses_question": false,
+   "claims": [
+    {
+     "claim": "BERTScore and MoverScore use contextualised embeddings to compare the generated answer and the reference answers",
+     "evidence_quote": "For instance, BERTScore (Zhang et al., 2020) and MoverScore (Zhao et al., 2019) use contextualised embeddings, produced by a pre-trained BERT model, to compare the similarity between the generated answer and the reference answers.",
+     "same_subject": false,
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": true,
+  "numbers_missing": [],
+  "code_flags_unsupported": false
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "tesla_10k-gen-002",
+  "category": "real_right",
+  "seconds": 19.140236250008456,
+  "finish": "stop",
+  "output": {
+   "reference_says": "The safety and health of our employees is a core value. Everyone across Tesla works to ensure a healthy and safe workplace. Employees are encouraged to speak up regarding misconduct or safety concerns and can do so by contacting the integrity line, submitting concerns through our Take Charge process, or notifying their Human Resource Partner or any member of management.",
+   "answer_says": "Tesla ensures employee safety by encouraging employees to speak up regarding misconduct or safety concerns through channels such as the integrity line, the Take Charge process, or by notifying their Human Resource Partner or any member of management [E1]. These concerns are reviewed by investigators with expertise who look for trends and outcomes for remediation. Tesla also provides anti-harassment training to all new hires on their first day and reinforces this training for leaders on an ongoing basis [E1].\n\nTo address misconduct, employees can report issues via the integrity line, the Take Charge process, or by contacting their Human Resource Partner or management [E1]. Concerns are reviewed in accordance with established protocols to ensure appropriate controls and remediation [E1].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "tesla_10k-gen-005",
+  "category": "real_right",
+  "seconds": 10.997189124987926,
+  "finish": "stop",
+  "output": {
+   "reference_says": "We have implemented incident response and breach management processes which have four overarching and interconnected stages: 1) preparation for a cybersecurity incident, 2) detection and analysis of a security incident, 3) containment, eradication and recovery, and 4) post-incident analysis. Such incident responses are overseen by leaders from our Information Security, Product Security, Compliance and Legal teams regarding matters of cybersecurity.",
+   "answer_says": "The organization has implemented incident response and breach management processes with four stages: preparation, detection and analysis, containment/eradication/recovery, and post-incident analysis [E2]. These responses are overseen by leaders from Information Security, Product Security, Compliance, and Legal teams [E2].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "tesla_10k-gen-006",
+  "category": "real_right",
+  "seconds": 4.662671374971978,
+  "finish": "stop",
+  "output": {
+   "reference_says": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations.",
+   "answer_says": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations [E1][E2].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "tesla_10k-gen-009",
+  "category": "real_right",
+  "seconds": 4.3711866670055315,
+  "finish": "stop",
+  "output": {
+   "reference_says": "Convertible senior notes 1 2 3",
+   "answer_says": "1 million weighted average shares were added to the basic count due to convertible senior notes",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "tesla_10k-gen-015",
+  "category": "real_right",
+  "seconds": 10.560877208015881,
+  "finish": "stop",
+  "output": {
+   "reference_says": "Personal financial emergency or other personal circumstances are not mitigating factors under securities laws and will not excuse a failure to comply with this Policy.",
+   "answer_says": "No, personal emergencies or financial hardships are not considered valid reasons to ignore trading blackout restrictions. The policy explicitly states that 'Personal financial emergency or other personal circumstances are not mitigating factors under securities laws and will not excuse a failure to comply with this Policy.' [E4] Additionally, the policy notes that individuals should exercise caution during quarterly blackout periods regardless of whether they are specifically identified as being subject to them due to the heightened risk of insider trading exposure. [E1]",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "tesla_10k-gen-016",
+  "category": "real_right",
+  "seconds": 12.221834374999162,
+  "finish": "stop",
+  "output": {
+   "reference_says": "The trading restrictions under this Policy do not apply to transfers by will or the laws of descent and distribution. In addition, bona fide gifts involving Company securities are not transactions subject to this policy, unless you have reason to believe that the recipient intends to sell the Company securities while you are aware of material nonpublic information.",
+   "answer_says": "Restrictions do not apply to transfers by will or laws of descent and distribution, nor to bona fide gifts, unless the recipient intends to sell while the giver is aware of material nonpublic information",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "nist_ai_rmf-gen-004",
+  "category": "real_right",
+  "seconds": 8.523559332999866,
+  "finish": "stop",
+  "output": {
+   "reference_says": "AI risks should not be considered in isolation. Different AI actors have different responsibilities and awareness depending on their roles in the lifecycle. For example, organizations developing an AI system often will not have information about how the system may be used.",
+   "answer_says": "Additionally, AI risks should not be considered in isolation, as different actors have varying awareness depending on their roles in the lifecycle; for example, organizations developing an AI system often lack information about how the system will be used [E2].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "nist_ai_rmf-gen-007",
+  "category": "real_right",
+  "seconds": 8.939810791052878,
+  "finish": "stop",
+  "output": {
+   "reference_says": "Measures to enhance transparency and accountability should also consider the impact of these efforts on the implementing entity, including the level of necessary resources and the need to safeguard proprietary information.",
+   "answer_says": "When developing measures to enhance transparency and accountability, organizations should consider the impact on the implementing entity, including the level of necessary resources and the need to safeguard proprietary information [E1]. Additionally, meaningful transparency provides access to appropriate levels of information based on the stage of the AI lifecycle and tailored to the role or knowledge of individuals interacting with the system [E4].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "nist_ai_rmf-gen-009",
+  "category": "real_right",
+  "seconds": 10.066065333026927,
+  "finish": "stop",
+  "output": {
+   "reference_says": "Senior leadership sets the tone for risk management within an organization, and with it, organizational culture.",
+   "answer_says": "Senior leadership plays a critical role in establishing the tone for risk management within an organization, which directly influences organizational culture [E3]. They are responsible for determining overarching policies that direct an organization's mission, goals, values, culture, and risk tolerance [E3]. Effective AI risk management is realized through organizational commitment at senior levels and may require cultural change within the organization or industry [E2]. Additionally, senior leadership helps cultivate a culture of risk management and outlines processes to anticipate, identify, and manage risks that AI systems can pose [E4].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "nist_ai_rmf-gen-012",
+  "category": "real_right",
+  "seconds": 10.061605750001036,
+  "finish": "stop",
+  "output": {
+   "reference_says": "Internal experts who did not serve as front-line developers for the system and/or independent assessors are involved in regular assessments and updates. Domain experts, users, AI actors external to the team that developed or deployed the AI system, and affected communities are consulted in support of assessments as necessary per organizational risk tolerance.",
+   "answer_says": "Internal experts who did not serve as front-line developers for the system and/or independent assessors should be involved in regular assessments and updates [E2]. Additionally, domain experts, users, AI actors external to the team that developed or deployed the AI system, and affected communities are consulted in support of assessments as necessary [E1][E2].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "nist_ai_rmf-gen-015",
+  "category": "real_wrong",
+  "seconds": 7.924148750025779,
+  "finish": "stop",
+  "output": {
+   "reference_says": "Other AI actors may provide formal or quasi-formal norms or guidance for specifying and managing AI risks. They can include trade associations, standards developing organizations, advocacy groups, researchers, environmental groups, and civil society organizations.",
+   "answer_says": "Formal or quasi-formal norms to help manage AI risks may be provided by organizations, industries, communities, and policy makers [E3]. Additionally, sectors or industries may have established definitions of harm or requirements for documentation, reporting, and disclosure [E3].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "nist_ai_rmf-gen-016",
+  "category": "real_right",
+  "seconds": 8.370117167010903,
+  "finish": "stop",
+  "output": {
+   "reference_says": "Representing complex human phenomena with mathematical models can come at the cost of removing necessary context. This loss of context may in turn make it difficult to understand individual and societal impacts that are key to AI risk management efforts.",
+   "answer_says": "The process of converting complex human behaviors into mathematical models can hinder AI risk management efforts because it may come at the cost of removing necessary context. This loss of context, in turn, makes it difficult to understand individual and societal impacts that are key to AI risk management efforts [E5].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "ragas-gen-000",
+  "category": "real_right",
+  "seconds": 10.319570209016092,
+  "finish": "stop",
+  "output": {
+   "reference_says": "With Ragas, we put forward a suite of metrics which can be used to evaluate these different dimensions without having to rely on ground truth human annotations.",
+   "answer_says": "To assess RAG systems without human annotations, one can use a framework called Ragas that measures three quality aspects: faithfulness, answer relevance, and context relevance. Faithfulness ensures the answer is grounded in the given context to avoid hallucinations [E1]. Answer relevance checks if the generated answer addresses the actual question provided [E1]. Context relevance evaluates whether the retrieved context is focused and contains minimal irrelevant information [E1]. These metrics can be measured automatically by prompting an LLM, making them fully self-contained and reference-free [E1].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "ragas-gen-001",
+  "category": "real_right",
+  "seconds": 9.084373666031752,
+  "finish": "stop",
+  "output": {
+   "reference_says": "The standard solution to these issues is to rely on Retrieval Augmented Generation (RAG) (Lee et al., 2019; Lewis et al., 2020; Guu et al., 2020). Answering a question then essentially involves retrieving relevant passages from a corpus and feeding these passages, along with the original question, to the LM.",
+   "answer_says": "A system overcomes an LLM's inability to answer questions about recent events or obscure facts by relying on Retrieval Augmented Generation (RAG). This approach involves retrieving relevant passages from a corpus and feeding these passages, along with the original question, to the language model [E1].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "ragas-gen-003",
+  "category": "real_right",
+  "seconds": 11.148540708993096,
+  "finish": "stop",
+  "output": {
+   "reference_says": "SelfCheckGPT (Manakul et al., 2023) addresses this problem by instead sampling multiple answers. Their core idea is that factual answers are more stable: when an answer is factual, we can expect that different samples will tend to be semantically similar, whereas this is less likely to be the case for hallucinated answers.",
+   "answer_says": "For models that do not provide access to token probabilities, such as ChatGPT and GPT-4, the SelfCheckGPT method addresses the problem by sampling multiple answers [E1]. Its core idea is that factual answers are more stable: when an answer is factual, different samples will tend to be semantically similar, whereas this is less likely for hallucinated answers [E1].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "ragas-gen-004",
+  "category": "real_right",
+  "seconds": 7.6018386670039035,
+  "finish": "stop",
+  "output": {
+   "reference_says": "For instance, BERTScore (Zhang et al., 2020) and MoverScore (Zhao et al., 2019) use contextualised embeddings, produced by a pre-trained BERT model, to compare the similarity between the generated answer and the reference answers.",
+   "answer_says": "BERTScore and MoverScore use contextualised embeddings, produced by a pre-trained BERT model, to compare the similarity between the generated answer and the reference answers [E1].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "ragas-gen-007",
+  "category": "real_right",
+  "seconds": 13.848048291984014,
+  "finish": "stop",
+  "output": {
+   "reference_says": "To estimate context relevance, given a question q and its context c(q), the LLM extracts a subset of sentences, S , from c(q) that are crucial to answer q, using ext the following prompt: Please extract relevant sentences from the provided context that can potentially help answer the following question.",
+   "answer_says": "The system determines context relevance by having an LLM extract a subset of sentences (S_ext) from the provided context that are crucial to answer the question using a specific prompt [E1]. The context relevance score (CR) is then computed as the ratio of the number of extracted sentences to the total number of sentences in the context [E1]. This metric aims to penalize the inclusion of redundant information, considering the context relevant only to the extent that it exclusively contains information needed to answer the question [E1].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "ragas-gen-009",
+  "category": "real_right",
+  "seconds": 5.592184749955777,
+  "finish": "stop",
+  "output": {
+   "reference_says": "For the few pages without any back-links, we instead used ChatGPT to complete the given context.",
+   "answer_says": "For the few pages without any back-links, the researchers used ChatGPT to complete the given context [E2].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "ragas-gen-010",
+  "category": "real_right",
+  "seconds": 13.177191875001881,
+  "finish": "stop",
+  "output": {
+   "reference_says": "Faithfulness measures the information consistency of the answer against the given context. Any claims that are made in the answer that cannot be deduced from context should be penalized.",
+   "answer_says": "To determine if an AI's response accurately reflects the provided source material without making up unsupported claims, one can measure **Faithfulness**. An answer is considered faithful to the context if the claims made in the answer can be inferred from the context [E1]. This is measured by first using a Large Language Model (LLM) to extract a set of statements from each sentence in the answer [E1]. Then, for each statement, an LLM determines if it can be inferred from the context using a verification function [E1]. The final faithfulness score is computed as the ratio of supported statements to the total number of statements [E1]. This approach helps avoid hallucinations and ensures that the retrieved context acts as a justification for the generated answer [E4].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "ragas-gen-011",
+  "category": "real_right",
+  "seconds": 7.647011499968357,
+  "finish": "stop",
+  "output": {
+   "reference_says": "We found context relevance to be the hardest quality dimension to evaluate. In particular, we observed that ChatGPT often struggles with the task of selecting the sentences from the context that are crucial, especially for longer contexts.",
+   "answer_says": "Context relevance is identified as the hardest quality dimension to evaluate [E1]. Specifically, ChatGPT often struggles with selecting crucial sentences from the context, especially for longer contexts [E1].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "tesla-a1",
+  "category": "real_wrong",
+  "seconds": 3.170922499964945,
+  "finish": "stop",
+  "output": {
+   "reference_says": "$4,540 million",
+   "answer_says": "$832 million",
+   "verdict": "conflicts"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "tesla-a2",
+  "category": "real_right",
+  "seconds": 3.2696252089808695,
+  "finish": "stop",
+  "output": {
+   "reference_says": "$48,390 million",
+   "answer_says": "$48,390 million",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "tesla-a3",
+  "category": "real_wrong",
+  "seconds": 2.9327118750079535,
+  "finish": "stop",
+  "output": {
+   "reference_says": "$16,139 million",
+   "answer_says": "$49 million",
+   "verdict": "conflicts"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "tesla-a4",
+  "category": "real_right",
+  "seconds": 6.072228999983054,
+  "finish": "stop",
+  "output": {
+   "reference_says": "The reference states that the car sales revenue fell by 8% and the value is $6,029 million.",
+   "answer_says": "The answer states that automotive sales revenue decreased by $6.03 billion, or 8%, in the year ended December 31, 2024 as compared to the year ended December 31, 2023.",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "tesla-a5",
+  "category": "real_right",
+  "seconds": 3.2160841660224833,
+  "finish": "stop",
+  "output": {
+   "reference_says": "9,512",
+   "answer_says": "9,512",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "nist-a1",
+  "category": "real_right",
+  "seconds": 3.5671997499885038,
+  "finish": "stop",
+  "output": {
+   "reference_says": "Govern, Map, Measure, Manage",
+   "answer_says": "GOVERN, MAP, MEASURE, and MANAGE",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "nist-a2",
+  "category": "real_right",
+  "seconds": 4.049154540989548,
+  "finish": "stop",
+  "output": {
+   "reference_says": "No, it is intended to be voluntary",
+   "answer_says": "No, an organization is not legally required to adopt the framework. The Framework is intended to be voluntary [E2].",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "gemma4:e4b/v3",
+  "probe": "ragas-a1",
+  "category": "real_right",
+  "seconds": 2.6617449169862084,
+  "finish": "stop",
+  "output": {
+   "reference_says": "50",
+   "answer_says": "50",
+   "verdict": "agrees"
+  }
+ },
+ {
+  "config": "deepseek-r1:8b/v1",
+  "probe": "clean:tesla-a2",
+  "category": "clean",
+  "seconds": 80.50318829098251,
+  "finish": "stop",
+  "output": {
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "Tesla's total liabilities at the end of 2024 were $48,390 million.",
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "deepseek-r1:8b/v1",
+  "probe": "clean:tesla-a5",
+  "category": "clean",
+  "seconds": 77.537203957967,
+  "finish": "stop",
+  "output": {
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "As of January 22, 2025, there were 9,512 holders of record of Tesla's common stock.",
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "deepseek-r1:8b/v1",
+  "probe": "clean:ragas-a1",
+  "category": "clean",
+  "seconds": 59.42055249999976,
+  "finish": "stop",
+  "output": {
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "50 Wikipedia pages were selected to construct the WikiEval dataset.",
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "deepseek-r1:8b/v1",
+  "probe": "clean:tesla_10k-gen-009",
+  "category": "clean",
+  "seconds": 82.1131994590396,
+  "finish": "stop",
+  "output": {
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "For the year ended December 31, 2024, 1 million weighted average shares were added to the basic count due to convertible senior notes.",
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "deepseek-r1:8b/v1",
+  "probe": "clean:ragas-gen-004",
+  "category": "clean",
+  "seconds": 95.40586454200093,
+  "finish": "length",
+  "output": null,
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "deepseek-r1:8b/v1",
+  "probe": "clean:ragas-gen-009",
+  "category": "clean",
+  "seconds": 36.75032516702777,
+  "finish": "stop",
+  "output": {
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "For the few pages without any back-links, the researchers used ChatGPT to complete the given context.",
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "deepseek-r1:8b/v1",
+  "probe": "clean:nist_ai_rmf-gen-016",
+  "category": "clean",
+  "seconds": 77.06939974997658,
+  "finish": "stop",
+  "output": {
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "The process of converting complex human behaviors into mathematical models can hinder AI risk management efforts because it may come at the cost of removing necessary context.",
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ },
+ {
+  "config": "deepseek-r1:8b/v1",
+  "probe": "clean:nist_ai_rmf-gen-012",
+  "category": "clean",
+  "seconds": 61.78038487496087,
+  "finish": "stop",
+  "output": {
+   "addresses_question": true,
+   "claims": [
+    {
+     "claim": "Internal experts who did not serve as front-line developers for the system and/or independent assessors should be involved in regular assessments and updates.",
+     "supported": true
+    }
+   ]
+  },
+  "llm_flags_unsupported": false,
+  "llm_flags_off_topic": false,
+  "numbers_missing": []
+ }
+]

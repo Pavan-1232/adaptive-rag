@@ -40,6 +40,19 @@ def make_two_column_pdf(path: Path, title: str, left: str, right: str) -> Path:
     return path
 
 
+def make_table_pdf(path: Path, rows: list[tuple[str, str]]) -> Path:
+    """A financial-style table: short labels on the left, numbers far to the right."""
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Helvetica", size=10)
+    for index, (label, values) in enumerate(rows):
+        y = 20 + index * 6
+        pdf.text(15, y, label)
+        pdf.text(120, y, values)
+    pdf.output(str(path))
+    return path
+
+
 def make_pdf_with_rotated_stamp(path: Path, body: str, stamp: str) -> Path:
     pdf = FPDF()
     pdf.add_page()

@@ -16,3 +16,5 @@ class RetrievedChunk:
     locator_end: int
     section_heading: str | None
     source: Literal["direct", "expansion"] = "direct"
+    start_char: int = 0
+    end_char: int = 0

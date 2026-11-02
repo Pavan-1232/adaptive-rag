@@ -23,6 +23,8 @@ class Citation:
     snippet: str
     score: float
     source: str
+    start_char: int = 0
+    end_char: int = 0
 
 
 def _range(start: int, end: int) -> str:
@@ -54,6 +56,8 @@ def build_citation(evidence_id: str, chunk: RetrievedChunk) -> Citation:
         snippet=" ".join(chunk.text.split())[:SNIPPET_CHARS],
         score=chunk.score,
         source=chunk.source,
+        start_char=chunk.start_char,
+        end_char=chunk.end_char,
     )
 
 

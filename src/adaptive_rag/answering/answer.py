@@ -106,7 +106,7 @@ def answer_question(ctx: AppContext, kb: sqlite3.Row, question: str) -> AnswerRe
     timings["retrieval"] = round((time.perf_counter() - started) * 1000, 1)
 
     # Gate 1: clearly weak evidence gets no LLM call.
-    if not retrieved or retrieved[0].score < settings.score_floor:
+    if not retrieved or retrieved[0].score < settings.floor_for(kb["embedding_model"]):
         trace_id = _write_trace(
             ctx, kb, question, "insufficient", retrieved, [], None, None, timings
         )

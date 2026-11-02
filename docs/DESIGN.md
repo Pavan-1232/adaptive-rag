@@ -29,7 +29,7 @@ Numeric settings marked "starting value" are untested defaults to calibrate. The
 | Python env | New conda env `adaptive-rag`, Python 3.11 | Clean dependencies; `rag-env` stays untouched | Reuse `rag-env` | Reuse risks breaking other work |
 | LLM | `qwen3.5:9b` (6.6 GB) | Installed, Apache 2.0, leaves more free memory | `gemma4:e4b` (9.6 GB) | Gemma may be as good but leaves little room on 16 GB |
 | Fallback LLM | `qwen3.5:4b` (3.3 GB) | For memory pressure; needs downloading | `gemma4:e2b` | Probably lower answer quality |
-| Evaluation judge | `gemma4:e4b`, provisional until tested alone in Stage 3 | Different model from the answer LLM | Same LLM | Same model would mark its own work; at 9.6 GB, memory is the concern. Fallback: `qwen3.5:4b` or a smaller Gemma |
+| Evaluation judge | `gemma4:e4b`, provisional; probe results and proposed changes are in `PROGRESS.md` | Different model from the answer LLM | Same LLM | Same model would mark its own work; at 9.6 GB, memory is the concern. Fallback: `qwen3.5:4b` or a smaller Gemma |
 | Embeddings | `embeddinggemma:300m` (622 MB, 768 dimensions) | Installed, small, batch support via `/api/embed` | `bge-m3` | Compare with measurements in Stage 3 |
 | PDF | `pdfplumber` | Permissive licence, exposes font data for headings | PyMuPDF | PyMuPDF is faster, but AGPL conflicts with possible commercial use |
 | DOCX | `python-docx` | Reads heading styles | `docx2txt` | Plain text only, loses structure |
@@ -212,7 +212,7 @@ Keep chunks in score order and stop at the first of:
 - The largest score gap in the range is reached.
 - The type's maximum is reached.
 
-The floor and delta are tuned on dev questions and stored per embedding model.
+The floor and delta are tuned on dev questions and stored per embedding model. The floor is set in Stage 3 (`score_floors` in `config.py`); delta is tuned in Stage 5.
 
 ### Evidence check
 
@@ -407,9 +407,9 @@ Each stage ends with user approval and updates to this file and `PROGRESS.md`.
 
 - **Objective:** trustworthy measurement before any optimization.
 - **Features:** metrics, question generator, runner, report, human benchmark.
-- **Tasks:** span-overlap metrics, bias filters, bootstrap, baseline run, embedding model comparison.
+- **Tasks:** fix PDF column misdetection on tables, span-overlap metrics, bias filters, bootstrap, baseline run, embedding model comparison, calibrate the score floor on dev data, measure wrong-focused `answered` responses.
 - **Tests:** metrics checked against hand-calculated examples, span matching, leakage check between dev and test sets.
-- **Acceptance:** reproducible baseline report and a reviewed benchmark.
+- **Acceptance:** reproducible baseline report, a reviewed benchmark, a score floor chosen from dev data only, and a reported wrong-focus rate.
 - **Deliverable:** first real baseline numbers.
 
 ### Stage 4: Chunking optimization

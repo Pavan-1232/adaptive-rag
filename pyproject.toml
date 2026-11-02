@@ -5,6 +5,7 @@ description = "Local-first RAG with evaluation-driven chunking and adaptive retr
 requires-python = ">=3.11"
 dependencies = [
     "chromadb>=1.5.9,<2",
+    "numpy>=2",
     "fastapi>=0.115",
     "ollama>=0.6",
     "pdfplumber>=0.11",
@@ -12,6 +13,7 @@ dependencies = [
     "pydantic-settings>=2.5",
     "python-docx>=1.1",
     "python-multipart>=0.0.20",
+    "pyyaml>=6",
     "tiktoken>=0.8",
     "uvicorn>=0.32",
 ]

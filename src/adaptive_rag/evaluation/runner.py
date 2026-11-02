@@ -1,0 +1,236 @@
+"""Run a benchmark against one system configuration and record per-question results."""
+
+import json
+import shutil
+import tempfile
+from dataclasses import asdict, dataclass, field
+from pathlib import Path
+
+from adaptive_rag.answering import GenerationFailed, answer_question
+from adaptive_rag.config import Settings
+from adaptive_rag.context import AppContext
+from adaptive_rag.db import migrate
+from adaptive_rag.ingest import register_upload, run_ingest_job
+from adaptive_rag.knowledge_bases import create_knowledge_base
+from adaptive_rag.providers import EmbeddingProvider, LLMProvider
+from adaptive_rag.retrieval import RetrievedChunk, fit_to_budget, retrieve_baseline
+from adaptive_rag.vectorstore import VectorStore
+
+from .benchmark import BenchmarkQuestion, ManifestDocument
+from .judge import compare_to_reference, judge_answer
+from .metrics import (
+    RankedChunk,
+    Span,
+    hit_at_k,
+    recall_at_budget,
+    recall_at_k,
+    reciprocal_rank,
+)
+from .spans import locate_quote, overlap
+
+POOL_SIZE = 30
+# Matches five 512-token chunks. At 2000, only three fit and a 1024-token chunk fits once.
+RECALL_BUDGET_TOKENS = 2560
+METRIC_K = 5
+
+
+@dataclass
+class QuestionResult:
+    id: str
+    document: str
+    type: str
+    question: str
+    answerable: bool
+    source: str
+    top_score: float | None
+    recall_at_budget: float | None = None
+    recall_at_5: float | None = None
+    hit_at_5: float | None = None
+    reciprocal_rank: float | None = None
+    status: str | None = None
+    answer: str | None = None
+    citations: list[str] = field(default_factory=list)
+    citation_on_evidence: bool | None = None
+    citation_precision: float | None = None
+    faithfulness: float | None = None
+    addresses_question: bool | None = None
+    reference_verdict: str | None = None
+    judge_claims: list[dict] = field(default_factory=list)
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+    timings_ms: dict[str, float] = field(default_factory=dict)
+    error: str | None = None
+
+
+def build_index(
+    settings: Settings,
+    embedder: EmbeddingProvider,
+    llm: LLMProvider,
+    documents: list[ManifestDocument],
+    documents_root: Path,
+    kb_name: str,
+) -> tuple[AppContext, object, dict[str, dict]]:
+    """Index documents into a knowledge base, reusing it if already built."""
+    ctx = AppContext(settings, embedder, llm, VectorStore(settings.chroma_dir))
+    with ctx.db() as conn:
+        migrate(conn)
+        kb = conn.execute("SELECT * FROM knowledge_bases WHERE name = ?", (kb_name,)).fetchone()
+    if kb is None:
+        kb = create_knowledge_base(ctx, kb_name)
+
+    indexed: dict[str, dict] = {}
+    for item in documents:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir) / item.name
+            shutil.copyfile(documents_root / item.file, temp_path)
+            document, job_id, _ = register_upload(ctx, kb, temp_path, item.name)
+        if job_id is not None:
+            run_ingest_job(ctx, job_id)
+        with ctx.db() as conn:
+            row = conn.execute("SELECT * FROM documents WHERE id = ?", (document["id"],)).fetchone()
+        if row["status"] != "ready":
+            raise RuntimeError(f"{item.name} failed to index: {row['error']}")
+        indexed[item.name] = dict(row)
+    return ctx, kb, indexed
+
+
+def evidence_spans(question: BenchmarkQuestion, indexed: dict[str, dict]) -> list[Span]:
+    spans: list[Span] = []
+    text = indexed[question.document]["canonical_text"]
+    for item in question.evidence:
+        found = [locate_quote(text, option.quote) for option in (item, *item.alternatives)]
+        if None in found:
+            raise ValueError(f"{question.id}: evidence quote not found in {question.document}")
+        alternatives = tuple(Span(question.document, *where) for where in found[1:])
+        spans.append(Span(question.document, *found[0], alternatives))
+    return spans
+
+
+def _ranked(chunks: list[RetrievedChunk]) -> list[RankedChunk]:
+    return [
+        RankedChunk(chunk.filename, chunk.start_char, chunk.end_char, chunk.token_count)
+        for chunk in chunks
+    ]
+
+
+def _touches_evidence(filename: str, start: int, end: int, spans: list[Span]) -> bool:
+    return any(
+        option.document == filename and overlap(start, end, option.start, option.end) > 0
+        for span in spans
+        for option in span.options()
+    )
+
+
+def evaluate_retrieval(
+    ctx: AppContext, kb, question: BenchmarkQuestion, spans: list[Span]
+) -> tuple[QuestionResult, list[RetrievedChunk]]:
+    pool = retrieve_baseline(ctx, kb, question.question, POOL_SIZE)
+    result = QuestionResult(
+        id=question.id,
+        document=question.document,
+        type=question.type,
+        question=question.question,
+        answerable=question.answerable,
+        source=question.source,
+        top_score=pool[0].score if pool else None,
+    )
+    if question.answerable:
+        ranked = _ranked(pool)
+        result.recall_at_budget = recall_at_budget(ranked, spans, RECALL_BUDGET_TOKENS)
+        result.recall_at_5 = recall_at_k(ranked, spans, METRIC_K)
+        result.hit_at_5 = hit_at_k(ranked, spans, METRIC_K)
+        result.reciprocal_rank = reciprocal_rank(ranked, spans)
+    return result, pool
+
+
+def evaluate_answer(
+    ctx: AppContext,
+    kb,
+    question: BenchmarkQuestion,
+    spans: list[Span],
+    result: QuestionResult,
+    pool: list[RetrievedChunk],
+) -> None:
+    """Generate with the score gate off, so calibration can replay any floor afterwards."""
+    try:
+        answer = answer_question(ctx, kb, question.question)
+    except GenerationFailed as exc:
+        result.error = str(exc)
+        return
+    result.status = answer.status
+    result.answer = answer.answer
+    result.citations = [citation.label for citation in answer.citations]
+    result.input_tokens = answer.input_tokens
+    result.output_tokens = answer.output_tokens
+    result.timings_ms = answer.timings_ms
+    if question.answerable and answer.citations:
+        on_evidence = [
+            _touches_evidence(citation.filename, citation.start_char, citation.end_char, spans)
+            for citation in answer.citations
+        ]
+        result.citation_on_evidence = any(on_evidence)
+        result.citation_precision = sum(on_evidence) / len(on_evidence)
+
+
+def evaluate_judgment(
+    judge: LLMProvider,
+    settings: Settings,
+    question: BenchmarkQuestion,
+    result: QuestionResult,
+    pool: list[RetrievedChunk],
+) -> None:
+    if result.status not in ("answered", "partial") or not result.answer:
+        return
+    if question.answerable:
+        reference = question.expected_answer or " ".join(e.quote for e in question.evidence)
+        result.reference_verdict = compare_to_reference(
+            judge, question.question, result.answer, reference
+        )
+    used = fit_to_budget(pool[: settings.top_k], settings.evidence_max_tokens)
+    judgment = judge_answer(judge, question.question, result.answer, [chunk.text for chunk in used])
+    if judgment is None:
+        return
+    result.faithfulness = judgment.faithfulness
+    result.addresses_question = judgment.addresses_question
+    result.judge_claims = [claim.model_dump() for claim in judgment.claims]
+
+
+def run_benchmark(
+    ctx: AppContext,
+    kb,
+    indexed: dict[str, dict],
+    questions: list[BenchmarkQuestion],
+    answers: bool = True,
+    judge: LLMProvider | None = None,
+    on_progress=None,
+) -> list[QuestionResult]:
+    """Retrieval and answers first, then judging, so the two LLMs never need to share memory."""
+    original_floor, original_floors = ctx.settings.score_floor, ctx.settings.score_floors
+    ctx.settings.score_floor, ctx.settings.score_floors = -1.0, {}
+    results: list[tuple[BenchmarkQuestion, QuestionResult, list[RetrievedChunk]]] = []
+    try:
+        for question in questions:
+            spans = evidence_spans(question, indexed) if question.answerable else []
+            result, pool = evaluate_retrieval(ctx, kb, question, spans)
+            if answers:
+                evaluate_answer(ctx, kb, question, spans, result, pool)
+            results.append((question, result, pool))
+            if on_progress:
+                on_progress(result)
+    finally:
+        ctx.settings.score_floor, ctx.settings.score_floors = original_floor, original_floors
+
+    if judge is not None and answers:
+        ctx.llm.unload()
+        for question, result, pool in results:
+            evaluate_judgment(judge, ctx.settings, question, result, pool)
+            if on_progress:
+                on_progress(result)
+        judge.unload()
+    return [result for _, result, _ in results]
+
+
+def save_results(path: Path, metadata: dict, results: list[QuestionResult]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"metadata": metadata, "results": [asdict(result) for result in results]}
+    path.write_text(json.dumps(payload, indent=1, ensure_ascii=False))

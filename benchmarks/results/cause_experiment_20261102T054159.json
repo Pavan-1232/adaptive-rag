@@ -1,0 +1,155 @@
+[
+ {
+  "id": "tesla-a1",
+  "text_added_before_chunk_tail": "ears ended December 31, 2024, 2023 and 2022, stock-based compensation expense related to these grants, net of forfeitures, were not\nmaterial.\nSummary Stock-Based Compensation Information\nThe following table summarizes our stock-based compensation expense by line item in the consolidated statements of operations (in millions):\nYear Ended December 31,\n2024 2023 2022\nCost of revenues $ 776 $ 741 $ 594\nResearch and development 832 689 536\nSelling, general and administrative 389 382 430\nRestructuring"
+ },
+ {
+  "id": "tesla-a1",
+  "variant": "baseline",
+  "output": {
+   "status": "answered",
+   "answer": "Tesla spent $832 million on research and development in 2024 [E3].",
+   "cited_ids": [
+    "E3"
+   ]
+  }
+ },
+ {
+  "id": "tesla-a1",
+  "variant": "retrieval: gold chunk replaces rank 5",
+  "output": {
+   "status": "answered",
+   "answer": "Tesla spent $4,540 million on Research and Development (R&D) in the year ended December 31, 2024 [E5].",
+   "cited_ids": [
+    "E5"
+   ]
+  }
+ },
+ {
+  "id": "tesla-a1",
+  "variant": "prompt: stricter rule, same evidence",
+  "output": {
+   "status": "answered",
+   "answer": "Tesla spent $832 million on research and development in 2024 [E3].",
+   "cited_ids": [
+    "E3"
+   ]
+  }
+ },
+ {
+  "id": "tesla-a1",
+  "variant": "chunking: misleading chunk keeps table title",
+  "output": {
+   "status": "answered",
+   "answer": "Tesla spent $832 million on Research and development in 2024 [E3].",
+   "cited_ids": [
+    "E3"
+   ]
+  }
+ },
+ {
+  "id": "tesla-a1",
+  "tight_passage_chars": 254,
+  "tight_score": 0.7376421893373297,
+  "would_rank": 1,
+  "rank1_score": 0.6815968155860901,
+  "gold_chunk_rank": 6
+ },
+ {
+  "id": "tesla-a3",
+  "text_added_before_chunk_tail": "fund investors as specified in the agreements. A fund’s creditors have no recourse to our general credit or to that of other funds. Certain assets of the\nfunds have been pledged as collateral for their obligations.\n\nThe aggregate carrying values of the VIEs’ assets and liabilities, after elimination of any intercompany transactions and balances, in the\nconsolidated balance sheets were as follows (in millions):\nDecember 31, December 31,\n2024 2023\nAssets\nCurrent assets\nCash and cash equivalents $ "
+ },
+ {
+  "id": "tesla-a3",
+  "variant": "baseline",
+  "output": {
+   "status": "answered",
+   "answer": "Tesla held $49 million in cash and cash equivalents at year end 2024 [E1].",
+   "cited_ids": [
+    "E1"
+   ]
+  }
+ },
+ {
+  "id": "tesla-a3",
+  "variant": "retrieval: gold chunk replaces rank 5",
+  "output": {
+   "status": "answered",
+   "answer": "Tesla held $16,139 million in cash and cash equivalents at year-end 2024 [E5].",
+   "cited_ids": [
+    "E5"
+   ]
+  }
+ },
+ {
+  "id": "tesla-a3",
+  "variant": "prompt: stricter rule, same evidence",
+  "output": {
+   "status": "answered",
+   "answer": "Tesla held $49 million in cash and cash equivalents at year-end 2024 [E1].",
+   "cited_ids": [
+    "E1"
+   ]
+  }
+ },
+ {
+  "id": "tesla-a3",
+  "variant": "chunking: misleading chunk keeps table title",
+  "output": {
+   "status": "answered",
+   "answer": "Tesla held $49 million in cash and cash equivalents at year-end 2024 [E1].",
+   "cited_ids": [
+    "E1"
+   ]
+  }
+ },
+ {
+  "id": "tesla-a3",
+  "tight_passage_chars": 353,
+  "tight_score": 0.6911402302445286,
+  "would_rank": 1,
+  "rank1_score": 0.6750268340110779,
+  "gold_chunk_rank": null
+ },
+ {
+  "id": "nist_ai_rmf-gen-015",
+  "variant": "baseline",
+  "output": {
+   "status": "answered",
+   "answer": "Formal or quasi-formal norms to help manage AI risks may be provided by organizations, industries, communities, and policy makers [E3]. Additionally, sectors or industries may have established definitions of harm or requirements for documentation, reporting, and disclosure [E3].",
+   "cited_ids": [
+    "E3"
+   ]
+  }
+ },
+ {
+  "id": "nist_ai_rmf-gen-015",
+  "variant": "retrieval: gold chunk replaces rank 5",
+  "output": {
+   "status": "answered",
+   "answer": "Other AI actors may provide formal or quasi-formal norms or guidance for specifying and managing AI risks. These actors can include trade associations, standards developing organizations, advocacy groups, researchers, environmental groups, and civil society organizations [E5].",
+   "cited_ids": [
+    "E5"
+   ]
+  }
+ },
+ {
+  "id": "nist_ai_rmf-gen-015",
+  "variant": "prompt: stricter rule, same evidence",
+  "output": {
+   "status": "answered",
+   "answer": "Formal or quasi-formal norms to help manage AI risks may be provided by organizations, industries, communities, and policy makers [E3]. Additionally, sectors or industries may have established definitions of harm or requirements for documentation, reporting, and disclosure [E3].",
+   "cited_ids": [
+    "E3"
+   ]
+  }
+ },
+ {
+  "id": "nist_ai_rmf-gen-015",
+  "tight_passage_chars": 264,
+  "tight_score": 0.7521361522360124,
+  "would_rank": 1,
+  "rank1_score": 0.5688104629516602,
+  "gold_chunk_rank": 16
+ }
+]

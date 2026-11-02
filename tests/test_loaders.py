@@ -10,6 +10,7 @@ from documents import (
     make_pdf,
     make_pdf_with_rotated_stamp,
     make_scanned_pdf,
+    make_table_pdf,
     make_two_column_pdf,
 )
 
@@ -66,6 +67,13 @@ def test_two_column_pdf_reads_each_column_in_order(tmp_path):
     assert positions == sorted(positions)
     assert doc.text.index("leftword119") < doc.text.index("rightword0")
     assert doc.text.count("A Full Width Paper Title") == 1
+
+
+def test_table_row_stays_with_its_numbers(tmp_path):
+    rows = [(f"Line item number {i}", f"{i},111 {i},222 {i},333 {i} %") for i in range(30)]
+    rows[10] = ("Total revenues", "97,690 96,773 81,462 1 %")
+    doc = LOADERS["pdf"].extract(make_table_pdf(tmp_path / "a.pdf", rows))
+    assert "Total revenues 97,690 96,773 81,462 1 %" in doc.text
 
 
 def test_rotated_margin_stamp_is_dropped(tmp_path):

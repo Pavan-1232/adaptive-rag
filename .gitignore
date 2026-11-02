@@ -28,3 +28,6 @@ htmlcov/
 .vscode/
 .idea/
 .DS_Store
+
+# Benchmark PDFs: links and hashes live in benchmarks/manifest.yaml
+benchmarks/documents/

@@ -1,0 +1,58 @@
+# Question template. Copy to questions_test.yaml and write your own questions.
+# The examples use a dev document, so they reveal nothing about the test set. Remove them.
+#
+# Fields
+#   id, document (file name from manifest.yaml), question, answerable, source: required.
+#   type: factual | conceptual | multi_part | table (answerable)
+#         near_miss | out_of_scope (unanswerable)
+#   evidence: required if answerable, must be empty if not.
+#     Each item is ONE required fact. If a question needs two facts, list two items.
+#     page: physical PDF page, or null. quote: exact text from the document; line breaks and
+#     case don't matter.
+#     alternatives: optional. Other places that state the SAME fact. Any one location counts.
+#     Use alternatives for "or", and separate items for "and".
+#   expected_answer: optional, but use it when you can. The gold comparison prefers it to the
+#     quote, so it is the better check for numbers.
+#   notes: optional. For unanswerable questions, say why it can't be answered.
+#
+# Check your file with: python -m adaptive_rag.evaluation validate benchmarks/questions_test.yaml
+# That prints IDs and errors only.
+
+# One fact, stated in two places: either location counts.
+- id: example-1
+  document: tesla_10k.pdf
+  type: table
+  question: How much did Tesla spend on R&D in 2024?
+  answerable: true
+  evidence:
+    - page: 43
+      quote: Research and development $ 4,540 $ 3,969 $ 3,075
+      alternatives:
+        - page: 52
+          quote: Research and development 4,540 3,969 3,075
+  expected_answer: $4,540 million
+  source: human
+
+# Two required facts: both must be covered.
+- id: example-2
+  document: tesla_10k.pdf
+  type: multi_part
+  question: What were Tesla's total liabilities and its cash and cash equivalents at the end of 2024?
+  answerable: true
+  evidence:
+    - page: 51
+      quote: Total liabilities 48,390 43,009
+    - page: 51
+      quote: Cash and cash equivalents $ 16,139 $ 16,398
+  expected_answer: Liabilities of $48,390 million; cash and cash equivalents of $16,139 million
+  source: human
+
+# Unanswerable: no evidence.
+- id: example-3
+  document: tesla_10k.pdf
+  type: near_miss
+  question: How many Cybertrucks did Tesla deliver in 2024?
+  answerable: false
+  evidence: []
+  notes: Model-level deliveries are not given
+  source: human

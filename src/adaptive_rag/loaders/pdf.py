@@ -17,10 +17,14 @@ MIN_PAGES_FOR_MARGIN_REMOVAL = 4
 # pdfplumber's default of 3 glues words together in tightly set two-column papers.
 X_TOLERANCE = 1
 MIN_WORDS_FOR_COLUMNS = 50
-MAX_CROSSING_SHARE = 0.03
+MAX_CROSSING_SHARE = 0.01
 MIN_COLUMN_SHARE = 0.2
 GUTTER_SEARCH = (0.4, 0.6)
 TITLE_BAND_SHARE = 0.4
+MAX_TITLE_BAND_WORDS_SHARE = 0.2
+MIN_PROSE_SHARE = 0.8
+MIN_FILLED_LINE_SHARE = 0.4
+FILLED_LINE_RATIO = 0.7
 BOLD_SHARE = 0.9
 BOLD_FONT_MARKERS = ("bold", "black", "heavy", "demi", "medi", "semibold")
 HYPHEN_BREAK = re.compile(r"[^\W\d_]-$")
@@ -50,7 +54,8 @@ def _find_columns(page) -> tuple[float, float] | None:
         )
         below = [word for word in words if word["top"] >= columns_top]
         crossed = sum(word["x0"] < gutter < word["x1"] for word in below)
-        if not below:
+        # A real title band is a few words. Prose above a table is not a title band.
+        if len(words) - len(below) > len(words) * MAX_TITLE_BAND_WORDS_SHARE or not below:
             continue
         share = crossed / len(below)
         if best is None or share < best[0]:
@@ -63,7 +68,35 @@ def _find_columns(page) -> tuple[float, float] | None:
     right_words = sum(word["x0"] >= gutter for word in below)
     if min(left_words, right_words) < len(below) * MIN_COLUMN_SHARE:
         return None
+    left_side = [word for word in below if word["x1"] <= gutter]
+    right_side = [word for word in below if word["x0"] >= gutter]
+    # A financial table also has a gutter, between its labels and its numbers. Real columns
+    # hold prose on both sides, and their lines run most of the way across the column.
+    if not (_is_prose(left_side) and _is_prose(right_side)):
+        return None
+    if not _lines_fill_column(left_side, left, gutter):
+        return None
+    if not _lines_fill_column(right_side, gutter, right):
+        return None
     return gutter, columns_top
+
+
+def _is_prose(words: list[dict]) -> bool:
+    alphabetic = sum(any(char.isalpha() for char in word["text"]) for word in words)
+    return alphabetic / len(words) >= MIN_PROSE_SHARE
+
+
+def _lines_fill_column(words: list[dict], column_left: float, column_right: float) -> bool:
+    """Most lines of a real column reach far across it. Table labels and short notes don't."""
+    line_ends: dict[int, tuple[float, float]] = {}
+    for word in words:
+        key = round(word["top"])
+        start, end = line_ends.get(key, (word["x0"], word["x1"]))
+        line_ends[key] = (min(start, word["x0"]), max(end, word["x1"]))
+    width = column_right - column_left
+    widest = max(end - start for start, end in line_ends.values())
+    filled = sum((end - start) >= FILLED_LINE_RATIO * widest for start, end in line_ends.values())
+    return widest >= 0.6 * width and filled >= MIN_FILLED_LINE_SHARE * len(line_ends)
 
 
 def _page_lines(page) -> list[dict]:
@@ -168,7 +201,7 @@ def _is_heading(line: dict, body_size: float) -> bool:
 
 
 class PdfLoader:
-    version = "pdf-4"
+    version = "pdf-5"
 
     def extract(self, path: Path) -> ExtractedDocument:
         try:
