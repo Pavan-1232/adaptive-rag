@@ -1,0 +1,1831 @@
+{
+ "metadata": {
+  "system": "A (fixed 512/50, top-5)",
+  "set": "dev",
+  "created_at": "2026-11-03T06:23:01+00:00",
+  "commit": "d69ee36+uncommitted",
+  "embedding_model": "embeddinggemma:300m",
+  "embedding_version": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+  "llm_model": "qwen3.5:9b",
+  "judge_model": "gemma4:e4b",
+  "judge_prompt": "audit-1",
+  "recall_budget_tokens": 2560,
+  "machine": "arm64 Darwin 27.0.0",
+  "question_source": "39 dev questions; LLM and assistant-written; assistant-reviewed, not human",
+  "notes": "Recall@budget uses 2560 tokens and gold evidence allows alternatives, so it is not comparable with earlier reports. Judge: audit prompt with code check, plus gold comparison."
+ },
+ "results": [
+  {
+   "id": "tesla_10k-gen-001",
+   "document": "tesla_10k.pdf",
+   "type": "conceptual",
+   "question": "How does a company manage the risk associated with relying on single suppliers for key components?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.47014403343200684,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.0,
+   "status": "partial",
+   "answer": "The evidence states that the company purchases thousands of parts globally from hundreds of suppliers, including single-source direct suppliers, which exposes them to multiple potential sources of component shortages [E1]. The company believes it will be able to secure additional or alternate sources or develop its own replacements for most of its components, but there is no assurance that it will be able to do so quickly or at all [E1]. Additionally, the company may face suppliers who are unwilling or unable to sustainably meet its timelines or cost, quality and volume needs, which may increase its costs or require it to replace them with other sources [E1]. The evidence does not provide specific details on how the company manages the risk associated with relying on single suppliers for key components.",
+   "citations": [
+    "tesla_10k.pdf, p. 17"
+   ],
+   "citation_on_evidence": false,
+   "citation_precision": 0.0,
+   "faithfulness": 0.75,
+   "addresses_question": false,
+   "reference_verdict": "different_point",
+   "judge_claims": [
+    {
+     "claim": "The company purchases thousands of parts globally from hundreds of suppliers, including single-source direct suppliers, which exposes them to multiple potential sources of component shortages [E1].",
+     "evidence_quote": "Our products contain thousands of parts purchased globally from hundreds of suppliers, including single-source direct suppliers, which exposes us to multiple potential sources of component shortages.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The company believes it will be able to secure additional or alternate sources or develop its own replacements for most of its components, but there is no assurance that it will be able to do so quickly or at all [E1].",
+     "evidence_quote": "While we believe that we will be able to secure additional or alternate sources or develop our own replacements for most of our components, there is no assurance that we will be able to do so quickly or at all.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Additionally, the company may face suppliers who are unwilling or unable to sustainably meet its timelines or cost, quality and volume needs, which may increase its costs or require it to replace them with other sources [E1].",
+     "evidence_quote": "We have faced in the past, and may face suppliers who are unwilling or unable to sustainably meet our timelines or our cost, quality and volume needs, which may increase our costs or require us to replace them with other sources.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The evidence does not provide specific details on how the company manages the risk associated with relying on single suppliers for key components.",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false,
+     "verified": false
+    }
+   ],
+   "input_tokens": 2960,
+   "output_tokens": 169,
+   "timings_ms": {
+    "retrieval": 25.5,
+    "generation": 33291.9
+   },
+   "error": null
+  },
+  {
+   "id": "tesla_10k-gen-002",
+   "document": "tesla_10k.pdf",
+   "type": "multi_part",
+   "question": "How does Tesla ensure employee safety and address misconduct while also managing its talent strategy?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.6705584526062012,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "Tesla ensures employee safety by encouraging employees to speak up regarding misconduct or safety concerns through channels such as the integrity line, the Take Charge process, or by notifying their Human Resource Partner or any member of management [E1]. These concerns are reviewed by investigators with expertise who look for trends and outcomes for remediation. Tesla also provides anti-harassment training to all new hires on their first day and reinforces this training for leaders on an ongoing basis [E1].\n\nTo address misconduct, employees can report issues via the integrity line, the Take Charge process, or by contacting their Human Resource Partner or management [E1]. Concerns are reviewed in accordance with established protocols to ensure appropriate controls and remediation [E1].\n\nRegarding talent strategy, Tesla's Compensation Committee oversees human capital management and reviews practices related to recruiting, developing, and retaining excellent talent [E2]. The company hires based on skills and performance, offering equity-based awards to align incentives with stockholders [E3]. Tesla also provides opportunities for professional growth through internships, fellowships, and leadership development programs designed to help leaders manage teams and resolve disputes [E1][E4].",
+   "citations": [
+    "tesla_10k.pdf, pp. 15-16",
+    "tesla_10k.pdf, p. 16",
+    "tesla_10k.pdf, pp. 22-23",
+    "tesla_10k.pdf, pp. 13-14"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.25,
+   "faithfulness": 0.875,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "Tesla ensures employee safety by encouraging employees to speak up regarding misconduct or safety concerns through channels such as the integrity line, the Take Charge process, or by notifying their Human Resource Partner or any member of management [E1].",
+     "evidence_quote": "Employees are encouraged to speak up regarding misconduct or safety concerns and can do so by contacting the integrity line, submitting concerns through our Take Charge process, or notifying their Human Resource Partner or any member of management.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "These concerns are reviewed by investigators with expertise who look for trends and outcomes for remediation.",
+     "evidence_quote": "Concerns are reviewed in accordance with established protocols by investigators with expertise, who also review for trends and outcomes for remediation and appropriate controls.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Tesla also provides anti-harassment training to all new hires on their first day and reinforces this training for leaders on an ongoing basis [E1].",
+     "evidence_quote": "Anti-harassment training is provided to all new hires on their first day of orientation, ensuring that all employees are equipped with the knowledge and tools to maintain a respectful environment. For leaders, anti-harassment training is reinforced on an ongoing basis to promote consistent leadership standards and reinforce organizational values.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "To address misconduct, employees can report issues via the integrity line, the Take Charge process, or by contacting their Human Resource Partner or management [E1].",
+     "evidence_quote": "Employees are encouraged to speak up regarding misconduct or safety concerns and can do so by contacting the integrity line, submitting concerns through our Take Charge process, or notifying their Human Resource Partner or any member of management.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Concerns are reviewed in accordance with established protocols to ensure appropriate controls and remediation [E1].",
+     "evidence_quote": "Concerns are reviewed in accordance with established protocols by investigators with expertise, who also review for trends and outcomes for remediation and appropriate controls.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Regarding talent strategy, Tesla's Compensation Committee oversees human capital management and reviews practices related to recruiting, developing, and retaining excellent talent [E2].",
+     "evidence_quote": "Our Compensation Committee generally oversees our human capital management strategy, and regularly receives updates and reviews certain management practices related to Tesla’s talent, including how Tesla recruits, develops and retains excellent talent.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The company hires based on skills and performance, offering equity-based awards to align incentives with stockholders [E3].",
+     "evidence_quote": "We hire, evaluate and promote employees based on their skills and performance. [...] Finally, our compensation philosophy for all of our personnel reflects our startup origins, with an emphasis on equity-based awards and benefits in order to closely align their incentives with the long-term interests of our stockholders.",
+     "same_subject": true,
+     "supported": true,
+     "verified": false
+    },
+    {
+     "claim": "Tesla also provides opportunities for professional growth through internships, fellowships, and leadership development programs designed to help leaders manage teams and resolve disputes [E1][E4].",
+     "evidence_quote": "For leaders, anti-harassment training is reinforced on an ongoing basis to promote consistent leadership standards and reinforce organizational values. In addition to anti-harassment training, we offer a range of leadership development programs throughout the year to further enhance leaders' skills. These programs are designed to help leaders manage teams, communicate effectively, drive a culture of accountability and resolve disputes.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2991,
+   "output_tokens": 269,
+   "timings_ms": {
+    "retrieval": 36.0,
+    "generation": 33380.6
+   },
+   "error": null
+  },
+  {
+   "id": "tesla_10k-gen-005",
+   "document": "tesla_10k.pdf",
+   "type": "multi_part",
+   "question": "How does the organization structure its approach to handling cybersecurity threats and ensuring regulatory compliance?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5476197004318237,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "status": "answered",
+   "answer": "The organization structures its approach by integrating cybersecurity risk identification and assessment into its overall risk management systems and processes [E2]. It employs a multi-faceted approach that includes third-party assessments, internal IT Audit, IT security, governance, risk and compliance reviews [E2]. To defend against threats, it conducts proactive privacy and cybersecurity reviews, audits data policies, performs penetration testing with external tools, operates a bug bounty program, conducts employee training, monitors emerging laws and regulations, and implements appropriate changes [E2]. The organization has implemented incident response and breach management processes with four stages: preparation, detection and analysis, containment/eradication/recovery, and post-incident analysis [E2]. These responses are overseen by leaders from Information Security, Product Security, Compliance, and Legal teams [E2]. Cybersecurity is overseen by the Board's Audit Committee, which receives quarterly updates from senior management on risks, mitigation status, incidents, and key initiatives [E1]. The organization also regularly engages external auditors and consultants to assess its internal cybersecurity programs and compliance with applicable practices and standards [E1][E2]. As of 2024, its Information Security Management System is certified to conform to ISO/IEC 27001:2013 requirements [E1].",
+   "citations": [
+    "tesla_10k.pdf, pp. 30-31",
+    "tesla_10k.pdf, pp. 31-32"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "The organization structures its approach by integrating cybersecurity risk identification and assessment into its overall risk management systems and processes.",
+     "evidence_quote": "Identifying and assessing cybersecurity risk is integrated into our overall risk management systems and processes.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "It employs a multi-faceted approach that includes third-party assessments, internal IT Audit, IT security, governance, risk and compliance reviews.",
+     "evidence_quote": "Cybersecurity risks related to our business, technical operations, privacy and compliance issues are identified and addressed through a multi-faceted approach including third party assessments, internal IT Audit, IT security, governance, risk and compliance reviews.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "To defend against threats, it conducts proactive privacy and cybersecurity reviews, audits data policies, performs penetration testing with external tools, operates a bug bounty program, conducts employee training, monitors emerging laws and regulations, and implements appropriate changes.",
+     "evidence_quote": "To defend, detect and respond to cybersecurity incidents, we, among other things: conduct proactive privacy and cybersecurity reviews of systems and applications, audit applicable data policies, perform penetration testing using external third-party tools and techniques to test security controls, operate a bug bounty program to encourage proactive vulnerability reporting, conduct employee training, monitor emerging laws and regulations related to data protection and information security (including our consumer products) and implement appropriate changes.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The organization has implemented incident response and breach management processes with four stages: preparation, detection and analysis, containment/eradication/recovery, and post-incident analysis.",
+     "evidence_quote": "We have implemented incident response and breach management processes which have four overarching and interconnected stages: 1) preparation for a cybersecurity incident, 2) detection and analysis of a security incident, 3) containment, eradication and recovery, and 4) post-incident analysis.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "These responses are overseen by leaders from Information Security, Product Security, Compliance, and Legal teams.",
+     "evidence_quote": "Such incident responses are overseen by leaders from our Information Security, Product Security, Compliance and Legal teams regarding matters of cybersecurity.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Cybersecurity is overseen by the Board's Audit Committee, which receives quarterly updates from senior management on risks, mitigation status, incidents, and key initiatives.",
+     "evidence_quote": "Members of the Audit Committee receive updates on a quarterly basis from senior management, including leaders from our Information Security, Product Security, Compliance and Legal teams regarding matters of cybersecurity. This includes existing and new cybersecurity risks, status on how management is addressing and/or mitigating those risks, cybersecurity and data privacy incidents (if any) and status on key information security initiatives.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The organization also regularly engages external auditors and consultants to assess its internal cybersecurity programs and compliance with applicable practices and standards.",
+     "evidence_quote": "As part of the above processes, we regularly engage external auditors and consultants to assess our internal cybersecurity programs and compliance with applicable practices and standards.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "As of 2024, its Information Security Management System is certified to conform to ISO/IEC 27001:2013 requirements.",
+     "evidence_quote": "As of 2024, our Information Security Management System has been certified to conform to the requirements of ISO/IEC 27001:2013.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3000,
+   "output_tokens": 289,
+   "timings_ms": {
+    "retrieval": 21.4,
+    "generation": 36016.8
+   },
+   "error": null
+  },
+  {
+   "id": "tesla_10k-gen-006",
+   "document": "tesla_10k.pdf",
+   "type": "factual",
+   "question": "How is warranty expense categorized within the company's financial statements?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.635671854019165,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "status": "answered",
+   "answer": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations [E1][E2].",
+   "citations": [
+    "tesla_10k.pdf, pp. 69-70",
+    "tesla_10k.pdf, p. 39"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations",
+     "evidence_quote": "Warranty expense is recorded as a component of Cost of revenues in the consolidated statements of operations.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3024,
+   "output_tokens": 50,
+   "timings_ms": {
+    "retrieval": 24.2,
+    "generation": 23738.4
+   },
+   "error": null
+  },
+  {
+   "id": "tesla_10k-gen-009",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "How many millions of weighted average shares were added to the basic count due to convertible senior notes for the year ended December 31, 2024?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.4491472840309143,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "For the year ended December 31, 2024, 1 million weighted average shares were added to the basic count due to convertible senior notes [E1].",
+   "citations": [
+    "tesla_10k.pdf, pp. 64-65"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "For the year ended December 31, 2024, 1 million weighted average shares were added to the basic count due to convertible senior notes",
+     "evidence_quote": "Convertible senior notes 1",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3375,
+   "output_tokens": 57,
+   "timings_ms": {
+    "retrieval": 22.3,
+    "generation": 31075.7
+   },
+   "error": null
+  },
+  {
+   "id": "tesla_10k-gen-015",
+   "document": "tesla_10k.pdf",
+   "type": "factual",
+   "question": "Are personal emergencies or financial hardships considered valid reasons to ignore trading blackout restrictions?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.48056936264038086,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.25,
+   "status": "answered",
+   "answer": "No, personal emergencies or financial hardships are not considered valid reasons to ignore trading blackout restrictions. The policy explicitly states that 'Personal financial emergency or other personal circumstances are not mitigating factors under securities laws and will not excuse a failure to comply with this Policy.' [E4] Additionally, the policy notes that individuals should exercise caution during quarterly blackout periods regardless of whether they are specifically identified as being subject to them due to the heightened risk of insider trading exposure. [E1]",
+   "citations": [
+    "tesla_10k.pdf, p. 124",
+    "tesla_10k.pdf, pp. 127-128"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "Personal emergencies or financial hardships are not considered valid reasons to ignore trading blackout restrictions.",
+     "evidence_quote": "Personal financial emergency or other personal circumstances are not mitigating factors under securities laws and will not excuse a failure to comply with this Policy.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The policy explicitly states that 'Personal financial emergency or other personal circumstances are not mitigating factors under securities laws and will not excuse a failure to comply with this Policy.'",
+     "evidence_quote": "Personal financial emergency or other personal circumstances are not mitigating factors under securities laws and will not excuse a failure to comply with this Policy.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Individuals should exercise caution during quarterly blackout periods regardless of whether they are specifically identified as being subject to them due to the heightened risk of insider trading exposure.",
+     "evidence_quote": "Even if you are not specifically identified as being subject to quarterly blackout periods, you should exercise caution when engaging in transactions during quarterly blackout periods because of the heightened risk of insider trading exposure.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2969,
+   "output_tokens": 119,
+   "timings_ms": {
+    "retrieval": 23.2,
+    "generation": 35670.8
+   },
+   "error": null
+  },
+  {
+   "id": "tesla_10k-gen-016",
+   "document": "tesla_10k.pdf",
+   "type": "conceptual",
+   "question": "Under what specific circumstances would a transfer of company securities not be considered a violation of the trading restrictions?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5619819760322571,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "A transfer of company securities would not be considered a violation of trading restrictions under the following specific circumstances:\n\n1. **Stock splits, stock dividends, and similar transactions**: Restrictions do not apply to changes in the number of securities held resulting from these events if they apply equally to all securities of a class [E1][E2].\n2. **Inheritance and bona fide gifts**: Restrictions do not apply to transfers by will or laws of descent and distribution, nor to bona fide gifts, unless the recipient intends to sell while the giver is aware of material nonpublic information [E1].\n3. **Change in form of ownership**: Transactions involving merely a change in the form of ownership are not subject to restrictions, such as transferring shares to an inter vivos trust where the individual is the sole beneficiary [E1].\n4. **Exercise of stock options for cash**: Restrictions do not apply to exercising stock options for cash, including stock-for-stock exercises or elections to withhold securities for taxes, though subsequent sales are restricted [E2].\n5. **Employee Stock Purchase Plan (ESPP)**: Restrictions do not apply to elections to participate in or purchases under the ESPP, though subsequent sales are restricted [E2].\n6. **401(k) plan transactions**: Restrictions do not apply to purchases resulting from periodic payroll contributions, but they do apply to changing contribution allocations, moving balances, borrowing against the account if it liquidates stock, or pre-paying loans that reallocate funds to stock [E2].\n7. **Vesting, cancellation, or forfeiture**: Restrictions do not apply to the vesting, cancellation, or forfeiture of options, restricted stock units, restricted stock, or stock appreciation rights in accordance with applicable plans and agreements [E2].",
+   "citations": [
+    "tesla_10k.pdf, p. 132",
+    "tesla_10k.pdf, pp. 131-132"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 0.8571428571428571,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "Stock splits, stock dividends, and similar transactions: Restrictions do not apply to changes in the number of securities held resulting from these events if they apply equally to all securities of a class.",
+     "evidence_quote": "The trading restrictions under this Policy do not apply to a change in the number of securities held as a result of a stock split or stock dividend applying equally to all securities of a class, or similar transactions.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Inheritance and bona fide gifts: Restrictions do not apply to transfers by will or laws of descent and distribution, nor to bona fide gifts, unless the recipient intends to sell while the giver is aware of material nonpublic information.",
+     "evidence_quote": "The trading restrictions under this Policy do not apply to transfers by will or the laws of descent and distribution. In addition, bona fide gifts involving Company securities are not transactions subject to this policy, unless you have reason to believe that the recipient intends to sell the Company securities while you are aware of material nonpublic information.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Change in form of ownership: Transactions involving merely a change in the form of ownership are not subject to restrictions, such as transferring shares to an inter vivos trust where the individual is the sole beneficiary.",
+     "evidence_quote": "Transactions that involve merely a change in the form in which you own securities are not subject to the trading restrictions under this Policy. For example, you may transfer shares to an inter vivos trust of which you are the sole beneficiary during your lifetime.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Exercise of stock options for cash: Restrictions do not apply to exercising stock options for cash, including stock-for-stock exercises or elections to withhold securities for taxes, though subsequent sales are restricted.",
+     "evidence_quote": "The trading restrictions under this Policy do not apply to the exercise of stock options for cash under the Company’s stock option plans. Likewise, the trading restrictions under this Policy do not apply to the exercise of stock options in a stock-for-stock exercise with the Company or an election to have the Company withhold securities to cover tax obligations in connection with an option exercise. However, the trading restrictions under this Policy do apply to (i) the sale of any securities issued upon the exercise of a stock option, (ii) a cashless exercise of a stock option through a broker, since this involves selling a portion of the underlying shares to cover the costs of exercise, and (iii) any other market sale for the purpose of generating the cash needed to pay the exercise price of an option.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Employee Stock Purchase Plan (ESPP): Restrictions do not apply to elections to participate in or purchases under the ESPP, though subsequent sales are restricted.",
+     "evidence_quote": "The trading restrictions in this Policy do not apply to elections with respect to participation in the Company’s employee stock purchase plan or to purchases of securities under the plan. However, the trading restrictions do apply to any subsequent sales of any such securities.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "401(k) plan transactions: Restrictions do not apply to purchases resulting from periodic payroll contributions, but they do apply to changing contribution allocations, moving balances, borrowing against the account if it liquidates stock, or pre-paying loans that reallocate funds to stock.",
+     "evidence_quote": "The trading restrictions in this Policy do not apply to purchases of Company stock in the 401(k) plan resulting from periodic contributions to the plan based on your payroll contribution election. The trading restrictions do apply, however, to elections you make under the 401(k) plan to (i) increase or decrease the percentage of your contributions that will be allocated to a Company stock fund, (ii) move balances into or out of a Company stock fund, (iii) borrow money against your 401(k) plan account if the loan will result in liquidation of some or all of your Company stock fund balance, and (iv) pre-pay a plan loan if the pre- payment will result in the allocation of loan proceeds to a Company stock fund.",
+     "same_subject": true,
+     "supported": true,
+     "verified": false
+    },
+    {
+     "claim": "Vesting, cancellation, or forfeiture: Restrictions do not apply to the vesting, cancellation, or forfeiture of options, restricted stock units, restricted stock, or stock appreciation rights in accordance with applicable plans and agreements.",
+     "evidence_quote": "The trading restrictions under this Policy also do not apply to the vesting, cancellation or forfeiture of stock options, restricted stock units, restricted stock or stock appreciation rights in accordance with applicable plans and agreements. However, the trading restrictions do apply to any subsequent sales of any such securities.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2997,
+   "output_tokens": 400,
+   "timings_ms": {
+    "retrieval": 26.2,
+    "generation": 61991.5
+   },
+   "error": null
+  },
+  {
+   "id": "nist_ai_rmf-gen-004",
+   "document": "nist_ai_rmf.pdf",
+   "type": "conceptual",
+   "question": "Why is it necessary for organizations to integrate AI risk management into their broader enterprise strategies rather than handling it separately?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.6278631687164307,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "Organizations should integrate AI risk management into broader enterprise risk management strategies because treating AI risks alongside other critical risks, such as cybersecurity and privacy, yields a more integrated outcome and organizational efficiencies [E1]. Additionally, AI risks should not be considered in isolation, as different actors have varying awareness depending on their roles in the lifecycle; for example, organizations developing an AI system often lack information about how the system will be used [E2]. Integrating AI risk management allows policies and resources to be prioritized based on assessed risk levels and potential impact rather than handling them separately [E2].",
+   "citations": [
+    "nist_ai_rmf.pdf, pp. 13-14",
+    "nist_ai_rmf.pdf, pp. 12-13"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 0.75,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "Organizations should integrate AI risk management into broader enterprise risk management strategies because treating AI risks alongside other critical risks, such as cybersecurity and privacy, yields a more integrated outcome and organizational efficiencies.",
+     "evidence_quote": "Treating AI risks along with other critical risks, such as cybersecurity and privacy, will yield a more integrated outcome and organizational efficiencies.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Additionally, AI risks should not be considered in isolation, as different actors have varying awareness depending on their roles in the lifecycle.",
+     "evidence_quote": "Different AI actors have different responsibilities and awareness depending on their roles in the lifecycle.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "For example, organizations developing an AI system often lack information about how the system will be used.",
+     "evidence_quote": "For example, organizations developing an AI system often will not have information about how the system may be used.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Integrating AI risk management allows policies and resources to be prioritized based on assessed risk levels and potential impact rather than handling them separately.",
+     "evidence_quote": "Policies and resources should be prioritized based on the assessed risk level and potential impact of an AI system.",
+     "same_subject": false,
+     "supported": false,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2985,
+   "output_tokens": 151,
+   "timings_ms": {
+    "retrieval": 33.8,
+    "generation": 38580.8
+   },
+   "error": null
+  },
+  {
+   "id": "nist_ai_rmf-gen-007",
+   "document": "nist_ai_rmf.pdf",
+   "type": "conceptual",
+   "question": "How can developers balance the need for transparency with the requirement to protect proprietary information when building AI systems?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.6213963627815247,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "When developing measures to enhance transparency and accountability, organizations should consider the impact on the implementing entity, including the level of necessary resources and the need to safeguard proprietary information [E1]. Additionally, meaningful transparency provides access to appropriate levels of information based on the stage of the AI lifecycle and tailored to the role or knowledge of individuals interacting with the system [E4].",
+   "citations": [
+    "nist_ai_rmf.pdf, p. 21",
+    "nist_ai_rmf.pdf, pp. 20-21"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "When developing measures to enhance transparency and accountability, organizations should consider the impact on the implementing entity, including the level of necessary resources and the need to safeguard proprietary information.",
+     "evidence_quote": "Measures to enhance transparency and accountability should also consider the impact of these efforts on the implementing entity, including the level of necessary resources and the need to safeguard proprietary information.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Meaningful transparency provides access to appropriate levels of information based on the stage of the AI lifecycle and tailored to the role or knowledge of individuals interacting with the system.",
+     "evidence_quote": "Meaningful transparency provides access to appropriate levels of information based on the stage of the AI lifecycle and tailored to the role or knowledge of AI actors or individuals interacting with or using the AI system.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2981,
+   "output_tokens": 97,
+   "timings_ms": {
+    "retrieval": 25.9,
+    "generation": 33684.3
+   },
+   "error": null
+  },
+  {
+   "id": "nist_ai_rmf-gen-009",
+   "document": "nist_ai_rmf.pdf",
+   "type": "factual",
+   "question": "What role does senior leadership play in shaping an organization's approach to managing risks associated with artificial intelligence?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5444215536117554,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "status": "answered",
+   "answer": "Senior leadership plays a critical role in establishing the tone for risk management within an organization, which directly influences organizational culture [E3]. They are responsible for determining overarching policies that direct an organization's mission, goals, values, culture, and risk tolerance [E3]. Effective AI risk management is realized through organizational commitment at senior levels and may require cultural change within the organization or industry [E2]. Additionally, senior leadership helps cultivate a culture of risk management and outlines processes to anticipate, identify, and manage risks that AI systems can pose [E4].",
+   "citations": [
+    "nist_ai_rmf.pdf, pp. 26-27",
+    "nist_ai_rmf.pdf, pp. 13-14",
+    "nist_ai_rmf.pdf, pp. 25-26"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.3333333333333333,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "Senior leadership plays a critical role in establishing the tone for risk management within an organization, which directly influences organizational culture",
+     "evidence_quote": "Senior leadership sets the tone for risk management within an organization, and with it, organizational culture.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "They are responsible for determining overarching policies that direct an organization's mission, goals, values, culture, and risk tolerance",
+     "evidence_quote": "Governing authorities can determine the overarching policies that direct an organization’s mission, goals, values, culture, and risk tolerance.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Effective AI risk management is realized through organizational commitment at senior levels and may require cultural change within the organization or industry",
+     "evidence_quote": "Effective risk management is realized through organizational commitment at senior levels and may require cultural change within an organization or industry.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Additionally, senior leadership helps cultivate a culture of risk management and outlines processes to anticipate, identify, and manage risks that AI systems can pose",
+     "evidence_quote": "• cultivates and implements a culture of risk management within organizations designing, developing, deploying, evaluating, or acquiring AI systems; • outlines processes, documents, and organizational schemes that anticipate, identify, and manage the risks a system can pose, including to users and others across society – and procedures to achieve those outcomes;",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2983,
+   "output_tokens": 148,
+   "timings_ms": {
+    "retrieval": 25.6,
+    "generation": 37563.9
+   },
+   "error": null
+  },
+  {
+   "id": "nist_ai_rmf-gen-012",
+   "document": "nist_ai_rmf.pdf",
+   "type": "factual",
+   "question": "Who should be involved in regularly assessing and updating AI metrics and controls?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5453227758407593,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "Internal experts who did not serve as front-line developers for the system and/or independent assessors should be involved in regular assessments and updates [E2]. Additionally, domain experts, users, AI actors external to the team that developed or deployed the AI system, and affected communities are consulted in support of assessments as necessary [E1][E2].",
+   "citations": [
+    "nist_ai_rmf.pdf, pp. 33-34",
+    "nist_ai_rmf.pdf, pp. 34-35"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "Internal experts who did not serve as front-line developers for the system and/or independent assessors should be involved in regular assessments and updates.",
+     "evidence_quote": "MEASURE 1.3: Internal experts who did not serve as front-line developers for the system and/or independent assessors are involved in regular assessments and updates.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Domain experts, users, AI actors external to the team that developed or deployed the AI system, and affected communities are consulted in support of assessments as necessary.",
+     "evidence_quote": "Domain experts, users, AI actors external to the team that developed or deployed the AI system, and affected communities are consulted in support of assessments as necessary per organizational risk tolerance.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3001,
+   "output_tokens": 103,
+   "timings_ms": {
+    "retrieval": 24.9,
+    "generation": 36139.8
+   },
+   "error": null
+  },
+  {
+   "id": "nist_ai_rmf-gen-015",
+   "document": "nist_ai_rmf.pdf",
+   "type": "factual",
+   "question": "What types of entities might provide formal or quasi-formal norms to help manage risks associated with artificial intelligence?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5688104629516602,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.0625,
+   "status": "answered",
+   "answer": "Formal or quasi-formal norms to help manage AI risks may be provided by organizations, industries, communities, and policy makers [E3]. Additionally, sectors or industries may have established definitions of harm or requirements for documentation, reporting, and disclosure [E3].",
+   "citations": [
+    "nist_ai_rmf.pdf, p. 12"
+   ],
+   "citation_on_evidence": false,
+   "citation_precision": 0.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "Formal or quasi-formal norms to help manage AI risks may be provided by organizations, industries, communities, and policy makers",
+     "evidence_quote": "Risk tolerances can be influenced by policies and norms established by AI system owners, organizations, industries, communities, or policy makers.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Sectors or industries may have established definitions of harm or requirements for documentation, reporting, and disclosure",
+     "evidence_quote": "Some sectors or industries may have established definitions of harm or established documentation, reporting, and disclosure requirements.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3011,
+   "output_tokens": 74,
+   "timings_ms": {
+    "retrieval": 34.5,
+    "generation": 43520.1
+   },
+   "error": null
+  },
+  {
+   "id": "nist_ai_rmf-gen-016",
+   "document": "nist_ai_rmf.pdf",
+   "type": "conceptual",
+   "question": "How does the process of converting complex human behaviors into mathematical models potentially hinder efforts to manage AI risks?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5300260186195374,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.2,
+   "status": "answered",
+   "answer": "The process of converting complex human behaviors into mathematical models can hinder AI risk management efforts because it may come at the cost of removing necessary context. This loss of context, in turn, makes it difficult to understand individual and societal impacts that are key to AI risk management efforts [E5].",
+   "citations": [
+    "nist_ai_rmf.pdf, pp. 44-45"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "The process of converting complex human behaviors into mathematical models can hinder AI risk management efforts because it may come at the cost of removing necessary context.",
+     "evidence_quote": "Many of the data-driven approaches that AI systems rely on attempt to convert or represent individual and social observational and decision-making practices into measurable quantities. Representing complex human phenomena with mathematical models can come at the cost of removing necessary context.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "This loss of context, in turn, makes it difficult to understand individual and societal impacts that are key to AI risk management efforts.",
+     "evidence_quote": "This loss of context may in turn make it difficult to understand individual and societal impacts that are key to AI risk management efforts.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2984,
+   "output_tokens": 78,
+   "timings_ms": {
+    "retrieval": 24.3,
+    "generation": 34085.0
+   },
+   "error": null
+  },
+  {
+   "id": "ragas-gen-000",
+   "document": "ragas.pdf",
+   "type": "factual",
+   "question": "How can one assess the performance of Retrieval Augmented Generation systems without relying on human annotations?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5946670174598694,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "To assess RAG systems without human annotations, one can use a framework called Ragas that measures three quality aspects: faithfulness, answer relevance, and context relevance. Faithfulness ensures the answer is grounded in the given context to avoid hallucinations [E1]. Answer relevance checks if the generated answer addresses the actual question provided [E1]. Context relevance evaluates whether the retrieved context is focused and contains minimal irrelevant information [E1]. These metrics can be measured automatically by prompting an LLM, making them fully self-contained and reference-free [E1].",
+   "citations": [
+    "ragas.pdf, pp. 2-3"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 0.8,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "To assess RAG systems without human annotations, one can use a framework called Ragas that measures three quality aspects: faithfulness, answer relevance, and context relevance.",
+     "evidence_quote": "We therefore focus on metrics that are fully self-contained and reference-free.",
+     "same_subject": false,
+     "supported": false,
+     "verified": true
+    },
+    {
+     "claim": "Faithfulness ensures the answer is grounded in the given context to avoid hallucinations [E1].",
+     "evidence_quote": "First, Faithfulness refers to the idea that the answer should be grounded in the given context. This is important to avoid hallucinations, and to ensure that the retrieved context can act as a justification for the generated answer.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Answer relevance checks if the generated answer addresses the actual question provided [E1].",
+     "evidence_quote": "Second, Answer Relevance refers to the idea that the generated answer should address the actual question that was provided.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Context relevance evaluates whether the retrieved context is focused and contains minimal irrelevant information [E1].",
+     "evidence_quote": "Finally, Context Relevance refers to the idea that the retrieved context should be focused, containing as little irrelevant information as possible.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "These metrics can be measured automatically by prompting an LLM, making them fully self-contained and reference-free [E1].",
+     "evidence_quote": "We now explain how these three quality aspects can be measured in a fully automated way, by prompting an LLM.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3041,
+   "output_tokens": 131,
+   "timings_ms": {
+    "retrieval": 33.0,
+    "generation": 40624.8
+   },
+   "error": null
+  },
+  {
+   "id": "ragas-gen-001",
+   "document": "ragas.pdf",
+   "type": "conceptual",
+   "question": "How does a system overcome an LLM's inability to answer questions about recent events or obscure facts?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.536386251449585,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "A system overcomes an LLM's inability to answer questions about recent events or obscure facts by relying on Retrieval Augmented Generation (RAG). This approach involves retrieving relevant passages from a corpus and feeding these passages, along with the original question, to the language model [E1].",
+   "citations": [
+    "ragas.pdf, p. 1"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "A system overcomes an LLM's inability to answer questions about recent events or obscure facts by relying on Retrieval Augmented Generation (RAG).",
+     "evidence_quote": "The standard solution to these issues is to rely on Retrieval Augmented Generation (RAG) (Lee et al., 2019; Lewis et al., 2020; Guu et al., 2020).",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "This approach involves retrieving relevant passages from a corpus and feeding these passages, along with the original question, to the language model [E1].",
+     "evidence_quote": "Answering a question then essentially involves retrieving relevant passages from a corpus and feeding these passages, along with the original question, to the LM.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3036,
+   "output_tokens": 79,
+   "timings_ms": {
+    "retrieval": 32.8,
+    "generation": 36425.3
+   },
+   "error": null
+  },
+  {
+   "id": "ragas-gen-003",
+   "document": "ragas.pdf",
+   "type": "factual",
+   "question": "How does the SelfCheckGPT method determine if an answer is factual when a model does not provide access to token probabilities?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5418739318847656,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "For models that do not provide access to token probabilities, such as ChatGPT and GPT-4, the SelfCheckGPT method addresses the problem by sampling multiple answers [E1]. Its core idea is that factual answers are more stable: when an answer is factual, different samples will tend to be semantically similar, whereas this is less likely for hallucinated answers [E1].",
+   "citations": [
+    "ragas.pdf, p. 2"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 0.5,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "For models that do not provide access to token probabilities, such as ChatGPT and GPT-4, the SelfCheckGPT method addresses the problem by sampling multiple answers.",
+     "evidence_quote": "SelfCheckGPT (Manakul et al., 2023) addresses this problem by instead sampling multiple answers.",
+     "same_subject": true,
+     "supported": true,
+     "verified": false
+    },
+    {
+     "claim": "Its core idea is that factual answers are more stable: when an answer is factual, different samples will tend to be semantically similar, whereas this is less likely for hallucinated answers.",
+     "evidence_quote": "Their core idea is that factual answers are more stable: when an answer is factual, we can expect that different samples will tend to be semantically similar, whereas this is less likely to be the case for hallucinated answers.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3021,
+   "output_tokens": 109,
+   "timings_ms": {
+    "retrieval": 38.9,
+    "generation": 37185.0
+   },
+   "error": null
+  },
+  {
+   "id": "ragas-gen-004",
+   "document": "ragas.pdf",
+   "type": "conceptual",
+   "question": "How do methods like BERTScore and MoverScore measure the quality of a generated response?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5647473335266113,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "BERTScore and MoverScore use contextualised embeddings, produced by a pre-trained BERT model, to compare the similarity between the generated answer and the reference answers [E1].",
+   "citations": [
+    "ragas.pdf, pp. 2-3"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "BERTScore and MoverScore use contextualised embeddings, produced by a pre-trained BERT model, to compare the similarity between the generated answer and the reference answers",
+     "evidence_quote": "For instance, BERTScore (Zhang et al., 2020) and MoverScore (Zhao et al., 2019) use contextualised embeddings, produced by a pre-trained BERT model, to compare the similarity between the generated answer and the reference answers.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3042,
+   "output_tokens": 57,
+   "timings_ms": {
+    "retrieval": 30.8,
+    "generation": 33523.6
+   },
+   "error": null
+  },
+  {
+   "id": "ragas-gen-007",
+   "document": "ragas.pdf",
+   "type": "conceptual",
+   "question": "How does the system determine whether a question's context contains only necessary information or includes redundant details?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.4915813207626343,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "The system determines context relevance by having an LLM extract a subset of sentences (S_ext) from the provided context that are crucial to answer the question using a specific prompt [E1]. The context relevance score (CR) is then computed as the ratio of the number of extracted sentences to the total number of sentences in the context [E1]. This metric aims to penalize the inclusion of redundant information, considering the context relevant only to the extent that it exclusively contains information needed to answer the question [E1].",
+   "citations": [
+    "ragas.pdf, pp. 3-4"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 0.3333333333333333,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "The system determines context relevance by having an LLM extract a subset of sentences (S_ext) from the provided context that are crucial to answer the question using a specific prompt [E1].",
+     "evidence_quote": "To estimate context relevance, given a question q and its context c(q), the LLM extracts a subset of sentences, S , from c(q) that are crucial to answer q, using\nextract the following prompt:",
+     "same_subject": true,
+     "supported": true,
+     "verified": false
+    },
+    {
+     "claim": "The context relevance score (CR) is then computed as the ratio of the number of extracted sentences to the total number of sentences in the context [E1].",
+     "evidence_quote": "The context relevance score is then computed as:\nCR = (2)\ntotal number of sentences in c(q)",
+     "same_subject": true,
+     "supported": true,
+     "verified": false
+    },
+    {
+     "claim": "This metric aims to penalize the inclusion of redundant information, considering the context relevant only to the extent that it exclusively contains information needed to answer the question [E1].",
+     "evidence_quote": "In particular, this metric aims to penalise the\ninclusion of redundant information.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3026,
+   "output_tokens": 125,
+   "timings_ms": {
+    "retrieval": 31.7,
+    "generation": 40747.7
+   },
+   "error": null
+  },
+  {
+   "id": "ragas-gen-009",
+   "document": "ragas.pdf",
+   "type": "factual",
+   "question": "How did the researchers handle Wikipedia pages that had no back-links when trying to measure context relevance?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.4445509910583496,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "status": "answered",
+   "answer": "For the few pages without any back-links, the researchers used ChatGPT to complete the given context [E2].",
+   "citations": [
+    "ragas.pdf, pp. 4-5"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "For the few pages without any back-links, the researchers used ChatGPT to complete the given context.",
+     "evidence_quote": "For the few pages without any back-links, we instead used ChatGPT to complete the given context.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3037,
+   "output_tokens": 45,
+   "timings_ms": {
+    "retrieval": 34.3,
+    "generation": 40561.5
+   },
+   "error": null
+  },
+  {
+   "id": "ragas-gen-010",
+   "document": "ragas.pdf",
+   "type": "conceptual",
+   "question": "How does one determine if an AI's response accurately reflects the provided source material without making up unsupported claims?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.4582899808883667,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "To determine if an AI's response accurately reflects the provided source material without making up unsupported claims, one can measure **Faithfulness**. An answer is considered faithful to the context if the claims made in the answer can be inferred from the context [E1]. This is measured by first using a Large Language Model (LLM) to extract a set of statements from each sentence in the answer [E1]. Then, for each statement, an LLM determines if it can be inferred from the context using a verification function [E1]. The final faithfulness score is computed as the ratio of supported statements to the total number of statements [E1]. This approach helps avoid hallucinations and ensures that the retrieved context acts as a justification for the generated answer [E4].",
+   "citations": [
+    "ragas.pdf, p. 3",
+    "ragas.pdf, pp. 2-3"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 0.6666666666666666,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "To determine if an AI's response accurately reflects the provided source material without making up unsupported claims, one can measure Faithfulness.",
+     "evidence_quote": "Faithfulness refers to the idea that the answer should be grounded in the given context.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "An answer is considered faithful to the context if the claims made in the answer can be inferred from the context.",
+     "evidence_quote": "We say that the answer a (q) is faithful to the context c(q) if the claims that are made in the answer can be inferred from the context.",
+     "same_subject": true,
+     "supported": true,
+     "verified": false
+    },
+    {
+     "claim": "This is measured by first using a Large Language Model (LLM) to extract a set of statements from each sentence in the answer.",
+     "evidence_quote": "To estimate faithfulness, we first use an LLM to extract a set of statements, S(a (q)).",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Then, for each statement, an LLM determines if it can be inferred from the context using a verification function.",
+     "evidence_quote": "in S, the LLM determines if s can be inferred from c(q) using a verification function v(s , c(q)).",
+     "same_subject": true,
+     "supported": true,
+     "verified": false
+    },
+    {
+     "claim": "The final faithfulness score is computed as the ratio of supported statements to the total number of statements.",
+     "evidence_quote": "The final faithfulness score, F , is then computed |V | as F = , where |V | is the number of statements |S| that were supported according to the LLM and |S| is the total number of statements.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "This approach helps avoid hallucinations and ensures that the retrieved context acts as a justification for the generated answer.",
+     "evidence_quote": "This is important to avoid hallucinations, and to ensure that the retrieved context can act as a justification for the generated answer.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3033,
+   "output_tokens": 180,
+   "timings_ms": {
+    "retrieval": 26.7,
+    "generation": 51807.0
+   },
+   "error": null
+  },
+  {
+   "id": "ragas-gen-011",
+   "document": "ragas.pdf",
+   "type": "multi_part",
+   "question": "How do the automated metrics compare to human judgments across different quality dimensions, and which specific aspect proves most difficult for current models to evaluate?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.4622499942779541,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "The results show that proposed metrics are much closer aligned with human judgements than predictions from two baselines (GPT Ranking and another baseline) [E1]. For faithfulness, the Ragas prediction is in general highly accurate compared to human judgments [E1]. For answer relevance, the agreement with human judgments is lower, though this is largely due to subtle differences between candidate answers [E1]. Context relevance is identified as the hardest quality dimension to evaluate [E1]. Specifically, ChatGPT often struggles with selecting crucial sentences from the context, especially for longer contexts [E1].",
+   "citations": [
+    "ragas.pdf, p. 5"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "The results show that proposed metrics are much closer aligned with human judgements than predictions from two baselines (GPT Ranking and another baseline) [E1].",
+     "evidence_quote": "The results in Table 1 show that our proposed metrics are much closer aligned with the human judgements than the predictions from the two baselines.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "For faithfulness, the Ragas prediction is in general highly accurate compared to human judgments [E1].",
+     "evidence_quote": "For faithfulness, the Ragas prediction are in general highly accurate.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "For answer relevance, the agreement with human judgments is lower, though this is largely due to subtle differences between candidate answers [E1].",
+     "evidence_quote": "For answer relevance, the agreement is lower, but this is largely due to the fact that the differences between the two candidate answers are often very subtle.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Context relevance is identified as the hardest quality dimension to evaluate [E1].",
+     "evidence_quote": "We found context relevance to be the hardest quality dimension to evaluate.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Specifically, ChatGPT often struggles with selecting crucial sentences from the context, especially for longer contexts [E1].",
+     "evidence_quote": "In particular, we observed that ChatGPT often struggles with the task of selecting the sentences from the context that are crucial, especially for longer contexts.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3012,
+   "output_tokens": 139,
+   "timings_ms": {
+    "retrieval": 34.6,
+    "generation": 48516.4
+   },
+   "error": null
+  },
+  {
+   "id": "tesla-a1",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "How much did Tesla spend on R&D in 2024?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.6815968155860901,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.16666666666666666,
+   "status": "answered",
+   "answer": "Tesla spent $832 million on research and development in 2024 [E3].",
+   "citations": [
+    "tesla_10k.pdf, pp. 84-85"
+   ],
+   "citation_on_evidence": false,
+   "citation_precision": 0.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "conflicts",
+   "judge_claims": [
+    {
+     "claim": "Tesla spent $832 million on research and development in 2024",
+     "evidence_quote": "Research and development 832 689 536",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3369,
+   "output_tokens": 51,
+   "timings_ms": {
+    "retrieval": 33.4,
+    "generation": 37204.1
+   },
+   "error": null
+  },
+  {
+   "id": "tesla-a2",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "What were Tesla total liabilities at the end of 2024?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.7167409658432007,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "status": "answered",
+   "answer": "Tesla's total liabilities at the end of 2024 were $48,390 million [E2].",
+   "citations": [
+    "tesla_10k.pdf, pp. 51-52"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "Tesla's total liabilities at the end of 2024 were $48,390 million",
+     "evidence_quote": "Total liabilities 48,390 43,009",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3402,
+   "output_tokens": 56,
+   "timings_ms": {
+    "retrieval": 23.2,
+    "generation": 37845.4
+   },
+   "error": null
+  },
+  {
+   "id": "tesla-a3",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "How much cash and cash equivalents did Tesla hold at year end 2024?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.6750268340110779,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.0,
+   "status": "answered",
+   "answer": "Tesla held $49 million in cash and cash equivalents at year end 2024 [E1].",
+   "citations": [
+    "tesla_10k.pdf, pp. 93-94"
+   ],
+   "citation_on_evidence": false,
+   "citation_precision": 0.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "conflicts",
+   "judge_claims": [
+    {
+     "claim": "Tesla held $49 million in cash and cash equivalents at year end 2024",
+     "evidence_quote": "Cash and cash equivalents $ 49 $ 66",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3522,
+   "output_tokens": 44,
+   "timings_ms": {
+    "retrieval": 28.8,
+    "generation": 39549.5
+   },
+   "error": null
+  },
+  {
+   "id": "tesla-a4",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "By how much did car sales revenue fall in 2024 compared with 2023?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.5737408995628357,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "status": "answered",
+   "answer": "Automotive sales revenue decreased by $6.03 billion, or 8%, in the year ended December 31, 2024 as compared to the year ended December 31, 2023 [E3].",
+   "citations": [
+    "tesla_10k.pdf, pp. 40-41"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "Automotive sales revenue decreased by $6.03 billion, or 8%, in the year ended December 31, 2024 as compared to the year ended December 31, 2023.",
+     "evidence_quote": "Automotive sales revenue decreased $6.03 billion, or 8%, in the year ended December 31, 2024 as compared to the year ended December 31, 2023, primarily due to lower average selling price on our vehicles driven by overall price reductions and attractive financing options provided in 2024 as well as mix.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3446,
+   "output_tokens": 81,
+   "timings_ms": {
+    "retrieval": 31.8,
+    "generation": 40642.1
+   },
+   "error": null
+  },
+  {
+   "id": "tesla-a5",
+   "document": "tesla_10k.pdf",
+   "type": "factual",
+   "question": "How many stockholders of record did Tesla have in January 2025?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.7123640179634094,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "status": "answered",
+   "answer": "As of January 22, 2025, there were 9,512 holders of record of Tesla's common stock [E3].",
+   "citations": [
+    "tesla_10k.pdf, p. 33"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "As of January 22, 2025, there were 9,512 holders of record of Tesla's common stock",
+     "evidence_quote": "As of January 22, 2025, there were 9,512 holders of record of our common stock.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3184,
+   "output_tokens": 54,
+   "timings_ms": {
+    "retrieval": 37.3,
+    "generation": 35408.2
+   },
+   "error": null
+  },
+  {
+   "id": "nist-a1",
+   "document": "nist_ai_rmf.pdf",
+   "type": "factual",
+   "question": "Which four functions make up the core of the AI risk framework?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.6234188675880432,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "The four functions that make up the core of the AI Risk Management Framework (AI RMF) are GOVERN, MAP, MEASURE, and MANAGE [E1]. These functions are broken down further into categories and subcategories to help organizations address the risks of AI systems in practice [E1].",
+   "citations": [
+    "nist_ai_rmf.pdf, pp. 7-9"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "The four functions that make up the core of the AI Risk Management Framework (AI RMF) are GOVERN, MAP, MEASURE, and MANAGE.",
+     "evidence_quote": "The Core is composed of four functions: GOVERN, MAP, MEASURE, and MANAGE.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "These functions are broken down further into categories and subcategories to help organizations address the risks of AI systems in practice.",
+     "evidence_quote": "Each of these high-level functions is broken down into categories and subcategories.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2995,
+   "output_tokens": 82,
+   "timings_ms": {
+    "retrieval": 29.0,
+    "generation": 38931.9
+   },
+   "error": null
+  },
+  {
+   "id": "nist-a2",
+   "document": "nist_ai_rmf.pdf",
+   "type": "conceptual",
+   "question": "Is an organization legally required to adopt the framework?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.4634890556335449,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "status": "answered",
+   "answer": "No, an organization is not legally required to adopt the framework. The Framework is intended to be voluntary [E2].",
+   "citations": [
+    "nist_ai_rmf.pdf, p. 7"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "No, an organization is not legally required to adopt the framework.",
+     "evidence_quote": "The Framework is intended to be voluntary, rights-preserving, non-sector-specific, and use-case agnostic, providing flexibility to organizations of all sizes and in all sectors and throughout society to implement the approaches in the Framework.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The Framework is intended to be voluntary.",
+     "evidence_quote": "The Framework is intended to be voluntary, rights-preserving, non-sector-specific, and use-case agnostic, providing flexibility to organizations of all sizes and in all sectors and throughout society to implement the approaches in the Framework.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2607,
+   "output_tokens": 45,
+   "timings_ms": {
+    "retrieval": 32.7,
+    "generation": 30920.1
+   },
+   "error": null
+  },
+  {
+   "id": "ragas-a1",
+   "document": "ragas.pdf",
+   "type": "factual",
+   "question": "How many Wikipedia articles were picked to build the evaluation dataset?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.5548268556594849,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "50 Wikipedia pages were selected to construct the WikiEval dataset [E1].",
+   "citations": [
+    "ragas.pdf, p. 4"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judge_claims": [
+    {
+     "claim": "50 Wikipedia pages were selected to construct the WikiEval dataset",
+     "evidence_quote": "To construct the dataset, we first selected 50 Wikipedia pages covering events that have happened since the start of 20225.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3030,
+   "output_tokens": 37,
+   "timings_ms": {
+    "retrieval": 32.4,
+    "generation": 33455.2
+   },
+   "error": null
+  },
+  {
+   "id": "tesla-u1",
+   "document": "tesla_10k.pdf",
+   "type": "near_miss",
+   "question": "What base salary did Tesla pay its CEO in 2024?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.5730707049369812,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judge_claims": [],
+   "input_tokens": 3279,
+   "output_tokens": 41,
+   "timings_ms": {
+    "retrieval": 36.1,
+    "generation": 34897.7
+   },
+   "error": null
+  },
+  {
+   "id": "tesla-u2",
+   "document": "tesla_10k.pdf",
+   "type": "near_miss",
+   "question": "How many Cybertrucks did Tesla deliver in 2024?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.5329217314720154,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judge_claims": [],
+   "input_tokens": 3145,
+   "output_tokens": 85,
+   "timings_ms": {
+    "retrieval": 35.1,
+    "generation": 37451.6
+   },
+   "error": null
+  },
+  {
+   "id": "tesla-u3",
+   "document": "tesla_10k.pdf",
+   "type": "near_miss",
+   "question": "What will Tesla's revenue be in fiscal 2026?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.6016888618469238,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judge_claims": [],
+   "input_tokens": 3490,
+   "output_tokens": 99,
+   "timings_ms": {
+    "retrieval": 28.4,
+    "generation": 41343.5
+   },
+   "error": null
+  },
+  {
+   "id": "nist-u1",
+   "document": "nist_ai_rmf.pdf",
+   "type": "near_miss",
+   "question": "What fines does NIST impose on companies that violate the AI RMF?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.5729648470878601,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judge_claims": [],
+   "input_tokens": 3022,
+   "output_tokens": 108,
+   "timings_ms": {
+    "retrieval": 25.3,
+    "generation": 45850.3
+   },
+   "error": null
+  },
+  {
+   "id": "nist-u2",
+   "document": "nist_ai_rmf.pdf",
+   "type": "near_miss",
+   "question": "How much money did Congress allocate to develop the AI RMF?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.46745169162750244,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judge_claims": [],
+   "input_tokens": 3006,
+   "output_tokens": 95,
+   "timings_ms": {
+    "retrieval": 26.7,
+    "generation": 38196.4
+   },
+   "error": null
+  },
+  {
+   "id": "ragas-u1",
+   "document": "ragas.pdf",
+   "type": "near_miss",
+   "question": "How much did the ChatGPT API calls cost during the Ragas experiments?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.4546903967857361,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judge_claims": [],
+   "input_tokens": 3055,
+   "output_tokens": 97,
+   "timings_ms": {
+    "retrieval": 32.4,
+    "generation": 39940.5
+   },
+   "error": null
+  },
+  {
+   "id": "ragas-u2",
+   "document": "ragas.pdf",
+   "type": "near_miss",
+   "question": "What learning rate was used to train the Ragas metrics?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.48326563835144043,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judge_claims": [],
+   "input_tokens": 3033,
+   "output_tokens": 121,
+   "timings_ms": {
+    "retrieval": 33.7,
+    "generation": 41692.8
+   },
+   "error": null
+  },
+  {
+   "id": "oos-1",
+   "document": "tesla_10k.pdf",
+   "type": "out_of_scope",
+   "question": "What is the capital of France?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.10406982898712158,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judge_claims": [],
+   "input_tokens": 3017,
+   "output_tokens": 33,
+   "timings_ms": {
+    "retrieval": 27.1,
+    "generation": 33592.0
+   },
+   "error": null
+  },
+  {
+   "id": "oos-2",
+   "document": "nist_ai_rmf.pdf",
+   "type": "out_of_scope",
+   "question": "What is the boiling point of liquid nitrogen?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.10831379890441895,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judge_claims": [],
+   "input_tokens": 2998,
+   "output_tokens": 43,
+   "timings_ms": {
+    "retrieval": 37.1,
+    "generation": 35905.0
+   },
+   "error": null
+  },
+  {
+   "id": "oos-3",
+   "document": "ragas.pdf",
+   "type": "out_of_scope",
+   "question": "How long should sourdough dough proof before baking?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.07293695211410522,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judge_claims": [],
+   "input_tokens": 3001,
+   "output_tokens": 117,
+   "timings_ms": {
+    "retrieval": 32.6,
+    "generation": 40553.5
+   },
+   "error": null
+  }
+ ]
+}

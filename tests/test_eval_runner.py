@@ -8,7 +8,14 @@ from adaptive_rag.evaluation.calibration import choose_floor, evaluate_floor, sw
 from adaptive_rag.evaluation.judge import compare_to_reference, judge_answer, quote_backs_claim
 from adaptive_rag.evaluation.leakage import shared_documents
 from adaptive_rag.evaluation.report import render_markdown, summarize
-from adaptive_rag.evaluation.runner import build_index, run_benchmark, save_results
+from adaptive_rag.evaluation.runner import (
+    build_index,
+    is_complete,
+    load_partial,
+    resume_conflicts,
+    run_benchmark,
+    save_results,
+)
 from fakes import FakeEmbeddings, FakeLLM
 
 
@@ -172,6 +179,10 @@ def test_unusable_gold_comparison_is_not_invented():
         ("In the year ended December 31, 2024, notes added 1.", "Convertible notes 1 2 3", True),
         ("Liabilities were high.", "A quote that is not in the evidence", False),
         ("Liabilities were high.", "", False),
+        ("Liabilities and notes.", "Total liabilities 48,390 [...] Convertible notes 1", True),
+        ("Liabilities and notes.", "Total liabilities 48,390 [...] Preferred stock 7", False),
+        ("Liabilities were 48,390.", "Total liabilities, 48,390 43,009", True),
+        ("Notes added 3.", "Convertible notes 1", True),
     ],
 )
 def test_code_check_on_quotes_and_numbers(claim, quote, expected):
@@ -310,3 +321,72 @@ def test_leakage_check_catches_a_test_document_in_dev(tmp_path):
 
 def test_real_manifest_has_no_leakage():
     assert shared_documents() == []
+
+
+def two_questions():
+    second = answerable(question="Why did revenue grow so much?")
+    second = BenchmarkQuestion(**{**second.model_dump(), "id": "q2"})
+    return [answerable(question="revenue grew eight percent"), second]
+
+
+def test_progress_is_saved_after_every_question_and_judge_call(indexed):
+    ctx, kb, docs = indexed
+    ctx.llm.queue(answer="Subscriptions expanded [E1].")
+    ctx.llm.queue(answer="Subscriptions expanded [E1].")
+    saves = []
+    run_benchmark(
+        ctx,
+        kb,
+        docs,
+        two_questions(),
+        judge=JudgeLLM(),
+        on_save=lambda r: saves.append([(x.id, x.status, x.judged) for x in r]),
+    )
+    assert saves[0] == [("q1", "answered", False)]
+    assert saves[1] == [("q1", "answered", False), ("q2", "answered", False)]
+    assert saves[-1] == [("q1", "answered", True), ("q2", "answered", True)]
+    assert len(saves) == 4
+
+
+def test_resume_skips_answered_questions_and_judges_only_the_rest(indexed, tmp_path):
+    ctx, kb, docs = indexed
+    ctx.llm.queue(answer="Subscriptions expanded [E1].")
+    path = tmp_path / "run.json"
+    first = run_benchmark(
+        ctx,
+        kb,
+        docs,
+        two_questions()[:1],
+        on_save=lambda r: save_results(path, {"set": "dev"}, r, complete=False),
+    )
+    assert not first[0].judged
+    _, done = load_partial(path)
+
+    ctx.llm.calls.clear()
+    ctx.llm.queue(answer="Subscriptions expanded [E1].")
+    judge = JudgeLLM()
+    results = run_benchmark(ctx, kb, docs, two_questions(), judge=judge, done=done)
+    assert len(ctx.llm.calls) == 1  # Only q2 was answered.
+    assert [r.id for r in results] == ["q1", "q2"]
+    assert all(r.judged for r in results)
+    assert results[0].faithfulness == 1.0  # q1 was judged from rebuilt evidence.
+
+    judge.calls.clear()
+    again = run_benchmark(
+        ctx, kb, docs, two_questions(), judge=judge, done={r.id: r for r in results}
+    )
+    assert judge.calls == [] and len(again) == 2
+
+
+def test_partial_files_are_marked_and_old_files_count_as_complete(tmp_path):
+    path = tmp_path / "run.json"
+    save_results(path, {"set": "dev"}, [], complete=False)
+    assert not is_complete(json.loads(path.read_text()))
+    assert not path.with_suffix(".tmp").exists()
+    assert is_complete({"metadata": {"set": "dev"}, "results": []})
+
+
+def test_resume_refuses_a_different_setup():
+    saved = {"embedding_model": "a", "judge_prompt": "audit-1", "questions_sha256": "x"}
+    assert resume_conflicts(saved, {**saved, "questions_sha256": "y"}) == ["questions_sha256"]
+    assert resume_conflicts(saved, dict(saved)) == []

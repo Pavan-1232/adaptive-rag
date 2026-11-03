@@ -1,6 +1,7 @@
 """Run a benchmark against one system configuration and record per-question results."""
 
 import json
+import os
 import shutil
 import tempfile
 from dataclasses import asdict, dataclass, field
@@ -55,6 +56,7 @@ class QuestionResult:
     faithfulness: float | None = None
     addresses_question: bool | None = None
     reference_verdict: str | None = None
+    judged: bool = False
     judge_claims: list[dict] = field(default_factory=list)
     input_tokens: int | None = None
     output_tokens: int | None = None
@@ -203,34 +205,95 @@ def run_benchmark(
     answers: bool = True,
     judge: LLMProvider | None = None,
     on_progress=None,
+    done: dict[str, QuestionResult] | None = None,
+    on_save=None,
 ) -> list[QuestionResult]:
-    """Retrieval and answers first, then judging, so the two LLMs never need to share memory."""
+    """Retrieval and answers first, then judging, so the two LLMs never need to share memory.
+
+    Questions in done are not answered again, and judged ones are not judged again, so a stopped
+    run can resume. on_save receives all results so far after every question and judge call.
+    """
+    done = done or {}
+    results: list[tuple[BenchmarkQuestion, QuestionResult, list[RetrievedChunk] | None]] = []
+
+    def save() -> None:
+        if on_save:
+            on_save([result for _, result, _ in results])
+
     original_floor, original_floors = ctx.settings.score_floor, ctx.settings.score_floors
     ctx.settings.score_floor, ctx.settings.score_floors = -1.0, {}
-    results: list[tuple[BenchmarkQuestion, QuestionResult, list[RetrievedChunk]]] = []
     try:
         for question in questions:
+            if question.id in done:
+                results.append((question, done[question.id], None))
+                continue
             spans = evidence_spans(question, indexed) if question.answerable else []
             result, pool = evaluate_retrieval(ctx, kb, question, spans)
             if answers:
                 evaluate_answer(ctx, kb, question, spans, result, pool)
             results.append((question, result, pool))
+            save()
             if on_progress:
                 on_progress(result)
     finally:
         ctx.settings.score_floor, ctx.settings.score_floors = original_floor, original_floors
 
-    if judge is not None and answers:
+    pending = [item for item in results if not item[1].judged]
+    if judge is not None and answers and pending:
         ctx.llm.unload()
-        for question, result, pool in results:
+        for question, result, pool in pending:
+            if pool is None:
+                # Resumed: rebuild the evidence the answer saw. Retrieval is deterministic.
+                pool = retrieve_baseline(ctx, kb, question.question, POOL_SIZE)
             evaluate_judgment(judge, ctx.settings, question, result, pool)
+            result.judged = True
+            save()
             if on_progress:
                 on_progress(result)
         judge.unload()
     return [result for _, result, _ in results]
 
 
-def save_results(path: Path, metadata: dict, results: list[QuestionResult]) -> None:
+def save_results(
+    path: Path, metadata: dict, results: list[QuestionResult], complete: bool = True
+) -> None:
+    """Write via a temporary file, so a stop mid-write never leaves a broken results file."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    payload = {"metadata": metadata, "results": [asdict(result) for result in results]}
-    path.write_text(json.dumps(payload, indent=1, ensure_ascii=False))
+    payload = {
+        "metadata": {**metadata, "complete": complete},
+        "results": [asdict(result) for result in results],
+    }
+    temporary = path.with_suffix(".tmp")
+    temporary.write_text(json.dumps(payload, indent=1, ensure_ascii=False))
+    os.replace(temporary, path)
+
+
+# A run can only resume if these match, or its results would mix two setups.
+RESUME_KEYS = (
+    "system",
+    "set",
+    "embedding_model",
+    "embedding_version",
+    "llm_model",
+    "judge_model",
+    "judge_prompt",
+    "judge_check",
+    "recall_budget_tokens",
+    "questions_sha256",
+    "retrieval_only",
+)
+
+
+def load_partial(path: Path) -> tuple[dict, dict[str, QuestionResult]]:
+    payload = json.loads(path.read_text())
+    results = {row["id"]: QuestionResult(**row) for row in payload["results"]}
+    return payload["metadata"], results
+
+
+def resume_conflicts(saved: dict, current: dict) -> list[str]:
+    return [key for key in RESUME_KEYS if saved.get(key) != current.get(key)]
+
+
+def is_complete(payload: dict) -> bool:
+    """Files written before resumable runs have no flag, and were only written when complete."""
+    return payload["metadata"].get("complete", True)

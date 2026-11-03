@@ -29,7 +29,7 @@ Numeric settings marked "starting value" are untested defaults to calibrate. The
 | Python env | New conda env `adaptive-rag`, Python 3.11 | Clean dependencies; `rag-env` stays untouched | Reuse `rag-env` | Reuse risks breaking other work |
 | LLM | `qwen3.5:9b` (6.6 GB) | Installed, Apache 2.0, leaves more free memory | `gemma4:e4b` (9.6 GB) | Gemma may be as good but leaves little room on 16 GB |
 | Fallback LLM | `qwen3.5:4b` (3.3 GB) | For memory pressure; needs downloading | `gemma4:e2b` | Probably lower answer quality |
-| Evaluation judge | `gemma4:e4b`, provisional; probe results and proposed changes are in `PROGRESS.md` | Different model from the answer LLM | Same LLM | Same model would mark its own work; at 9.6 GB, memory is the concern. Fallback: `qwen3.5:4b` or a smaller Gemma |
+| Evaluation judge | `gemma4:e4b` with an audit prompt, a code check of its quotes and numbers, and a comparison against gold (decided 2026-11-02) | Different model from the answer LLM; caught most planted errors in Stage 3 probes | `deepseek-r1:8b` | About 4x slower on this Mac and its error-catching wasn't measured. At 9.6 GB, memory is the concern. Fallback: `qwen3.5:4b` or a smaller Gemma |
 | Embeddings | `embeddinggemma:300m` (622 MB, 768 dimensions) | Installed, small, batch support via `/api/embed` | `bge-m3` | Compare with measurements in Stage 3 |
 | PDF | `pdfplumber` | Permissive licence, exposes font data for headings | PyMuPDF | PyMuPDF is faster, but AGPL conflicts with possible commercial use |
 | DOCX | `python-docx` | Reads heading styles | `docx2txt` | Plain text only, loses structure |
@@ -112,7 +112,7 @@ Semantic chunking is tested, not assumed better. A Vectara study found its extra
 
 1. Sample sections from the canonical text, spread across the document, without using chunk boundaries.
 2. The LLM returns a question and an exact supporting quote, using a Pydantic schema with Ollama structured output.
-3. Code locates the quote and stores its character span. If it can't be found, the question is dropped.
+3. Code locates the quote and stores its character span. If it can't be found, the question is dropped. Each evidence item is one required fact. It can list `alternatives`, which are other places stating the same fact, and covering any one of them counts.
 4. A hit means a chunk covers at least 50% of the evidence span (starting value).
 
 ### Bias controls
@@ -130,7 +130,7 @@ Semantic chunking is tested, not assumed better. A Vectara study found its extra
 
 | Metric | Role |
 |---|---|
-| Recall@budget: share of evidence covered within 2000 retrieved tokens (starting value) | Primary |
+| Recall@budget: share of evidence covered within 2560 retrieved tokens, the size of five 512-token chunks. Raised from 2000 on 2026-11-02, which fit only three 512-token chunks or one 1024-token chunk; results from the two budgets are not comparable | Primary |
 | Hit rate@5, recall@5, MRR | Reported; they favour larger chunks |
 | Processing time, chunk count, storage | Tie-breakers |
 
@@ -315,7 +315,8 @@ class LLMProvider(Protocol):
 | Dimension | Measure | Method |
 |---|---|---|
 | Retrieval | Recall@budget, hit rate, recall@k, MRR | Evidence-span overlap |
-| Faithfulness | Share of claims supported by evidence | `gemma4:e4b` judge; human spot-check, with agreement reported |
+| Faithfulness | Share of claims supported by evidence | `gemma4:e4b` judge, where a claim counts only if the judge supports it and its quote passes the code check; human spot-check, with agreement reported |
+| Correctness | Agreement with the gold answer or quote | `gemma4:e4b` gold comparison. Catches wrong answers that are faithful to the wrong passage, which faithfulness can't see |
 | Citations | Valid ID, correct document and locator, supports the claim | Code for the first two; judge and human for the last |
 | Refusals | False-answer and false-refusal rates | Includes unanswerable questions |
 | Latency | p50/p95 per step | Trace log |
@@ -416,7 +417,7 @@ Each stage ends with user approval and updates to this file and `PROGRESS.md`.
 
 - **Objective:** select configs by measurement and reuse them.
 - **Features:** remaining candidates, profiler, selection rule, registry, re-test logic.
-- **Tasks:** confirm the question count, build chunkers, enforce cost caps, wire into ingestion, measure regret.
+- **Tasks:** confirm the question count, build chunkers, enforce cost caps, wire into ingestion, measure regret, and retest `bge-m3:latest` against `embeddinggemma:300m`, specifically on table questions.
 - **Tests:** chunker offset checks, selection rule cases, cap enforcement, reuse and re-index triggers.
 - **Acceptance:** B vs C reported honestly, cost per document measured, and caps never exceeded.
 - **Deliverable:** optimizer plus results, even if C doesn't win.

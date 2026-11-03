@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
-**Last updated:** 2026-11-02
-**Current state:** Stage 3 in progress and paused at the user's request. All user decisions are implemented in code and the work so far is in a WIP checkpoint commit on branch `stage-3-evaluation-harness`. The dev report rerun was stopped partway and saved no results, so it must be run again, followed by the audit false-alarm check. See "Next steps". Numbers under "Stage 3 results so far" come from the old setup unless marked otherwise.
+**Last updated:** 2026-11-03
+**Current state:** Stage 3 in progress. Dev rerun, false-alarm check, and the looser code check are done and committed on branch `stage-3-evaluation-harness` (2026-11-03). Waiting on the user's `questions_test.yaml`; then close Stage 3.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -48,6 +48,9 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 24 | Recall@budget uses 2560 tokens, not 2000. Old and new numbers are not comparable | 2026-11-02 |
 | 25 | Gold evidence supports "any of these" through `alternatives` on each evidence item | 2026-11-02 |
 | 26 | Gold evidence pages are physical PDF pages | 2026-11-02 |
+| 27 | Evaluation runs save after every question and judge call, and resume with `--resume <results file>` | 2026-11-03 |
+| 28 | Adopt the looser code check (`judge_check` `loose-1`). It was tuned on the dev answers, so its false-alarm rate must be confirmed on the test set before it is reported | 2026-11-03 |
+| 29 | Faithfulness doesn't catch wrong-table answers. Use the citation check (citation off gold evidence) and the gold comparison to detect wrong answers, not faithfulness | 2026-11-03 |
 
 ## Smoke test results (2026-10-30)
 
@@ -120,7 +123,7 @@ The rotated-text filter and idle-unload check were added after this run. Afterwa
 
 ### Baseline: `embeddinggemma:300m`, fixed 512/50, top-5
 
-Old setup, from `dev_embeddinggemma_300m_20261030T084407`: 2000-token budget, single-location gold, old judge prompt. **Not comparable with the rerun.** There is no report yet for the new setup.
+Old setup, from `dev_embeddinggemma_300m_20261030T084407`: 2000-token budget, single-location gold, old judge prompt. **Not comparable with the rerun below.**
 
 | Metric | Result |
 |---|---|
@@ -129,6 +132,48 @@ Old setup, from `dev_embeddinggemma_300m_20261030T084407`: 2000-token budget, si
 | MRR | 0.564 (95% CI 0.422–0.708) |
 | Unanswerable refused, gate off | 10 of 10 |
 | Generation p50 / p95 | 36.0 s / 59.7 s |
+
+### Rerun with the new setup (2026-11-03)
+
+`dev_embeddinggemma_300m_20261103T062301`: 2560-token budget, gold evidence with alternatives, audit judge with code check, plus gold comparison. It ran before resumable runs existed. The answers matched the 2026-10-30 run word for word on all 39 questions, so the generation is deterministic.
+
+| Metric | Result |
+|---|---|
+| Recall@budget (2560 tokens) | 0.862 (95% CI 0.724–0.966) |
+| Hit rate@5 | 0.862 (95% CI 0.724–0.966) |
+| MRR | 0.661 (95% CI 0.521–0.793) |
+| Wrong focus, citation off gold | 3 of 28: exactly the 3 user-confirmed wrong answers |
+| Gold comparison: conflicts / different point | 2 / 0 of 28: `tesla-a1` and `tesla-a3`; it missed `nist_ai_rmf-gen-015` |
+| Faithfulness (LLM judge) | 0.915 (95% CI 0.849–0.970) |
+| Unanswerable refused, gate off | 10 of 10 |
+| Generation p50 / p95 | 37.5 s / 48.8 s |
+
+Recall@budget now equals recall@5, because 2560 tokens fits all 5 chunks of 512.
+
+**Faithfulness of 0.915 is mostly judge noise, not answer errors.** All 3 wrong answers scored 1.0. The drop below 1.0 comes from correct answers flagged by the judge (next section).
+
+### Audit judge false alarms (2026-11-03)
+
+`audit_false_alarms_20261103T064126.json`. The judge was run on the saved 2026-10-30 answers: 25 correct and 3 wrong. 4 of the correct labels and all 3 wrong ones are user-confirmed; the other 21 are the assistant's.
+
+| Signal | Correct answers flagged (false alarms) | Wrong answers flagged |
+|---|---|---|
+| LLM says unsupported | 2 of 25 | 0 of 3 |
+| Code check fails | 5 of 25 | 0 of 3 |
+| Off topic | 0 of 25 | 0 of 3 |
+| Any | **7 of 25 (28%)** | **0 of 3** |
+
+Causes:
+- **Code check (5):** in 4 answers, the judge's quote wasn't exactly in the evidence. It had elided text with `[...]`, or garbled PDF formula text. In 1 answer, the "4" in "GPT-4" was treated as a figure missing from the quote. All 5 claims are true.
+- **LLM (2):** `nist_ai_rmf-gen-004` makes an inference the evidence doesn't state, so that flag is arguably correct at claim level. `ragas-gen-000`'s judge picked the wrong sentence as its quote, so that one is a false alarm.
+
+**Looser code check, tested offline** on the saved outputs, with no new LLM calls:
+- **Rule:** split the quote at `[...]`; each piece must be found in the evidence, or 90% of its words must appear there; the claim's figures must appear anywhere in the evidence.
+- **Result:** false alarms drop from 7 to 2 of 25. Planted errors caught drop from 13 to 12 of 14; the one lost is a wrong figure (3 instead of 1) that appears elsewhere in the same table. Real failures caught stay at 0 of 3.
+- **Caveat:** this rule was designed after seeing these 25 answers, so it is fitted to them.
+- **Adopted 2026-11-03** as `judge_check` `loose-1` in `judge.py`. The production code reproduces the offline counts: 2 of 25 correct answers flagged, 0 of 3 wrong, 12 of 14 planted errors caught, 0 of 11 clean probes flagged. **Its false-alarm rate is tuned on dev and must be confirmed on the test set before it is reported.** The 2026-11-03 report's faithfulness of 0.915 used the strict check. The next judge run will use the looser one.
+
+**Faithfulness doesn't catch wrong-table answers.** The real failures are faithful to the wrong passage, such as a figure from a stock-compensation or VIE table, so every claim is "supported". Use the citation check and the gold comparison as the signals for wrong answers. The gold comparison catches 2 of 3. The wrong-focus signal from citations off gold catches 3 of 3 now that gold has alternatives.
 
 ### Wrong-focus answers
 
@@ -201,16 +246,17 @@ Old setup with a 2000-token budget. Not rerun, because the retest is planned for
 
 Table questions had a hit rate@5 of 0.8 for `bge-m3:latest` and 0.4 for `embeddinggemma:300m`, on only 5 questions. Indexing took about 69 s against 38 s, measured on separate days and not as a controlled benchmark. Vectors have 1024 dimensions against 768; models are 1.2 GB against 621 MB. `bge-m3:latest` has no answer or judge run.
 
-### Implemented, not yet measured in a report
+### Implemented
 
 - **Recall@budget is now 2560 tokens** (`RECALL_BUDGET_TOKENS` in `runner.py`). At 2000, only 3 chunks of 512 and 1 of 1024 fit. `compare` refuses runs with different budgets. The two old reports carry a "not comparable" note.
 - **`alternatives` on evidence** in `benchmark.py`, `metrics.py`, `runner.py`, and `validate`. `questions_dev.yaml` has them on `tesla-a1`, `tesla-a4`, `nist-a1`, `ragas-gen-000`, and `ragas-gen-010`. All `page: null` entries are filled, and the file passes `validate`.
 - **Judge** in `judge.py`: audit prompt, code check of quotes and numbers, and `compare_to_reference`. The report has a new row for the gold comparison.
 - **Template:** `benchmarks/questions_template.yaml`, which passes `validate`.
+- **Resumable runs** (2026-11-03): `runner.py` saves after every question and judge call, writing via a temporary file. `run --resume <file>` skips answered questions and judged ones. It refuses if the questions file, models, judge prompt, budget, or retrieval-only mode differ from the saved run. `calibrate` and `compare` refuse incomplete files. Tests: 180 passed. Also checked through the CLI by cutting a retrieval-only run back to 17 of 39 questions and resuming it; the result matched an uninterrupted run exactly.
 
 ### Known issues
 
-- The audit prompt tells the judge about one answer in two has errors, which isn't true of real answers. It was kept as measured. The false-alarm check will show whether that matters.
+- The audit prompt tells the judge about one answer in two has errors, which isn't true of real answers. It was kept as measured. On real answers, only 2 of 7 false alarms came from the LLM, so it doesn't look like the main problem. That wasn't tested directly.
 - In retrieval-only runs, the `false_answers` and `system_refused` columns from `calibrate` are meaningless.
 - `data/eval/dev_bge-m3/` is an empty leftover from the earlier failed attempt. The real index is `data/eval/dev_bge-m3_latest/`. Both are gitignored.
 - The stopped rerun added extra rows to `query_traces` in `data/eval/dev_embeddinggemma_300m/`. They are harmless and gitignored.
@@ -225,21 +271,12 @@ Table questions had a hit rate@5 of 0.8 for `bge-m3:latest` and 0.4 for `embeddi
 
 ## Next steps (Stage 3)
 
-Run from the repo root with `conda activate adaptive-rag`. Don't run the two LLM jobs at the same time.
+Run from the repo root with `conda activate adaptive-rag`. Use `--resume <results file>` if a run stops.
 
-1. **Rerun the dev report.** The last attempt was stopped by the user on 2026-11-02 at the 21st question or later. Results are saved only at the end, so nothing was kept. The 2026-10-30 run took about an hour; the audit judge takes longer per call. Use a background job:
-   ```
-   python -m adaptive_rag.evaluation run --set dev --questions benchmarks/questions_dev.yaml --judge --question-source "39 dev questions; LLM and assistant-written; assistant-reviewed, not human" --notes "Recall@budget uses 2560 tokens and gold evidence allows alternatives, so it is not comparable with earlier reports. Judge: audit prompt with code check, plus gold comparison."
-   ```
-2. **Measure the audit judge's false alarms.** This uses the saved answers from the 2026-10-30 run: 25 labelled correct (4 confirmed by the user, 21 the assistant's reading) and 3 wrong (user-confirmed). A false alarm is `llm_flag`, `code_flag`, or `off_topic_flag` on a correct answer. Report all of it, including any poor result.
-   ```
-   python benchmarks/analysis/audit_false_alarms.py
-   ```
-3. **Update the docs.** Record both results here. In `DESIGN.md`, change the 2000-token Recall@budget (section 5), the judge row (section 3), and the evidence description, and add the `bge-m3:latest` table retest to the Stage 4 tasks. None of these `DESIGN.md` changes are done yet.
-4. **Ask the user before committing the results.** The WIP checkpoint was made before the rerun. Before any commit, confirm that no files under `data/`, no `.env`, and no benchmark PDFs are staged.
-5. **Wait for the user's `questions_test.yaml`,** then run `validate` on it. The user may add `alternatives` wherever a fact appears in several places.
-6. **Close Stage 3** with the end-of-stage report, including a reported wrong-focus rate from the new run. Stop and wait for approval before Stage 4.
+1. **Wait for the user's `questions_test.yaml`,** then run `validate` on it, which prints IDs and errors only. The user may add `alternatives` wherever a fact appears in several places.
+2. **Close Stage 3** with the end-of-stage report. Report wrong answers through the citation check and the gold comparison, not faithfulness. Stop and wait for approval before Stage 4.
+3. **At the held-out test run** (`run --set test --final`, once per release): report the looser code check's false-alarm rate there before quoting any faithfulness figure.
 
 ## Open questions
 
-- None waiting on the user right now, other than the commit confirmation and `questions_test.yaml`.
+- None waiting on the user, other than `questions_test.yaml`.

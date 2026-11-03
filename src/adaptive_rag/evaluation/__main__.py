@@ -18,10 +18,18 @@ from adaptive_rag.providers import OllamaEmbeddings, OllamaLLM
 
 from .benchmark import BENCHMARK_DIR, file_sha256, load_manifest, load_questions
 from .calibration import choose_floor, sweep
-from .judge import PROMPT_VERSION
+from .judge import CHECK_VERSION, PROMPT_VERSION
 from .questions import generate_questions
 from .report import render_markdown, summarize
-from .runner import RECALL_BUDGET_TOKENS, build_index, run_benchmark, save_results
+from .runner import (
+    RECALL_BUDGET_TOKENS,
+    build_index,
+    is_complete,
+    load_partial,
+    resume_conflicts,
+    run_benchmark,
+    save_results,
+)
 from .spans import locate_quote
 from .stats import is_tie, paired_difference_ci
 
@@ -127,7 +135,12 @@ def _metadata(args, settings, embedder, split, question_source, judge_model) -> 
         "llm_model": settings.llm_model,
         "judge_model": judge_model,
         "judge_prompt": PROMPT_VERSION if judge_model != "none" else None,
+        "judge_check": CHECK_VERSION if judge_model != "none" else None,
         "recall_budget_tokens": RECALL_BUDGET_TOKENS,
+        "questions_sha256": file_sha256(Path(args.questions))
+        if hasattr(args, "questions")
+        else None,
+        "retrieval_only": getattr(args, "retrieval_only", False),
         "machine": f"{platform.machine()} {platform.system()} {platform.release()}",
         "question_source": question_source,
         "notes": getattr(args, "notes", None),
@@ -148,6 +161,26 @@ def cmd_run(args: argparse.Namespace) -> int:
     judge = None
     if args.judge:
         judge = OllamaLLM(args.judge, settings.ollama_host, settings.num_ctx)
+    metadata = _metadata(
+        args, settings, embedder, args.set, args.question_source, args.judge or "none"
+    )
+
+    done = {}
+    if args.resume:
+        path = Path(args.resume)
+        saved, done = load_partial(path)
+        conflicts = resume_conflicts(saved, metadata)
+        if conflicts:
+            print(f"Can't resume {path}: these differ from the saved run: {', '.join(conflicts)}")
+            return 2
+        metadata = {**saved, "resumed": [*saved.get("resumed", []), metadata["created_at"]]}
+        if saved.get("commit") != metadata.get("commit"):
+            metadata["resumed_commits"] = [*saved.get("resumed_commits", []), _commit()]
+        print(f"Resuming {path}: {len(done)} of {len(questions)} questions already answered.")
+    else:
+        stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S")
+        path = RESULTS / f"{args.set}_{args.embedding_model.replace(':', '_')}_{stamp}.json"
+        print(f"Saving progress to {path}. To resume after a stop, add: --resume {path}")
 
     def progress(result) -> None:
         print(f"{result.id}: {result.status} top={result.top_score}", flush=True)
@@ -160,11 +193,8 @@ def cmd_run(args: argparse.Namespace) -> int:
         answers=not args.retrieval_only,
         judge=judge,
         on_progress=progress,
-    )
-    stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S")
-    path = RESULTS / f"{args.set}_{args.embedding_model.replace(':', '_')}_{stamp}.json"
-    metadata = _metadata(
-        args, settings, embedder, args.set, args.question_source, args.judge or "none"
+        done=done,
+        on_save=lambda so_far: save_results(path, metadata, so_far, complete=False),
     )
     save_results(path, metadata, results)
     rows = [asdict(result) for result in results]
@@ -175,6 +205,9 @@ def cmd_run(args: argparse.Namespace) -> int:
 
 def cmd_calibrate(args: argparse.Namespace) -> int:
     payload = json.loads(Path(args.results).read_text())
+    if not is_complete(payload):
+        print("This run is incomplete. Resume it with: run --resume <file>")
+        return 2
     if payload["metadata"]["set"] != "dev":
         print("Calibrate on dev results only.")
         return 2
@@ -197,6 +230,9 @@ def cmd_compare(args: argparse.Namespace) -> int:
     """Compare two result files on the same questions, retrieval metrics only."""
     first = json.loads(Path(args.first).read_text())
     second = json.loads(Path(args.second).read_text())
+    if not (is_complete(first) and is_complete(second)):
+        print("At least one run is incomplete. Resume it with: run --resume <file>")
+        return 2
     budgets = [run["metadata"].get("recall_budget_tokens", 2000) for run in (first, second)]
     if budgets[0] != budgets[1]:
         print(f"Not comparable: Recall@budget used {budgets[0]} and {budgets[1]} tokens.")
@@ -238,6 +274,7 @@ def main() -> int:
     run.add_argument("--final", action="store_true", help="required for the held-out test set")
     run.add_argument("--question-source", default="unspecified")
     run.add_argument("--notes", default=None)
+    run.add_argument("--resume", default=None, help="continue a stopped run from its results file")
 
     calibrate = commands.add_parser("calibrate", help="sweep score floors on dev results")
     calibrate.add_argument("results")

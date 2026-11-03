@@ -14,6 +14,9 @@ from adaptive_rag.providers import LLMProvider
 from .spans import locate_quote
 
 PROMPT_VERSION = "audit-1"
+CHECK_VERSION = "loose-1"
+# Share of a quote's words that must appear in the evidence when the exact text can't be found.
+MIN_QUOTE_WORDS_FOUND = 0.9
 AUDIT_MAX_TOKENS = 1500
 REFERENCE_MAX_TOKENS = 400
 SCHEMA = {
@@ -49,6 +52,8 @@ REFERENCE_SCHEMA = {
 }
 _NUMBER = re.compile(r"\d[\d,]*(?:\.\d+)?")
 _CITATION = re.compile(r"\[E\d+\]")
+_ELISION = re.compile(r"\s*(?:\[\.\.\.\]|\.\.\.|…)\s*")
+_WORD = re.compile(r"[a-z0-9]+")
 _DATE = re.compile(
     r"(January|February|March|April|May|June|July|August|September|October|November|December)"
     r"\s+\d{1,2}(,\s*\d{4})?"
@@ -86,12 +91,31 @@ def _is_year(number: str) -> bool:
     return len(number) == 4 and number[:2] in ("19", "20")
 
 
+def _piece_found(piece: str, evidence_text: str, evidence_words: set[str]) -> bool:
+    if locate_quote(evidence_text, piece) is not None:
+        return True
+    # Judges garble PDF text such as formulas, so nearly all the words is enough.
+    words = _WORD.findall(piece.lower())
+    return bool(words) and sum(w in evidence_words for w in words) / len(words) >= (
+        MIN_QUOTE_WORDS_FOUND
+    )
+
+
 def quote_backs_claim(claim: str, quote: str, evidence: list[str]) -> bool:
-    """Code check: the judge's quote is really in the evidence and holds the claim's figures."""
-    if not quote.strip() or locate_quote("\n\n".join(evidence), quote) is None:
+    """Code check: the judge's quote is in the evidence, and the claim's figures are too.
+
+    Loose by design: elided quotes are checked piece by piece, and figures may come from anywhere
+    in the evidence. Tuned on the dev answers (2026-11-03) to cut false alarms on correct
+    answers; its false-alarm rate still has to be confirmed on the test set.
+    """
+    evidence_text = "\n\n".join(evidence)
+    evidence_words = set(_WORD.findall(evidence_text.lower()))
+    pieces = [piece for piece in _ELISION.split(quote) if piece.strip()]
+    if not pieces or not all(_piece_found(p, evidence_text, evidence_words) for p in pieces):
         return False
     plain = _DATE.sub("", _CITATION.sub("", claim))
-    return {number for number in _numbers(plain) if not _is_year(number)} <= _numbers(quote)
+    figures = {number for number in _numbers(plain) if not _is_year(number)}
+    return figures <= _numbers(evidence_text)
 
 
 def judge_answer(
