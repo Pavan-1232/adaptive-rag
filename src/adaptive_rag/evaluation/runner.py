@@ -276,6 +276,7 @@ def save_results(
 # A run can only resume if these match, or its results would mix two setups.
 RESUME_KEYS = (
     "system",
+    "chunking",
     "set",
     "embedding_model",
     "embedding_version",

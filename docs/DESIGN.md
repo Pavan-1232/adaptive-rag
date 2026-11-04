@@ -165,7 +165,7 @@ Many documents will tie and get a simple config. The system must not claim a dif
 - Every candidate is scored on the chunks that touch the sample. Questions come only from the sample. Table questions are planned in proportion to the sample's table share: at least 3 when tables exceed 5% of it, and at most 3 per table.
 - At most 60 LLM calls per document (40 accepted questions; rejected ones are replaced). Generation stops at 70% of the time budget. The LLM is unloaded before any embedding.
 - A time budget of 12 minutes per document (starting value). Semantic chunking runs last, so it is the first candidate dropped. With fewer than 10 selection questions, the control C1 is kept.
-- Confirmation questions are every 4th accepted question, so both sets spread across the document.
+- Selection questions come first. Confirmation gets at most a quarter of the accepted questions (10 of 40), chosen evenly across the document.
 - When the time budget runs out, stop and keep the best result so far.
 - Evaluate with in-memory NumPy search and cached embeddings, so Chroma isn't filled with temporary data.
 
@@ -325,6 +325,8 @@ class LLMProvider(Protocol):
 | D | C + dynamic depth |
 | E | D + neighbors and dedupe |
 | F | E + evidence check |
+
+**Stage 4 change (2026-11-04):** on dev, the optimizer chose C1 for every document and B was C1, so A, B and C were the same system. The Stage 4 held-out run therefore compares A (C1) with C7 table-aware as one fixed config, and with C (the optimizer). It is pre-registered in `PROGRESS.md`, decision 42. Later stages use whichever of these the held-out result supports as their chunking base.
 
 ### Measures
 
