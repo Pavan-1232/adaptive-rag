@@ -109,6 +109,17 @@ Testing on real PDFs in Stage 2 showed that pdfplumber's defaults glue words tog
 
 Semantic chunking is tested, not assumed better. A Vectara study found its extra cost wasn't backed by consistent gains.
 
+**How the candidates work (implemented in Stage 4):**
+
+- **Recursive (C2–C4):** split at paragraphs, then lines, sentences, words and tokens, then merge greedily up to the size. Overlap is at most N trailing tokens of the previous chunk, starting at a sentence boundary where possible and never mid-word.
+- **Structure-aware (C5):** chunks never cross a heading. Sections under 50 tokens merge into the next one. It runs only when headings look reliable: at least 3 sections, at least 60% of the text under a heading, a median section of at least 80 tokens, and no heading over 15 words.
+- **Semantic (C6):** each sentence is embedded with one neighbour on each side. Cuts go where the distance between consecutive windows is above the 95th percentile. Groups over 512 tokens are split recursively, and groups under 64 tokens join the next group. There is no overlap. In the optimizer it embeds only the sampled regions.
+- **Table-aware (C7):**
+  - **Detection, by line rules:** a row is a line ending in 2 or more figures. A table needs at least 3 rows with a text label, so chart axis ticks don't count. The title is up to 6 lines above, stopping at a blank line, a sentence end, or a "Table N" line. A caption directly below is included.
+  - **Chunking:** a table that fits is one chunk. A larger table is split only at line ends. Continuation chunks carry the title and header (at most 150 tokens) as a second character range.
+  - **Context:** that range is put in front of the chunk text, both for embedding and in the LLM evidence. Text-only tables aren't detected.
+- **Context is never free:** each chunk has `evidence_tokens` = text tokens + context tokens. Recall@budget, the optimizer's scoring, and the LLM evidence budget all charge `evidence_tokens`. Gold evidence is matched against the chunk's own range only, so context adds cost but no coverage.
+
 ### Question generation
 
 1. Sample sections from the canonical text, spread across the document, without using chunk boundaries.
@@ -150,8 +161,12 @@ Many documents will tie and get a simple config. The system must not claim a dif
 
 - At most 7 candidates and 40 questions per document (30 selection, 10 confirmation).
 - The smoke test measured a median of 5.6 s per question with `think=False`, so the 40-question limit stays.
-- Sample about 25% of tokens, capped at 30,000. Short documents are evaluated in full.
-- A time budget per document. When it runs out, stop and keep the best result so far.
+- Sample about 25% of tokens, capped at 30,000. Documents of 30,000 tokens or fewer are evaluated in full. Samples are evenly spaced windows of 1,500 tokens. They snap to a line boundary within 400 characters, otherwise to a word boundary, and they never cut a detected table.
+- Every candidate is scored on the chunks that touch the sample. Questions come only from the sample. Table questions are planned in proportion to the sample's table share: at least 3 when tables exceed 5% of it, and at most 3 per table.
+- At most 60 LLM calls per document (40 accepted questions; rejected ones are replaced). Generation stops at 70% of the time budget. The LLM is unloaded before any embedding.
+- A time budget of 12 minutes per document (starting value). Semantic chunking runs last, so it is the first candidate dropped. With fewer than 10 selection questions, the control C1 is kept.
+- Confirmation questions are every 4th accepted question, so both sets spread across the document.
+- When the time budget runs out, stop and keep the best result so far.
 - Evaluate with in-memory NumPy search and cached embeddings, so Chroma isn't filled with temporary data.
 
 Sampled scores run high because there are fewer distracting chunks. They are valid only for comparing candidates, not as a measure of final quality.

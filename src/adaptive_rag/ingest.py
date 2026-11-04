@@ -8,7 +8,13 @@ import sqlite3
 from dataclasses import asdict
 from pathlib import Path
 
-from adaptive_rag.chunking import FIXED_STRATEGY, FIXED_VERSION, chunk_fixed
+from adaptive_rag.chunking import (
+    FIXED_STRATEGY,
+    FIXED_VERSION,
+    chunk_fixed,
+    context_text,
+    embedding_text,
+)
 from adaptive_rag.context import AppContext
 from adaptive_rag.knowledge_bases import check_embedding_lock
 from adaptive_rag.loaders import LOADERS, ExtractionError, validate_upload
@@ -198,8 +204,9 @@ def _ingest(ctx: AppContext, document_id: int) -> None:
         ids = [f"{document_id}-{chunk.index}" for chunk in chunks]
         conn.executemany(
             "INSERT INTO chunks (id, document_id, chunk_index, start_char, end_char, text,"
-            " token_count, locator_start, locator_end, section_heading, chunking_config_id)"
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            " token_count, locator_start, locator_end, section_heading, chunking_config_id,"
+            " context_start, context_end, context_text, context_tokens, is_table)"
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 (
                     chunk_id,
@@ -213,13 +220,19 @@ def _ingest(ctx: AppContext, document_id: int) -> None:
                     chunk.locator_end,
                     chunk.section_heading,
                     config_id,
+                    chunk.context_start,
+                    chunk.context_end,
+                    context_text(extracted.text, chunk),
+                    chunk.context_tokens,
+                    int(chunk.is_table),
                 )
                 for chunk_id, chunk in zip(ids, chunks, strict=True)
             ],
         )
 
     title = Path(doc["filename"]).stem
-    vectors = ctx.embedder.embed_documents([chunk.text for chunk in chunks], [title] * len(chunks))
+    texts = [embedding_text(extracted.text, chunk) for chunk in chunks]
+    vectors = ctx.embedder.embed_documents(texts, [title] * len(chunks))
     metadatas = [
         {
             "document_id": document_id,

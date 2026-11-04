@@ -8,7 +8,8 @@ def fit_to_budget(chunks: list[RetrievedChunk], max_tokens: int) -> list[Retriev
     selected: list[RetrievedChunk] = []
     used = 0
     for chunk in chunks:
-        if used + chunk.token_count <= max_tokens:
+        # evidence_tokens includes any table header context, so context is never free.
+        if used + chunk.evidence_tokens <= max_tokens:
             selected.append(chunk)
-            used += chunk.token_count
+            used += chunk.evidence_tokens
     return selected

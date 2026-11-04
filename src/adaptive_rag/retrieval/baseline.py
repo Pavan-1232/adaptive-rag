@@ -49,6 +49,8 @@ def retrieve_baseline(
             section_heading=by_id[hit.chunk_id]["section_heading"],
             start_char=by_id[hit.chunk_id]["start_char"],
             end_char=by_id[hit.chunk_id]["end_char"],
+            context_text=by_id[hit.chunk_id]["context_text"],
+            context_tokens=by_id[hit.chunk_id]["context_tokens"],
         )
         for hit in hits
         if hit.chunk_id in by_id

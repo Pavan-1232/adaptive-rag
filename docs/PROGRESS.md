@@ -61,6 +61,8 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 37 | Quote location prefers a match that starts on the stated page, else the first match. Needed because the same table row can appear on several pages. It moved 0 of 34 dev and 0 of 37 test gold quotes, so earlier results stand | 2026-11-04 |
 | 38 | When extraction scrambles a gold row, shorten the quote to the part that survives intact, keep the question and answer unchanged, and record it as a known extraction failure in `notes`. Applied to `tbl-nist-01` and `tbl-nist-04` | 2026-11-04 |
 | 39 | Table extraction stays unchanged in Stage 4, so B vs C measures chunking only. The flattened Fed Table 1 header is a known limitation | 2026-11-04 |
+| 40 | Keep `embeddinggemma:300m`. The Stage 4 retest found 0 of 3 configs favouring `bge-m3:latest` | 2026-11-04 |
+| 41 | C7's detector was tuned on dev, so any B or C dev score that uses C7 is reported as optimistic. The held-out test run is the only evidence for C7 | 2026-11-04 |
 
 ## Smoke test results (2026-10-30)
 
@@ -378,6 +380,73 @@ Built:
 **Known limitations:**
 - Text-only tables, such as NIST's category tables, aren't detected, so C7 treats them as prose. Their rows are also scrambled by extraction.
 - A row's label line can end up at the end of the previous piece, as with Fed "Memo: Projected appropriate policy path".
+
+### Step 3b: checkpoint, context budget, C5, C6, profiler, optimizer (2026-11-04)
+
+- **Checkpoint commit:** `010f056` on `stage-4-chunking-optimization`. Checked: no `data/`, `.env`, PDFs or DB files.
+- **C7 context is charged everywhere:**
+  - `Chunk.evidence_tokens` and `RetrievedChunk.evidence_tokens` are text tokens plus context tokens.
+  - `fit_to_budget` (the LLM evidence), the runner's Recall@budget input, and the optimizer's in-memory scoring all use `evidence_tokens`.
+  - The LLM evidence block shows the context before the chunk.
+  - Migration `002_chunk_context.sql` adds `context_start`, `context_end`, `context_text`, `context_tokens` and `is_table` to `chunks`. Ingestion stores them and embeds `embedding_text`.
+  - 6 tests in `tests/test_context_budget.py`.
+- **C5** `chunking/structure.py` and **C6** `chunking/semantic.py`, with rules as in DESIGN.md section 5.
+- **Optimizer** `src/adaptive_rag/optimizer/`:
+  - `profile.py`: format, pages, tokens, heading density, section stats, table share, characters per page, language, reliable headings.
+  - `candidates.py`: C1–C7 and the simplicity order.
+  - `sampling.py`: regions and the question plan.
+  - `scoring.py`: in-memory NumPy index.
+  - `selection.py`: the design's rule.
+  - `embcache.py`: disk cache keyed by model, digest, prompt version, title and text.
+  - `optimize.py`: orchestration and caps.
+- **Question generator:** `generate_for_plan` takes explicit windows, a `table` type, a maximum number of accepted questions, and a deadline. The Stage 3 `generate_questions` is unchanged in behaviour.
+- **Two cap bugs found by tests and fixed:**
+  - Snapping samples to line boundaries could blow the 30k-token cap on documents with very long lines (48k measured in a test).
+  - The 3-table-question minimum couldn't be met with one table.
+- **Tests:** 18 in `tests/test_optimizer.py`, covering C5 boundaries, C6 breakpoints and regions, profile, sampling caps, the table question plan, context charging, three selection cases, the question, call, time and candidate caps, LLM unload before embedding, the control fallback, and the cache. Full suite: 234 passed, 7 Ollama tests deselected. `ruff` is clean.
+- **Not yet:**
+  - The optimizer hasn't run on a real document, so no ingest cost is measured.
+  - There is no registry or reuse logic.
+  - Ingestion still always uses C1.
+
+### Step 4: `bge-m3:latest` retest, procedure fixed before running (2026-11-04)
+
+Written before any retest number existed.
+
+- **Data:** the 4 dev documents in one pool, like one knowledge base. Questions: the 29 answerable questions in `questions_dev.yaml` plus the 15 in `questions_dev_tables.yaml`, 44 in all. Table questions: 20. **Clean table questions: 18**, without `tbl-nist-01` and `tbl-nist-04`, which are reported separately as known extraction failures.
+- **Setup:** in-memory exact cosine search (`optimizer/scoring.py`), pool of 30, Recall@budget at 2560 tokens charged as evidence tokens (text plus C7 context), and the same metrics as Stage 3. The title in the embedding prompt is the file stem, as in ingestion.
+- **Grid:** {`embeddinggemma:300m`, `bge-m3:latest`} × {C1 fixed 512/50, C3 recursive 512/50, C7 table-aware 512/50}.
+- **Rule (decision 36), applied per chunking config:** that config favours `bge-m3:latest` if the paired 95% bootstrap CI of `bge-m3` minus `embeddinggemma` on Recall@budget over the 18 clean table questions lies entirely above zero, **and** the CI over all 44 questions isn't entirely below zero.
+- **Decision:** switch only if at least 2 of the 3 configs favour `bge-m3`. Otherwise keep `embeddinggemma:300m`.
+- **Not comparable with Stage 3:** this setup has a 4th document (more distractors), exact in-memory search instead of Chroma HNSW, and 15 more questions.
+
+### Step 4 result (2026-11-04): keep `embeddinggemma:300m`
+
+`benchmarks/results/embedding_retest_20261104T054418.json`, run on commit `010f056` with uncommitted Stage 4 changes. Digests: `embeddinggemma:300m` `85462619…`, `bge-m3:latest` `79076464…`.
+
+**By the rule, 0 of 3 configs favour `bge-m3`.** On clean table questions, its CI never lies entirely above zero, and every point estimate is at or below `embeddinggemma`'s. **Decision by the fixed rule: keep `embeddinggemma:300m`.** The user confirmed it on 2026-11-04 (decision 40).
+
+Recall@budget at 2560 tokens, mean (95% CI). Differences are `bge-m3` minus `embeddinggemma`, paired:
+
+| Config | Subset | n | `embeddinggemma` | `bge-m3` | Difference |
+|---|---|---|---|---|---|
+| C1 fixed | All | 44 | 0.841 (0.727–0.932) | 0.747 (0.611–0.864) | −0.094 (−0.205 to 0.000) |
+| C1 fixed | Clean table | 18 | 0.722 (0.500–0.889) | 0.556 (0.333–0.778) | −0.167 (−0.389 to +0.056) |
+| C1 fixed | Non-table | 24 | 0.917 (0.792–1.000) | 0.869 (0.708–0.994) | −0.047 (−0.136 to 0.000) |
+| C3 recursive | All | 44 | 0.886 (0.773–0.977) | 0.760 (0.633–0.873) | −0.127 (−0.273 to +0.023) |
+| C3 recursive | Clean table | 18 | 0.778 (0.556–0.944) | 0.635 (0.413–0.833) | −0.143 (−0.421 to +0.111) |
+| C3 recursive | Non-table | 24 | 0.958 (0.875–1.000) | 0.833 (0.667–0.958) | −0.125 (−0.292 to +0.042) |
+| C7 table-aware | All | 44 | 0.955 (0.886–1.000) | 0.909 (0.818–0.977) | −0.045 (−0.159 to +0.068) |
+| C7 table-aware | Clean table | 18 | 1.000 (1.000–1.000) | 1.000 (1.000–1.000) | 0.000 |
+| C7 table-aware | Non-table | 24 | 0.917 (0.792–1.000) | 0.833 (0.667–0.958) | −0.083 (−0.292 to +0.125) |
+
+- **Known extraction failures,** reported separately: `tbl-nist-01` and `tbl-nist-04` reach Recall@budget 1.0 under both models and all configs. Their quotes were shortened to the part that extraction keeps intact, so this is a weak test. The gold rank is 2–3 for `embeddinggemma` and 1–4 for `bge-m3`.
+- **Stage 3's wrong-answer misses:**
+  - `tesla-a3`: under C1 it is outside the top 30 for `embeddinggemma` but rank 5 for `bge-m3`.
+  - `tesla-a1`: rank 6 and 8 under C1. Under C7 both are found: `tesla-a1` at rank 1 for `embeddinggemma` and 2 for `bge-m3`, `tesla-a3` at rank 7 and 2.
+- **Indexing time,** full dev pool of about 185–192k stored tokens: `embeddinggemma` 31 s for C1 and 28 s for C3; `bge-m3` 71 s and 81 s, so about 2.5x slower. The C7 times (10.5 s and 27.4 s) are **not** cold-cache: 257 of its 454 chunks were identical to chunks already cached, so only 197 were embedded.
+
+**Caveat on C7's dev numbers.** The C7 detector rules (the labelled-row minimum, the title-line limit and the "Table N" stop) were adjusted on the dev documents while checking where the dev table gold rows fall in C7 chunks. That check used the 15 new dev table questions. C7's clean-table score of 1.000 on dev is therefore **optimistic** and is not evidence that C7 beats C1. Only the single held-out test run can show that. C1, C3 and the embedding comparison weren't tuned this way.
 
 ## Workspace state
 

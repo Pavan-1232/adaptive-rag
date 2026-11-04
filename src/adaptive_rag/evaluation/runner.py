@@ -115,7 +115,7 @@ def evidence_spans(question: BenchmarkQuestion, indexed: dict[str, dict]) -> lis
 
 def _ranked(chunks: list[RetrievedChunk]) -> list[RankedChunk]:
     return [
-        RankedChunk(chunk.filename, chunk.start_char, chunk.end_char, chunk.token_count)
+        RankedChunk(chunk.filename, chunk.start_char, chunk.end_char, chunk.evidence_tokens)
         for chunk in chunks
     ]
 

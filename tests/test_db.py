@@ -2,7 +2,7 @@ import sqlite3
 
 import pytest
 
-from adaptive_rag.db import connect, migrate
+from adaptive_rag.db import MIGRATIONS_DIR, connect, migrate
 
 
 def add_kb(conn, name="KB"):
@@ -26,7 +26,8 @@ def test_migrate_is_idempotent(settings):
     conn = connect(settings.db_path)
     migrate(conn)
     migrate(conn)
-    assert conn.execute("PRAGMA user_version").fetchone()[0] == 1
+    latest = max(int(path.name.split("_", 1)[0]) for path in MIGRATIONS_DIR.glob("*.sql"))
+    assert conn.execute("PRAGMA user_version").fetchone()[0] == latest == 2
     conn.close()
 
 

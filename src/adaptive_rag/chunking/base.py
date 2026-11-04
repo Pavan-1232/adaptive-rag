@@ -33,6 +33,13 @@ class Chunk:
     context_start: int | None = None
     context_end: int | None = None
     is_table: bool = False
+    # Tokens of the context plus its separator. Budgets charge evidence_tokens, never just
+    # token_count, so C7's header is not free.
+    context_tokens: int = 0
+
+    @property
+    def evidence_tokens(self) -> int:
+        return self.token_count + self.context_tokens
 
 
 def make_chunk(
@@ -58,14 +65,20 @@ def make_chunk(
         context_start=context[0] if context else None,
         context_end=context[1] if context else None,
         is_table=is_table,
+        context_tokens=count_tokens(doc.text[context[0] : context[1]] + "\n") if context else 0,
     )
 
 
-def embedding_text(doc_text: str, chunk: Chunk) -> str:
-    """The chunk text, preceded by its table context when it has one."""
+def context_text(doc_text: str, chunk: Chunk) -> str | None:
     if chunk.context_start is None or chunk.context_end is None:
-        return chunk.text
-    return doc_text[chunk.context_start : chunk.context_end] + "\n" + chunk.text
+        return None
+    return doc_text[chunk.context_start : chunk.context_end]
+
+
+def embedding_text(doc_text: str, chunk: Chunk) -> str:
+    """The chunk text, preceded by its table context when it has one. The LLM sees the same."""
+    context = context_text(doc_text, chunk)
+    return chunk.text if context is None else context + "\n" + chunk.text
 
 
 def locate(doc: ExtractedDocument, start: int, end: int) -> tuple[int, int]:

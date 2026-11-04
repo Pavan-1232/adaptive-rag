@@ -1,6 +1,6 @@
 """Chunking strategies. Stage 4 adds recursive, structure-aware, semantic, and table-aware."""
 
-from .base import MAX_CHUNK_TOKENS, Chunk, count_tokens, embedding_text
+from .base import MAX_CHUNK_TOKENS, Chunk, context_text, count_tokens, embedding_text
 from .fixed import STRATEGY as FIXED_STRATEGY
 from .fixed import VERSION as FIXED_VERSION
 from .fixed import chunk_fixed
@@ -24,6 +24,7 @@ __all__ = [
     "chunk_fixed",
     "chunk_recursive",
     "chunk_table_aware",
+    "context_text",
     "count_tokens",
     "embedding_text",
     "find_tables",
