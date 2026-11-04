@@ -25,17 +25,45 @@ def _normalize_with_map(text: str) -> tuple[str, list[int]]:
     return "".join(output), positions
 
 
-def locate_quote(text: str, quote: str) -> tuple[int, int] | None:
-    """Return the quote's (start, end) in text, or None if it isn't there."""
+def locate_quote(
+    text: str, quote: str, prefer: tuple[int, int] | None = None
+) -> tuple[int, int] | None:
+    """Return the quote's (start, end) in text, or None if it isn't there.
+
+    The same table row can appear on several pages. With `prefer`, a character range such
+    as the stated page, the first match that starts inside it wins; otherwise the first match.
+    """
     needle = _SPACE.sub(" ", quote).strip().lower()
     if not needle:
         return None
     haystack, positions = _normalize_with_map(text)
     candidates = [needle, re.sub(r"(?<=[^\W\d_])- (?=[^\W\d_])", "", needle)]
     for candidate in candidates:
+        first: tuple[int, int] | None = None
         found = haystack.find(candidate)
-        if found >= 0:
-            return positions[found], positions[found + len(candidate) - 1] + 1
+        while found >= 0:
+            span = positions[found], positions[found + len(candidate) - 1] + 1
+            if prefer is None or prefer[0] <= span[0] < prefer[1]:
+                return span
+            first = first or span
+            found = haystack.find(candidate, found + 1)
+        if first is not None:
+            return first
+    return None
+
+
+def page_range(units: list, page: int | None) -> tuple[int, int] | None:
+    """The character range of a physical page, from units given as objects or dicts."""
+    if page is None:
+        return None
+    for unit in units:
+        number, start, end = (
+            (unit["number"], unit["start"], unit["end"])
+            if isinstance(unit, dict)
+            else (unit.number, unit.start, unit.end)
+        )
+        if number == page:
+            return start, end
     return None
 
 

@@ -15,7 +15,7 @@ from adaptive_rag.evaluation.questions import (
     sample_windows,
     word_overlap,
 )
-from adaptive_rag.evaluation.spans import locate_quote
+from adaptive_rag.evaluation.spans import locate_quote, page_range
 from adaptive_rag.evaluation.stats import is_tie, mean_ci, paired_difference_ci
 from adaptive_rag.loaders import ExtractedDocument, Unit
 
@@ -97,6 +97,22 @@ def test_quote_location_tolerates_a_copied_line_break_hyphen():
     text = "Systems use semantic chunking widely."
     start, end = locate_quote(text, "use seman- tic chunking")
     assert text[start:end] == "use semantic chunking"
+
+
+def test_quote_location_prefers_the_stated_page_for_repeated_rows():
+    text = "Credits 2,763 1,790\f Other\f Credits 2,763 1,790 end"
+    second = text.index("Credits", 5)
+    assert locate_quote(text, "credits 2,763 1,790", (second - 2, len(text)))[0] == second
+    # No match on the preferred page: fall back to the first match, as before.
+    assert locate_quote(text, "credits 2,763 1,790", (8, 12))[0] == 0
+    assert locate_quote(text, "credits 2,763 1,790")[0] == 0
+
+
+def test_page_range_reads_stored_and_extracted_units():
+    units = [{"number": 1, "start": 0, "end": 10}, {"number": 2, "start": 11, "end": 20}]
+    assert page_range(units, 2) == (11, 20)
+    assert page_range(units, 9) is None
+    assert page_range(units, None) is None
 
 
 def test_missing_quote_returns_none():
@@ -206,4 +222,4 @@ def test_manifest_separates_dev_and_test_documents():
     documents = load_manifest()
     dev = {item.name for item in documents if item.set == "dev"}
     test = {item.name for item in documents if item.set == "test"}
-    assert len(dev) == 3 and len(test) == 5 and not dev & test
+    assert len(dev) == 4 and len(test) == 5 and not dev & test

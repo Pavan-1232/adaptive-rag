@@ -95,7 +95,7 @@ Testing on real PDFs in Stage 2 showed that pdfplumber's defaults glue words tog
 
 ## 5. Chunking optimization
 
-### Candidates (maximum 6)
+### Candidates (maximum 7)
 
 | ID | Strategy | Size / overlap (tokens) | Condition |
 |---|---|---|---|
@@ -105,8 +105,22 @@ Testing on real PDFs in Stage 2 showed that pdfplumber's defaults glue words tog
 | C4 | Recursive | 1024 / 100 | Always |
 | C5 | Structure-aware | Up to 512 | Only if reliable headings are found |
 | C6 | Semantic (embedding breakpoints) | Up to 512 | Skipped when cost caps are reached |
+| C7 | Table-aware recursive | Up to 512 | Only if tables are detected. Tables become their own chunks, split only between rows; continuation chunks carry a second character range for the table title and header (added 2026-11-04) |
 
 Semantic chunking is tested, not assumed better. A Vectara study found its extra cost wasn't backed by consistent gains.
+
+**Product default (decided 2026-11-04, after the Stage 4 held-out run):** C1 is the default chunking (`chunking = "C1"`). The optimizer (`chunking = "adaptive"`) and C7 (`chunking = "C7"`) are opt-in settings; their code and tests stay. Reasons: the optimizer chose C1 for all 9 dev and test documents at about 10 minutes each, and C7 vs C1 on held-out data was inconclusive (table and overall). See `PROGRESS.md`, decision 44.
+
+**How the candidates work (implemented in Stage 4):**
+
+- **Recursive (C2–C4):** split at paragraphs, then lines, sentences, words and tokens, then merge greedily up to the size. Overlap is at most N trailing tokens of the previous chunk, starting at a sentence boundary where possible and never mid-word.
+- **Structure-aware (C5):** chunks never cross a heading. Sections under 50 tokens merge into the next one. It runs only when headings look reliable: at least 3 sections, at least 60% of the text under a heading, a median section of at least 80 tokens, and no heading over 15 words.
+- **Semantic (C6):** each sentence is embedded with one neighbour on each side. Cuts go where the distance between consecutive windows is above the 95th percentile. Groups over 512 tokens are split recursively, and groups under 64 tokens join the next group. There is no overlap. In the optimizer it embeds only the sampled regions.
+- **Table-aware (C7):**
+  - **Detection, by line rules:** a row is a line ending in 2 or more figures. A table needs at least 3 rows with a text label, so chart axis ticks don't count. The title is up to 6 lines above, stopping at a blank line, a sentence end, or a "Table N" line. A caption directly below is included.
+  - **Chunking:** a table that fits is one chunk. A larger table is split only at line ends. Continuation chunks carry the title and header (at most 150 tokens) as a second character range.
+  - **Context:** that range is put in front of the chunk text, both for embedding and in the LLM evidence. Text-only tables aren't detected.
+- **Context is never free:** each chunk has `evidence_tokens` = text tokens + context tokens. Recall@budget, the optimizer's scoring, and the LLM evidence budget all charge `evidence_tokens`. Gold evidence is matched against the chunk's own range only, so context adds cost but no coverage.
 
 ### Question generation
 
@@ -147,10 +161,14 @@ Many documents will tie and get a simple config. The system must not claim a dif
 
 ### Cost controls (starting values, calibrate in Stage 4)
 
-- At most 6 candidates and 40 questions per document (30 selection, 10 confirmation).
+- At most 7 candidates and 40 questions per document (30 selection, 10 confirmation).
 - The smoke test measured a median of 5.6 s per question with `think=False`, so the 40-question limit stays.
-- Sample about 25% of tokens, capped at 30,000. Short documents are evaluated in full.
-- A time budget per document. When it runs out, stop and keep the best result so far.
+- Sample about 25% of tokens, capped at 30,000. Documents of 30,000 tokens or fewer are evaluated in full. Samples are evenly spaced windows of 1,500 tokens. They snap to a line boundary within 400 characters, otherwise to a word boundary, and they never cut a detected table.
+- Every candidate is scored on the chunks that touch the sample. Questions come only from the sample. Table questions are planned in proportion to the sample's table share: at least 3 when tables exceed 5% of it, and at most 3 per table.
+- At most 60 LLM calls per document (40 accepted questions; rejected ones are replaced). Generation stops at 70% of the time budget. The LLM is unloaded before any embedding.
+- A time budget of 12 minutes per document (starting value). Semantic chunking runs last, so it is the first candidate dropped. With fewer than 10 selection questions, the control C1 is kept.
+- Selection questions come first. Confirmation gets at most a quarter of the accepted questions (10 of 40), chosen evenly across the document.
+- When the time budget runs out, stop and keep the best result so far.
 - Evaluate with in-memory NumPy search and cached embeddings, so Chroma isn't filled with temporary data.
 
 Sampled scores run high because there are fewer distracting chunks. They are valid only for comparing candidates, not as a measure of final quality.
@@ -309,6 +327,8 @@ class LLMProvider(Protocol):
 | D | C + dynamic depth |
 | E | D + neighbors and dedupe |
 | F | E + evidence check |
+
+**Stage 4 change (2026-11-04):** on dev, the optimizer chose C1 for every document and B was C1, so A, B and C were the same system. The Stage 4 held-out run therefore compares A (C1) with C7 table-aware as one fixed config, and with C (the optimizer). It is pre-registered in `PROGRESS.md`, decision 42. Later stages use whichever of these the held-out result supports as their chunking base. **Result:** C7 vs A inconclusive and C = A, so Stage 5 builds on A (C1).
 
 ### Measures
 

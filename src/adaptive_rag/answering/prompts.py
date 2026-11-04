@@ -39,7 +39,7 @@ def evidence_id(position: int) -> str:
 
 def _fence(position: int, chunk: RetrievedChunk) -> str:
     # A document containing "</evidence>" must not be able to end its own block.
-    body = _EVIDENCE_TAG.sub("[evidence", chunk.text)
+    body = _EVIDENCE_TAG.sub("[evidence", chunk.evidence_text)
     source = html.escape(chunk.filename, quote=True)
     return f'<evidence id="{evidence_id(position)}" source="{source}">\n{body}\n</evidence>'
 

@@ -9,7 +9,7 @@ from fakes import FakeEmbeddings, FakeLLM
 
 @pytest.fixture
 def settings(tmp_path):
-    return Settings(_env_file=None, data_dir=tmp_path / "data")
+    return Settings(_env_file=None, data_dir=tmp_path / "data", chunking="fixed")
 
 
 @pytest.fixture

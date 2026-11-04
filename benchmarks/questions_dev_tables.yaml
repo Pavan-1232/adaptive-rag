@@ -1,0 +1,243 @@
+# Dev table questions (15). Written in a separate session from the PDFs in
+# benchmarks/documents/dev/ only. Pages are physical PDF pages (blank pages counted).
+# Quotes are the row label followed by its values left to right. Superscript footnote
+# markers are kept attached to the label (e.g. "Unemployment rate1"), as pdfplumber extracts them.
+
+# ---------------------------------------------------------------- Fed MPR (6)
+
+- id: tbl-fed-01
+  document: fed_mpr_feb2025.pdf
+  type: table
+  question: In the December 2024 projections, what median unemployment rate did Fed officials expect for the end of 2025?
+  answerable: true
+  evidence:
+    - page: 59
+      quote: Unemployment rate 4.2 4.3 4.3 4.3 4.2 4.2 4.2–4.5 4.1–4.4 4.0–4.4 3.9–4.3 4.2 4.2–4.5 3.9–4.6 3.8–4.5 3.5–4.5
+  expected_answer: 4.3 percent (median)
+  notes: >-
+    Trap: the September projection row below gives 4.4 for 2025; the longer-run median is 4.2,
+    and 2026 and 2027 are also 4.3, so the column must be read, not guessed.
+  source: "claude-separate-session, user spot-checked"
+
+- id: tbl-fed-02
+  document: fed_mpr_feb2025.pdf
+  type: table
+  question: Where do Fed participants expect the federal funds rate to settle over the long term, according to the December 2024 median?
+  answerable: true
+  evidence:
+    - page: 59
+      quote: Federal funds rate 4.4 3.9 3.4 3.1 3.0 4.4–4.6 3.6–4.1 3.1–3.6 2.9–3.6 2.8–3.6 4.4–4.6 3.1–4.4 2.4–3.9 2.4–3.9 2.4–3.9
+  expected_answer: 3.0 percent (median, longer run)
+  notes: >-
+    Trap: the neighbouring 2027 column is 3.1; the September projection row gives 2.9 for the
+    longer run.
+  source: "claude-separate-session, user spot-checked"
+
+- id: tbl-fed-03
+  document: fed_mpr_feb2025.pdf
+  type: table
+  question: Back in September 2024, what median federal funds rate had officials pencilled in for the end of 2025?
+  answerable: true
+  evidence:
+    - page: 59
+      quote: September projection 4.4 3.4 2.9 2.9 2.9 4.4–4.6 3.1–3.6 2.6–3.6 2.6–3.6 2.5–3.5 4.1–4.9 2.9–4.1 2.4–3.9 2.4–3.9 2.4–3.8
+  expected_answer: 3.4 percent (median, September projection)
+  notes: >-
+    Trap: the December row above gives 3.9 for 2025, and the December 2026 value is also 3.4,
+    so the right number can come from the wrong row and column.
+  source: "claude-separate-session, user spot-checked"
+
+- id: tbl-fed-04
+  document: fed_mpr_feb2025.pdf
+  type: table
+  question: What median core inflation (PCE excluding food and energy) did participants project for 2026 in December 2024?
+  answerable: true
+  evidence:
+    - page: 59
+      quote: Core PCE inflation4 2.8 2.5 2.2 2.0 2.8–2.9 2.5–2.7 2.0–2.3 2.0 2.8–2.9 2.1–3.2 2.0–2.7 2.0–2.6
+  expected_answer: 2.2 percent (median)
+  notes: >-
+    Trap: headline PCE inflation for 2026 is 2.1 in the row above; the September core row gives
+    2.0. Core PCE has no longer-run column, so its fourth value (2.0) is 2027, not longer run.
+  source: "claude-separate-session, user spot-checked"
+
+- id: tbl-fed-05
+  document: fed_mpr_feb2025.pdf
+  type: table
+  question: In the September 2024 projections, what median headline PCE inflation was expected for 2025?
+  answerable: true
+  evidence:
+    - page: 59
+      quote: September projection 2.3 2.1 2.0 2.0 2.0 2.2–2.4 2.1–2.2 2.0 2.0 2.0 2.1–2.7 2.1–2.4 2.0–2.2 2.0–2.1 2.0
+  expected_answer: 2.1 percent (median, September projection)
+  notes: >-
+    Trap: the December row gives 2.5 for 2025, and December 2026 is 2.1, the same number in the
+    wrong row and column. Core PCE rows sit just below.
+  source: "claude-separate-session, user spot-checked"
+
+- id: tbl-fed-06
+  document: fed_mpr_feb2025.pdf
+  type: table
+  question: Based on past forecasting errors, how wide is the typical error band around the unemployment rate projection for 2026?
+  answerable: true
+  evidence:
+    - page: 74
+      quote: Unemployment rate1 ± 0.1 ± 1.1 ± 1.6 ± 2.0
+  expected_answer: Plus or minus 1.6 percentage points
+  notes: >-
+    Trap: total consumer prices also show ± 1.6 for 2026 (and 2025) in the row below; the
+    unemployment 2025 value is ± 1.1 and 2027 is ± 2.0.
+  source: "claude-separate-session, user spot-checked"
+
+# ---------------------------------------------------------------- Tesla 10-K (4)
+
+- id: tbl-tsla-01
+  document: tesla_10k.pdf
+  type: table
+  question: How much revenue did Tesla make from selling regulatory credits in 2024?
+  answerable: true
+  evidence:
+    - page: 52
+      quote: Automotive regulatory credits 2,763 1,790 1,776
+      alternatives:
+        - page: 40
+          quote: Automotive regulatory credits 2,763 1,790 1,776
+        - page: 58
+          quote: Automotive regulatory credits 2,763 1,790 1,776
+  expected_answer: $2,763 million
+  notes: >-
+    Trap: automotive leasing (1,827) is the next row and is close in size; 2023 credits were
+    1,790.
+  source: "claude-separate-session, user spot-checked"
+
+- id: tbl-tsla-02
+  document: tesla_10k.pdf
+  type: table
+  question: What was Tesla's pre-tax profit for 2024?
+  answerable: true
+  evidence:
+    - page: 52
+      quote: Income before income taxes 8,990 9,973 13,719
+      alternatives:
+        - page: 84
+          quote: Income before income taxes $ 8,990 $ 9,973 $ 13,719
+  expected_answer: $8,990 million
+  notes: >-
+    Trap: income from operations (7,076) and net income (7,153) are nearby rows; 2023 pre-tax
+    income was 9,973.
+  source: "claude-separate-session, user spot-checked"
+
+- id: tbl-tsla-03
+  document: tesla_10k.pdf
+  type: table
+  question: How much did Tesla spend on buying property and equipment in 2024, per the cash flow statement?
+  answerable: true
+  evidence:
+    - page: 55
+      quote: Purchases of property and equipment excluding finance leases, net of sales (11,339) (8,898) (7,158)
+      alternatives:
+        - page: 46
+          quote: capital expenditures, which were $11.34 billion
+  expected_answer: $11,339 million (about $11.34 billion)
+  notes: >-
+    Trap: purchases of investments (35,955) and net cash used in investing activities (18,787)
+    sit in the same section; page 45 gives a 2025 capex expectation of over $11.00 billion.
+  source: "claude-separate-session, user spot-checked"
+
+- id: tbl-tsla-04
+  document: tesla_10k.pdf
+  type: table
+  question: What gross profit did Tesla's energy generation and storage business earn in 2023?
+  answerable: true
+  evidence:
+    - page: 94
+      quote: Gross profit $ 2,640 $ 1,141 $ 288
+      alternatives:
+        - page: 41
+          quote: Gross profit energy generation and storage segment $ 2,640 $ 1,141 $ 288
+  expected_answer: $1,141 million
+  notes: >-
+    Trap: 2024 energy gross profit is 2,640 in the column to the left; the automotive segment's
+    gross profit row (16,519 for 2023) has the same "Gross profit" label on page 94.
+  source: "claude-separate-session, user spot-checked"
+
+# ---------------------------------------------------------------- NIST AI RMF (4)
+
+- id: tbl-nist-01
+  document: nist_ai_rmf.pdf
+  type: table
+  question: What does the GOVERN function expect organisations to have ready in case third-party data or AI systems fail?
+  answerable: true
+  evidence:
+    - page: 29
+      quote: "GOVERN 6.2: Contingency processes are in place to handle"
+  expected_answer: Contingency processes to handle failures or incidents in third-party data or AI systems deemed high-risk (GOVERN 6.2).
+  notes: >-
+    Trap: GOVERN 6.1 directly above is also about third-party risk (policies, IP infringement);
+    MANAGE 3.1 and MAP 4.1 also mention third parties. Table 1 continuation page.
+    Known extraction failure (2026-11-04): the PDF loader interleaves this row line by line with
+    the table's left Categories column, so the full sentence never appears as one string. The
+    quote was shortened to the prefix that survives intact; the question and answer are unchanged.
+  source: "claude-separate-session, user spot-checked"
+
+- id: tbl-nist-02
+  document: nist_ai_rmf.pdf
+  type: table
+  question: Under the MAP function, what must be true of the processes for humans overseeing an AI system?
+  answerable: true
+  evidence:
+    - page: 32
+      quote: "MAP 3.5: Processes for human oversight are defined, assessed, and documented in accordance with organizational policies from the GOVERN function."
+  expected_answer: They are defined, assessed, and documented in line with organizational policies from the GOVERN function (MAP 3.5).
+  notes: >-
+    Trap: MAP 3.4 directly above covers operator and practitioner proficiency; GOVERN 3.2
+    covers roles for human-AI configurations and oversight. Table 2 continuation page.
+  source: "claude-separate-session, user spot-checked"
+
+- id: tbl-nist-03
+  document: nist_ai_rmf.pdf
+  type: table
+  question: Which MEASURE subcategory deals with an AI system's privacy risk, and what does it require?
+  answerable: true
+  evidence:
+    - page: 35
+      quote: "MEASURE 2.10: Privacy risk of the AI system – as identified in the MAP function – is examined and documented."
+  expected_answer: MEASURE 2.10 — privacy risk, as identified in the MAP function, is examined and documented.
+  notes: >-
+    Trap: MEASURE 2.8 (transparency and accountability, "examined and documented") and 2.11
+    (fairness and bias, "evaluated") use near-identical wording. Table 3 continuation page.
+  source: "claude-separate-session, user spot-checked"
+
+- id: tbl-nist-04
+  document: nist_ai_rmf.pdf
+  type: table
+  question: According to the MANAGE function, who should be told about incidents and errors?
+  answerable: true
+  evidence:
+    - page: 38
+      quote: "MANAGE 4.3: Incidents and errors are communicated to relevant"
+  expected_answer: Relevant AI actors, including affected communities (MANAGE 4.3); processes for tracking, responding to, and recovering from incidents and errors are followed and documented.
+  notes: >-
+    Quote is the first sentence only; the second sentence has a hyphenated line break
+    ("track-ing"). Trap: MANAGE 2.3 is about responding to and recovering from previously
+    unknown risks; MEASURE 3.3 covers end users reporting problems. Table 4 continuation page.
+    Known extraction failure (2026-11-04): the PDF loader interleaves this row with the left
+    Categories column ("monitored regularly." lands mid-sentence). The quote was shortened to the
+    prefix that survives intact; the question and answer are unchanged.
+  source: "claude-separate-session, user spot-checked"
+
+# ---------------------------------------------------------------- Ragas (1)
+
+- id: tbl-ragas-01
+  document: ragas.pdf
+  type: table
+  question: How often did the GPT Score baseline agree with human annotators on context relevance?
+  answerable: true
+  evidence:
+    - page: 5
+      quote: GPT Score 0.72 0.52 0.63
+  expected_answer: 0.63 accuracy
+  notes: >-
+    Trap: Ragas scores 0.70 on context relevance in the row above; GPT Score's answer
+    relevance (0.52) equals GPT Ranking's context relevance (0.52).
+  source: "claude-separate-session, user spot-checked"

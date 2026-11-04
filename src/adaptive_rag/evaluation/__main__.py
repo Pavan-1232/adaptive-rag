@@ -30,7 +30,7 @@ from .runner import (
     run_benchmark,
     save_results,
 )
-from .spans import locate_quote
+from .spans import locate_quote, page_range
 from .stats import is_tie, paired_difference_ci
 
 DOCUMENTS = BENCHMARK_DIR / "documents"
@@ -52,9 +52,21 @@ def _commit() -> str:
     return result.stdout.strip() + ("+uncommitted" if dirty.stdout.strip() else "")
 
 
-def _settings(split: str, model: str) -> Settings:
+SYSTEMS = {
+    "fixed": "A (fixed 512/50, top-5)",  # Stage 3's system A, in its original index folder
+    "C1": "A (C1 fixed 512/50, top-5)",
+    "C7": "C7 (table-aware 512/50, top-5)",
+    "adaptive": "C (per-document optimizer, top-5)",
+}
+
+
+def _settings(split: str, model: str, chunking: str = "fixed") -> Settings:
+    """Each chunking mode gets its own index folder, so systems never share chunks."""
     slug = model.replace(":", "_")
-    return Settings(data_dir=Path("data") / "eval" / f"{split}_{slug}", embedding_model=model)
+    folder = f"{split}_{slug}" if chunking == "fixed" else f"{split}_{slug}_{chunking}"
+    return Settings(
+        data_dir=Path("data") / "eval" / folder, embedding_model=model, chunking=chunking
+    )
 
 
 def _providers(settings: Settings):
@@ -95,7 +107,7 @@ def cmd_validate(args: argparse.Namespace) -> int:
         doc = texts[question.document]
         options = [o for evidence in question.evidence for o in (evidence, *evidence.alternatives)]
         for evidence in options:
-            found = locate_quote(doc.text, evidence.quote)
+            found = locate_quote(doc.text, evidence.quote, page_range(doc.units, evidence.page))
             if found is None:
                 problems.append(f"{question.id}: quote not found")
                 continue
@@ -126,7 +138,8 @@ def cmd_generate(args: argparse.Namespace) -> int:
 
 def _metadata(args, settings, embedder, split, question_source, judge_model) -> dict:
     return {
-        "system": "A (fixed 512/50, top-5)",
+        "system": SYSTEMS.get(getattr(args, "chunking", "fixed"), getattr(args, "chunking", "")),
+        "chunking": getattr(args, "chunking", "fixed"),
         "set": split,
         "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "commit": _commit(),
@@ -151,7 +164,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     if args.set == "test" and not args.final:
         print("The test set is held out. Pass --final to run it, once per release.")
         return 2
-    settings = _settings(args.set, args.embedding_model)
+    settings = _settings(args.set, args.embedding_model, args.chunking)
     embedder, llm = _providers(settings)
     documents = load_manifest(split=args.set)
     ctx, kb, indexed = build_index(
@@ -179,7 +192,9 @@ def cmd_run(args: argparse.Namespace) -> int:
         print(f"Resuming {path}: {len(done)} of {len(questions)} questions already answered.")
     else:
         stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S")
-        path = RESULTS / f"{args.set}_{args.embedding_model.replace(':', '_')}_{stamp}.json"
+        suffix = "" if args.chunking == "fixed" else f"_{args.chunking}"
+        model = args.embedding_model.replace(":", "_")
+        path = RESULTS / f"{args.set}_{model}{suffix}_{stamp}.json"
         print(f"Saving progress to {path}. To resume after a stop, add: --resume {path}")
 
     def progress(result) -> None:
@@ -243,7 +258,10 @@ def cmd_compare(args: argparse.Namespace) -> int:
         print("Result files cover different questions.")
         return 2
     ids = sorted(a)
-    print(f"{first['metadata']['embedding_model']} minus {second['metadata']['embedding_model']}")
+    labels = [
+        f"{r['metadata']['system']} [{r['metadata']['embedding_model']}]" for r in (first, second)
+    ]
+    print(f"{labels[0]} minus {labels[1]}")
     for key in ("recall_at_budget", "recall_at_5", "hit_at_5", "reciprocal_rank"):
         ci = paired_difference_ci([a[i][key] for i in ids], [b[i][key] for i in ids])
         verdict = "tie" if is_tie(ci) else "different"
@@ -270,6 +288,12 @@ def main() -> int:
     run.add_argument("--questions", required=True)
     run.add_argument("--embedding-model", default="embeddinggemma:300m")
     run.add_argument("--retrieval-only", action="store_true")
+    run.add_argument(
+        "--chunking",
+        default="fixed",
+        choices=sorted(SYSTEMS) + ["C2", "C3", "C4", "C5", "C6"],
+        help="fixed (Stage 3 A), C1-C7 (one config for every document), or adaptive (C)",
+    )
     run.add_argument("--judge", nargs="?", const=JUDGE_MODEL, default=None)
     run.add_argument("--final", action="store_true", help="required for the held-out test set")
     run.add_argument("--question-source", default="unspecified")

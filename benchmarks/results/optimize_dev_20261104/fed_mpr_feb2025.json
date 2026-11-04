@@ -1,0 +1,1094 @@
+{
+  "document": "fed_mpr_feb2025.pdf",
+  "optimizer_version": "optimizer-1",
+  "profile": {
+    "version": "profile-1",
+    "format": "pdf",
+    "pages": 80,
+    "tokens": 44211,
+    "sections": 100,
+    "heading_density": 2.262,
+    "median_section_tokens": 279.0,
+    "section_coverage": 1.0,
+    "table_count": 5,
+    "table_share": 0.0375,
+    "chars_per_page": 2250.2,
+    "language": "en",
+    "headings_reliable": false,
+    "has_tables": true
+  },
+  "caps": {
+    "max_questions": 40,
+    "confirmation_questions": 10,
+    "max_llm_calls": 60,
+    "max_candidates": 7,
+    "time_budget_s": 720.0,
+    "generation_share": 0.7,
+    "min_selection_questions": 10
+  },
+  "sample_tokens": 12109,
+  "regions": [
+    [
+      0,
+      4582
+    ],
+    [
+      26835,
+      33389
+    ],
+    [
+      52596,
+      59137
+    ],
+    [
+      78108,
+      84498
+    ],
+    [
+      104323,
+      110927
+    ],
+    [
+      131313,
+      137768
+    ],
+    [
+      149047,
+      153546
+    ],
+    [
+      172887,
+      180016
+    ]
+  ],
+  "questions_selection": 6,
+  "questions_confirmation": 10,
+  "question_types": {
+    "factual": 8,
+    "conceptual": 4,
+    "multi_part": 4
+  },
+  "rejected": {
+    "quote not found": 16,
+    "copies the quote's wording": 6,
+    "time cap": 22
+  },
+  "llm_calls": 38,
+  "candidates": [
+    {
+      "id": "C1",
+      "status": "scored",
+      "chunks_in_sample": 34,
+      "storage_tokens": 17217,
+      "seconds": 3.4,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": 1.0
+    },
+    {
+      "id": "C2",
+      "status": "scored",
+      "chunks_in_sample": 61,
+      "storage_tokens": 14802,
+      "seconds": 3.17,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": 1.0
+    },
+    {
+      "id": "C3",
+      "status": "scored",
+      "chunks_in_sample": 34,
+      "storage_tokens": 16122,
+      "seconds": 3.27,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": 1.0
+    },
+    {
+      "id": "C4",
+      "status": "scored",
+      "chunks_in_sample": 25,
+      "storage_tokens": 18364,
+      "seconds": 3.57,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": 1.0
+    },
+    {
+      "id": "C5",
+      "status": "not applicable",
+      "chunks_in_sample": 0,
+      "storage_tokens": 0,
+      "seconds": 0.0,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": null
+    },
+    {
+      "id": "C7",
+      "status": "scored",
+      "chunks_in_sample": 34,
+      "storage_tokens": 16122,
+      "seconds": 3.36,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": 1.0
+    },
+    {
+      "id": "C6",
+      "status": "scored",
+      "chunks_in_sample": 46,
+      "storage_tokens": 12102,
+      "seconds": 21.44,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": 0.9994
+    }
+  ],
+  "winner": "C1",
+  "winner_reason": "only 6 selection questions; kept the control",
+  "timings_s": {
+    "questions": 505.72,
+    "query_embeddings": 1.4,
+    "candidates": 38.21,
+    "total": 545.66
+  },
+  "stopped_early": [
+    "question generation hit the time cap"
+  ],
+  "per_question": {
+    "C1": [
+      {
+        "id": "fed_mpr_feb2025-gen-000",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-004",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-014",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-020",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-021",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-023",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-025",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-027",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-028",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-030",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-031",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-033",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-035",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      }
+    ],
+    "C2": [
+      {
+        "id": "fed_mpr_feb2025-gen-000",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-004",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-014",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-020",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-021",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-023",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-025",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-027",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 0.9235668789808917,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-028",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-030",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-031",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "gold_rank": 4
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-033",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-035",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      }
+    ],
+    "C3": [
+      {
+        "id": "fed_mpr_feb2025-gen-000",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-004",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-014",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-020",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-021",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-023",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-025",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-027",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-028",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-030",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-031",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-033",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-035",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      }
+    ],
+    "C4": [
+      {
+        "id": "fed_mpr_feb2025-gen-000",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-004",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-014",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-020",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-021",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-023",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-025",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-027",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-028",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-030",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-031",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-033",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-035",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      }
+    ],
+    "C7": [
+      {
+        "id": "fed_mpr_feb2025-gen-000",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-004",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-014",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-020",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-021",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-023",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-025",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-027",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-028",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-030",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-031",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-033",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-035",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      }
+    ],
+    "C6": [
+      {
+        "id": "fed_mpr_feb2025-gen-000",
+        "recall_at_budget": 0.9935897435897436,
+        "recall_at_5": 0.9935897435897436,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-004",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-014",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-020",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-021",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-023",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-025",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-027",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-028",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-030",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-031",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-033",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "fed_mpr_feb2025-gen-035",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "gold_rank": 4
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "fed_mpr_feb2025-gen-000",
+      "type": "factual",
+      "split": "confirmation",
+      "question": "Who submitted the February 2025 Monetary Policy Report to Congress on behalf of the Federal Reserve System?",
+      "quote": "The Board of Governors is pleased to submit its Monetary Policy Report pursuant to section 2B of the Federal Reserve Act.\n\nSincerely,\nJerome H. Powell, Chair",
+      "page": 3
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-003",
+      "type": "factual",
+      "split": "selection",
+      "question": "What is the specific end date used for daily data series in the provided figures?",
+      "quote": "ime series in the figures extend through, for daily data, February 4, 2025; for monthly data, December 2024; and, for quarterly data, 2024:Q4.",
+      "page": 6
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-004",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "How have recent changes in supply chain conditions and market balance influenced the trend of core goods prices?",
+      "quote": "The movement toward pre-pandemic conditions for this category of inflation in part reflects the resolution of supply chain issues and other supply constraints that had boosted goods prices earlier, and supply\u2013demand conditions in goods markets now appear to be relatively balanced.",
+      "page": 17
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-012",
+      "type": "factual",
+      "split": "confirmation",
+      "question": "What specific factor is identified as a key contributor to the stronger-than-expected productivity growth observed since the start of the pandemic?",
+      "quote": "One key contributing factor has likely been new business formation, which surged early in the pandemic and remains strong (fi gure B). This strength has likely supported productivity growth because newer fi rms are more likely to adopt new technologies or production processes, use ex",
+      "page": 28
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-014",
+      "type": "multi_part",
+      "split": "selection",
+      "question": "How has recent business formation influenced productivity growth, and what specific type of industry has seen a disproportionate increase in new company creation?",
+      "quote": "Moreover, the surge in business formation has been disproportionately concentrated in high-tech industries, which historically have been important drivers of productivity gains.",
+      "page": 28
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-020",
+      "type": "multi_part",
+      "split": "confirmation",
+      "question": "How do foreign central banks justify their recent decision to lower interest rates, and what specific economic indicators are they monitoring to guide these policy shifts?",
+      "quote": "Many foreign central banks, including the European Central Bank and the Bank of Canada as well as several central banks in Latin America and Southeast Asia, continued to cut policy rates since mid-2024, citing declining inflationary pressures, easing labor markets, and concerns about economic growth. Policymakers generally emphasized that they are following a data-dependent",
+      "page": 45
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-021",
+      "type": "factual",
+      "split": "selection",
+      "question": "Which specific countries were included in the emerging market economy aggregate used for inflation analysis?",
+      "quote": "The emerging market economy (EME) aggregate is the average of Argentina, Brazil, Chile, Colombia, Hong Kong, India, Indonesia, Israel, Malaysia, Mexico, the Philippines, Russia, Saudi Arabia, Singapore, South Korea, Taiwan, Thailand, and Vietnam, weighted by shares of U.S. non-oil goods imports, and begins in May 2017.",
+      "page": 46
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-023",
+      "type": "multi_part",
+      "split": "confirmation",
+      "question": "How did investor sentiment toward emerging markets shift from late September to the fourth quarter of the previous year, and what specific economic factors drove this reversal in capital flows?",
+      "quote": "More broadly, while aggregate emerging market economy (EME) funds recorded strong inflows last September, these turned to large outflows in the fourth quarter as investors reacted to the deterioration in the economic outlook for China, rising U.S. longer-term interest rates, and the prospect of new U.S. tariffs on EME exports to the U.S.",
+      "page": 47
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-024",
+      "type": "factual",
+      "split": "confirmation",
+      "question": "What factors did market participants cite for the significant rise in the broad dollar index since mid-2024?",
+      "quote": "Market participants attributed the recent increase in the dollar index to widening gaps of U.S. interest rates over those of major AFEs, the relative strength of the U.S. economy, and political and fiscal developments in some foreign economies. Some market participants also pointed to potential increases in U.S. tariffs on imports as a factor pushing the dollar higher in recent months.",
+      "page": 48
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-025",
+      "type": "conceptual",
+      "split": "selection",
+      "question": "Why do these monetary policy rules prioritize core PCE price inflation over headline inflation when calculating interest rate adjustments?",
+      "quote": "The rules are implemented as responding to core PCE price inflation rather than to headline PCE price inflation because current and near-term core inflation rates tend to outperform headline inflation",
+      "page": 56
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-027",
+      "type": "factual",
+      "split": "confirmation",
+      "question": "How does the balanced-approach rule differ from the standard Taylor (1993) rule in its response to unemployment gaps?",
+      "quote": "Taylor (1993) rule R T93 = r LR + \u03c0 + 0.5(\u03c0 \u2212 \u03c0LR) + (u LR \u2212 u )\nt t t t t t\nBalanced-approach rule R BA = r LR + \u03c0 + 0.5(\u03c0 \u2212 \u03c0LR) + 2(u LR \u2212 u )\nt t t t t t",
+      "page": 57
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-028",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "How does the adjusted Taylor rule account for situations where the standard formula suggests interest rates should fall below zero?",
+      "quote": "Unlike the other simple rules featured here, the adjusted Taylor (1993) rule recognizes that the federal funds rate cannot be reduced materially below the effective lower bound (ELB). By contrast, the standard Taylor (1993) rule prescribed policy rates that, during the pandemic-induced recession, were far below zero. To make up for the cumulative shortfall in policy accommodation following a recession during which the federal funds rate is constrained",
+      "page": 57
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-030",
+      "type": "factual",
+      "split": "selection",
+      "question": "How many participants estimated that the appropriate target level for the federal funds rate in 2027 would be between 2.37 and 2.62?",
+      "quote": "Number of participants\n2027\n20\n18\n16\n14\n12\n10\n8\n6\n4\n2\n2.13\u2212 2.38\u2212 2.63\u2212 2.88\u2212 3.13\u2212 3.38\u2212 3.63\u2212 3.88\u2212 4.13\u2212 4.38\u2212 4.63\u2212 4.88\u2212\n2.37 2.62 2.87 3.12 3.37 3.62 3.87 4.12 4.37 4.62 4.87 5.12\nPercent range",
+      "page": 67
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-031",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "How do Federal Reserve officials quantify the potential downside and upside scenarios for future economic growth when presenting their forecasts?",
+      "quote": "Median projection and confidence interval based on historical forecast errors\nPercent\nChange in real GDP\n6\nMedian of projections\n70% confidence interval",
+      "page": 68
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-033",
+      "type": "factual",
+      "split": "selection",
+      "question": "How do FOMC participants characterize the symmetry of risks to their unemployment rate projections based on their current assessments?",
+      "quote": "Likewise, participants who judge the risks to their projections as \u201cbroadly balanced\u201d would view the confidence interval around their projections as approximately symmetric.",
+      "page": 68
+    },
+    {
+      "id": "fed_mpr_feb2025-gen-035",
+      "type": "multi_part",
+      "split": "confirmation",
+      "question": "What specific economic indicators are listed as sources for Figures 17 through 27, and which organizations provided the data for those specific figures?",
+      "quote": "Figure 17. Measures of change in hourly compensation\nBureau of Labor Statistics; Federal Reserve Bank of Atlanta, Wage Growth Tracker; all via Haver\nAnalytics.\nFigure 18. Change in real gross domestic product and gross domestic income\nBureau of Economic Analysis via Haver Analytics.\nFigure 19. Change in real personal consumption expenditures\nBureau of Economic Analysis via Haver Analytics.",
+      "page": 78
+    }
+  ],
+  "ingest_timings_s": {
+    "extract": 4.74,
+    "optimize": 545.66,
+    "index_winner": 9.25,
+    "total": 559.65
+  },
+  "winner_chunks_full_document": 96,
+  "meta": {
+    "created": "2026-11-04T06:26:03+00:00",
+    "commit": "0b9c47ba2dad85e053f5d820e56dd41a03af8b0f",
+    "embedding_model": "embeddinggemma:300m",
+    "embedding_digest": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+    "llm_model": "qwen3.5:9b",
+    "embeddings_cached": false
+  }
+}

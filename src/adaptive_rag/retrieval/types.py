@@ -18,3 +18,15 @@ class RetrievedChunk:
     source: Literal["direct", "expansion"] = "direct"
     start_char: int = 0
     end_char: int = 0
+    # C7 table header shown before the chunk text; its tokens are charged to the budget.
+    context_text: str | None = None
+    context_tokens: int = 0
+
+    @property
+    def evidence_tokens(self) -> int:
+        return self.token_count + self.context_tokens
+
+    @property
+    def evidence_text(self) -> str:
+        """What the LLM reads: the context, then the chunk."""
+        return self.text if self.context_text is None else f"{self.context_text}\n{self.text}"

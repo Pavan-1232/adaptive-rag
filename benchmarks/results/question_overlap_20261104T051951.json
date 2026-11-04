@@ -1,0 +1,132 @@
+{
+  "dev_file": "benchmarks/questions_dev_tables.yaml",
+  "test_file": "benchmarks/questions_test.yaml",
+  "embedding_model": "embeddinggemma:300m",
+  "thresholds": {
+    "jaccard": 0.5,
+    "cosine": 0.85
+  },
+  "flagged": 0,
+  "rows": [
+    {
+      "dev_id": "tbl-fed-01",
+      "nearest_test_id": "fed-un",
+      "cosine": 0.715,
+      "max_jaccard": 0.333,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-fed-02",
+      "nearest_test_id": "fed-01",
+      "cosine": 0.62,
+      "max_jaccard": 0.13,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-fed-03",
+      "nearest_test_id": "fed-01",
+      "cosine": 0.687,
+      "max_jaccard": 0.19,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-fed-04",
+      "nearest_test_id": "fed-02",
+      "cosine": 0.581,
+      "max_jaccard": 0.136,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-fed-05",
+      "nearest_test_id": "fed-02",
+      "cosine": 0.779,
+      "max_jaccard": 0.294,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-fed-06",
+      "nearest_test_id": "fed-un",
+      "cosine": 0.584,
+      "max_jaccard": 0.118,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-tsla-01",
+      "nearest_test_id": "apple-01",
+      "cosine": 0.493,
+      "max_jaccard": 0.2,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-tsla-02",
+      "nearest_test_id": "apple-01",
+      "cosine": 0.49,
+      "max_jaccard": 0.2,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-tsla-03",
+      "nearest_test_id": "apple-02",
+      "cosine": 0.479,
+      "max_jaccard": 0.227,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-tsla-04",
+      "nearest_test_id": "apple-01",
+      "cosine": 0.422,
+      "max_jaccard": 0.111,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-nist-01",
+      "nearest_test_id": "csf-02",
+      "cosine": 0.376,
+      "max_jaccard": 0.053,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-nist-02",
+      "nearest_test_id": "csf-05",
+      "cosine": 0.296,
+      "max_jaccard": 0.053,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-nist-03",
+      "nearest_test_id": "csf-04",
+      "cosine": 0.419,
+      "max_jaccard": 0.188,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-nist-04",
+      "nearest_test_id": "csf-05",
+      "cosine": 0.461,
+      "max_jaccard": 0.059,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "tbl-ragas-01",
+      "nearest_test_id": "raptor-03",
+      "cosine": 0.399,
+      "max_jaccard": 0.111,
+      "identical_quotes": 0,
+      "flagged": false
+    }
+  ]
+}

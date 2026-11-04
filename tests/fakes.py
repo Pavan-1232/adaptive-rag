@@ -76,3 +76,30 @@ class FakeLLM:
 
     def unload(self):
         self.unloads += 1
+
+
+class QuestionLLM:
+    """Answers each prompt with a question and a quote copied from the passage."""
+
+    id = "fake"
+    model = "fake-llm:1"
+
+    def __init__(self, clock=None, seconds_per_call=0.0):
+        self.calls = 0
+        self.events: list[str] = []
+        self.clock, self.seconds = clock, seconds_per_call
+
+    def generate(self, messages, schema=None, max_tokens=None, temperature=0):
+        self.calls += 1
+        self.events.append("generate")
+        if self.clock:
+            self.clock.now += self.seconds
+        passage = re.search(r"<passage>\n(.*)\n</passage>", messages[0]["content"], re.S).group(1)
+        lines = [line.strip() for line in passage.split("\n")]
+        quote = next((line for line in lines if len(line) >= 40), max(lines, key=len))
+        quote = quote[:120].rsplit(" ", 1)[0]
+        payload = {"question": "Which figure is mentioned here?", "evidence_quote": quote}
+        return LLMResult(json.dumps(payload), 100, 20, 5.0, "stop")
+
+    def unload(self):
+        self.events.append("unload")

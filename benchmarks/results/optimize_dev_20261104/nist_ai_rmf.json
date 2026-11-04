@@ -1,0 +1,1651 @@
+{
+  "document": "nist_ai_rmf.pdf",
+  "optimizer_version": "optimizer-1",
+  "profile": {
+    "version": "profile-1",
+    "format": "pdf",
+    "pages": 47,
+    "tokens": 20442,
+    "sections": 26,
+    "heading_density": 1.272,
+    "median_section_tokens": 329.0,
+    "section_coverage": 1.0,
+    "table_count": 0,
+    "table_share": 0.0,
+    "chars_per_page": 2218.6,
+    "language": "en",
+    "headings_reliable": true,
+    "has_tables": false
+  },
+  "caps": {
+    "max_questions": 40,
+    "confirmation_questions": 10,
+    "max_llm_calls": 60,
+    "max_candidates": 7,
+    "time_budget_s": 720.0,
+    "generation_share": 0.7,
+    "min_selection_questions": 10
+  },
+  "sample_tokens": 20442,
+  "regions": [
+    [
+      0,
+      104275
+    ]
+  ],
+  "questions_selection": 16,
+  "questions_confirmation": 10,
+  "question_types": {
+    "factual": 11,
+    "conceptual": 11,
+    "multi_part": 4
+  },
+  "rejected": {
+    "copies the quote's wording": 5,
+    "too long": 1,
+    "quote not found": 12,
+    "time cap": 16
+  },
+  "llm_calls": 44,
+  "candidates": [
+    {
+      "id": "C1",
+      "status": "scored",
+      "chunks_in_sample": 45,
+      "storage_tokens": 22642,
+      "seconds": 3.86,
+      "selection_recall": 0.7861,
+      "difference_vs_leader": [
+        -0.0792,
+        -0.2542,
+        0.0818
+      ],
+      "tied_with_leader": true,
+      "confirmation_recall": 0.7
+    },
+    {
+      "id": "C2",
+      "status": "scored",
+      "chunks_in_sample": 90,
+      "storage_tokens": 22090,
+      "seconds": 4.5,
+      "selection_recall": 0.8653,
+      "difference_vs_leader": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tied_with_leader": true,
+      "confirmation_recall": 0.9567
+    },
+    {
+      "id": "C3",
+      "status": "scored",
+      "chunks_in_sample": 49,
+      "storage_tokens": 21890,
+      "seconds": 3.94,
+      "selection_recall": 0.75,
+      "difference_vs_leader": [
+        -0.1153,
+        -0.3241,
+        0.0647
+      ],
+      "tied_with_leader": true,
+      "confirmation_recall": 0.9
+    },
+    {
+      "id": "C4",
+      "status": "scored",
+      "chunks_in_sample": 31,
+      "storage_tokens": 22798,
+      "seconds": 4.07,
+      "selection_recall": 0.75,
+      "difference_vs_leader": [
+        -0.1153,
+        -0.3241,
+        0.0647
+      ],
+      "tied_with_leader": true,
+      "confirmation_recall": 0.6
+    },
+    {
+      "id": "C5",
+      "status": "scored",
+      "chunks_in_sample": 50,
+      "storage_tokens": 21356,
+      "seconds": 3.9,
+      "selection_recall": 0.75,
+      "difference_vs_leader": [
+        -0.1153,
+        -0.3241,
+        0.0647
+      ],
+      "tied_with_leader": true,
+      "confirmation_recall": 0.7
+    },
+    {
+      "id": "C7",
+      "status": "not applicable",
+      "chunks_in_sample": 0,
+      "storage_tokens": 0,
+      "seconds": 0.0,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": null
+    },
+    {
+      "id": "C6",
+      "status": "scored",
+      "chunks_in_sample": 59,
+      "storage_tokens": 20421,
+      "seconds": 19.14,
+      "selection_recall": 0.75,
+      "difference_vs_leader": [
+        -0.1153,
+        -0.3241,
+        0.0647
+      ],
+      "tied_with_leader": true,
+      "confirmation_recall": 0.6
+    }
+  ],
+  "winner": "C1",
+  "winner_reason": "leader C2; tied with leader: C2, C1, C3, C4, C5, C6; simplest tied wins",
+  "timings_s": {
+    "questions": 507.29,
+    "query_embeddings": 1.58,
+    "candidates": 39.41,
+    "total": 548.75
+  },
+  "stopped_early": [
+    "question generation hit the time cap"
+  ],
+  "per_question": {
+    "C1": [
+      {
+        "id": "nist_ai_rmf-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-004",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-006",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-007",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-008",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-009",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-010",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-011",
+        "recall_at_budget": 0.5773584905660377,
+        "recall_at_5": 0.5773584905660377,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-013",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-015",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-016",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-019",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.1,
+        "gold_rank": 10
+      },
+      {
+        "id": "nist_ai_rmf-gen-020",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-024",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.1,
+        "gold_rank": 10
+      },
+      {
+        "id": "nist_ai_rmf-gen-025",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.125,
+        "gold_rank": 8
+      },
+      {
+        "id": "nist_ai_rmf-gen-031",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.058823529411764705,
+        "gold_rank": 17
+      },
+      {
+        "id": "nist_ai_rmf-gen-033",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-034",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-035",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "gold_rank": 4
+      },
+      {
+        "id": "nist_ai_rmf-gen-036",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-037",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.2,
+        "gold_rank": 5
+      },
+      {
+        "id": "nist_ai_rmf-gen-039",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.14285714285714285,
+        "gold_rank": 7
+      },
+      {
+        "id": "nist_ai_rmf-gen-040",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.14285714285714285,
+        "gold_rank": 7
+      },
+      {
+        "id": "nist_ai_rmf-gen-041",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-043",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      }
+    ],
+    "C2": [
+      {
+        "id": "nist_ai_rmf-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "nist_ai_rmf-gen-004",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "nist_ai_rmf-gen-006",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-007",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-008",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-009",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-010",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.14285714285714285,
+        "gold_rank": 7
+      },
+      {
+        "id": "nist_ai_rmf-gen-011",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "gold_rank": 4
+      },
+      {
+        "id": "nist_ai_rmf-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-013",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-015",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-016",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-019",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "nist_ai_rmf-gen-020",
+        "recall_at_budget": 0.3456521739130435,
+        "recall_at_5": 0.3456521739130435,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.0625,
+        "gold_rank": 16
+      },
+      {
+        "id": "nist_ai_rmf-gen-024",
+        "recall_at_budget": 0.5665294924554184,
+        "recall_at_5": 0.5665294924554184,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-025",
+        "recall_at_budget": 0.9828326180257511,
+        "recall_at_5": 0.9828326180257511,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-031",
+        "recall_at_budget": 0.5703422053231939,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.1111111111111111,
+        "gold_rank": 9
+      },
+      {
+        "id": "nist_ai_rmf-gen-033",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-034",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-035",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-036",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 0.8044444444444444,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-037",
+        "recall_at_budget": 0.9453302961275627,
+        "recall_at_5": 0.9453302961275627,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-039",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.14285714285714285,
+        "gold_rank": 7
+      },
+      {
+        "id": "nist_ai_rmf-gen-040",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.05555555555555555,
+        "gold_rank": 18
+      },
+      {
+        "id": "nist_ai_rmf-gen-041",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-043",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.2,
+        "gold_rank": 5
+      }
+    ],
+    "C3": [
+      {
+        "id": "nist_ai_rmf-gen-003",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.1,
+        "gold_rank": 10
+      },
+      {
+        "id": "nist_ai_rmf-gen-004",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-006",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-007",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "nist_ai_rmf-gen-008",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-009",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-010",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-011",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-013",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-015",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-016",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-019",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-020",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.2,
+        "gold_rank": 5
+      },
+      {
+        "id": "nist_ai_rmf-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.2,
+        "gold_rank": 5
+      },
+      {
+        "id": "nist_ai_rmf-gen-025",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.06666666666666667,
+        "gold_rank": 15
+      },
+      {
+        "id": "nist_ai_rmf-gen-031",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.08333333333333333,
+        "gold_rank": 12
+      },
+      {
+        "id": "nist_ai_rmf-gen-033",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-034",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-035",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-036",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-037",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-039",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.09090909090909091,
+        "gold_rank": 11
+      },
+      {
+        "id": "nist_ai_rmf-gen-040",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.047619047619047616,
+        "gold_rank": 21
+      },
+      {
+        "id": "nist_ai_rmf-gen-041",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-043",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      }
+    ],
+    "C4": [
+      {
+        "id": "nist_ai_rmf-gen-003",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.14285714285714285,
+        "gold_rank": 7
+      },
+      {
+        "id": "nist_ai_rmf-gen-004",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-006",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-007",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-008",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-009",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-010",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "nist_ai_rmf-gen-011",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "nist_ai_rmf-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-013",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-015",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-016",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-019",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.045454545454545456,
+        "gold_rank": 22
+      },
+      {
+        "id": "nist_ai_rmf-gen-020",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-025",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.08333333333333333,
+        "gold_rank": 12
+      },
+      {
+        "id": "nist_ai_rmf-gen-031",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.09090909090909091,
+        "gold_rank": 11
+      },
+      {
+        "id": "nist_ai_rmf-gen-033",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-034",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-035",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "nist_ai_rmf-gen-036",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-037",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-039",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.14285714285714285,
+        "gold_rank": 7
+      },
+      {
+        "id": "nist_ai_rmf-gen-040",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.043478260869565216,
+        "gold_rank": 23
+      },
+      {
+        "id": "nist_ai_rmf-gen-041",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-043",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "gold_rank": 4
+      }
+    ],
+    "C5": [
+      {
+        "id": "nist_ai_rmf-gen-003",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.07142857142857142,
+        "gold_rank": 14
+      },
+      {
+        "id": "nist_ai_rmf-gen-004",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-006",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-007",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-008",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-009",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-010",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.05555555555555555,
+        "gold_rank": 18
+      },
+      {
+        "id": "nist_ai_rmf-gen-011",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-013",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-015",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-016",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-019",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-020",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "gold_rank": 4
+      },
+      {
+        "id": "nist_ai_rmf-gen-024",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.14285714285714285,
+        "gold_rank": 7
+      },
+      {
+        "id": "nist_ai_rmf-gen-025",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.1,
+        "gold_rank": 10
+      },
+      {
+        "id": "nist_ai_rmf-gen-031",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.05,
+        "gold_rank": 20
+      },
+      {
+        "id": "nist_ai_rmf-gen-033",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-034",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-035",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-036",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-037",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-039",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.09090909090909091,
+        "gold_rank": 11
+      },
+      {
+        "id": "nist_ai_rmf-gen-040",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.07692307692307693,
+        "gold_rank": 13
+      },
+      {
+        "id": "nist_ai_rmf-gen-041",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-043",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      }
+    ],
+    "C6": [
+      {
+        "id": "nist_ai_rmf-gen-003",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.0625,
+        "gold_rank": 16
+      },
+      {
+        "id": "nist_ai_rmf-gen-004",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-006",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-007",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-008",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-009",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "nist_ai_rmf-gen-010",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.14285714285714285,
+        "gold_rank": 7
+      },
+      {
+        "id": "nist_ai_rmf-gen-011",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-013",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-015",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-016",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-019",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.0625,
+        "gold_rank": 16
+      },
+      {
+        "id": "nist_ai_rmf-gen-020",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "nist_ai_rmf-gen-024",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.1,
+        "gold_rank": 10
+      },
+      {
+        "id": "nist_ai_rmf-gen-025",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.07142857142857142,
+        "gold_rank": 14
+      },
+      {
+        "id": "nist_ai_rmf-gen-031",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.06666666666666667,
+        "gold_rank": 15
+      },
+      {
+        "id": "nist_ai_rmf-gen-033",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-034",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-035",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-036",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-037",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-039",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.08333333333333333,
+        "gold_rank": 12
+      },
+      {
+        "id": "nist_ai_rmf-gen-040",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.09090909090909091,
+        "gold_rank": 11
+      },
+      {
+        "id": "nist_ai_rmf-gen-041",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "nist_ai_rmf-gen-043",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "nist_ai_rmf-gen-003",
+      "type": "factual",
+      "split": "selection",
+      "question": "What is the intended nature of the Framework regarding its application to different types of organizations?",
+      "quote": "The Framework is intended to be voluntary, rights-preserving, non-sector-specific, and use-case agnostic, providing flexibility to organizations of all sizes and in all sectors and throughout society to implement the approaches in the Framework.",
+      "page": 7
+    },
+    {
+      "id": "nist_ai_rmf-gen-004",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "How does the NIST AI Risk Management Framework structure its approach to handling risks across different stages of an artificial intelligence system's lifecycle?",
+      "quote": "Part 2 comprises the \u201cCore\u201d of the Framework. It describes four specific functions to help organizations address the risks of AI systems in practice. These functions \u2013 GOVERN, MAP, MEASURE, and MANAGE \u2013 are broken down further into categories and subcategories.\nWhile GOVERN applies to all stages of organizations\u2019 AI risk management processes\nand procedures, the MAP, MEASURE, and MANAGE functions can be applied in AI\nsystem-specific contexts and at specific stages of the AI lifecycle.",
+      "page": 8
+    },
+    {
+      "id": "nist_ai_rmf-gen-006",
+      "type": "factual",
+      "split": "selection",
+      "question": "What specific challenges do organizations face when trying to measure risks associated with third-party software and data in AI systems?",
+      "quote": "Risk metrics or methodologies used by the organization developing the AI system may not align with the risk metrics or methodologies uses by the organization deploying or operating the system. Also, the organization developing the AI system may not be transparent about the risk metrics or methodologies it used.",
+      "page": 10
+    },
+    {
+      "id": "nist_ai_rmf-gen-007",
+      "type": "conceptual",
+      "split": "selection",
+      "question": "Why might the risks identified during controlled testing differ from those encountered when an AI system is actually used in the real world?",
+      "quote": "While measuring AI risks in a laboratory or a controlled environment may yield important insights pre-deployment, these measurements may differ from risks that emerge in operational, real-world settings.",
+      "page": 11
+    },
+    {
+      "id": "nist_ai_rmf-gen-008",
+      "type": "multi_part",
+      "split": "confirmation",
+      "question": "How should organizations determine their approach to handling risks when they cannot eliminate all failures, and what criteria should guide the allocation of resources among different AI systems?",
+      "quote": "Attempting to eliminate negative risk entirely can be counterproductive in practice because not all incidents and failures can be eliminated. Unrealistic expectations about risk may lead organizations to allocate resources in a manner that makes risk triage inefficient or impractical or wastes scarce resources. A risk management culture can help organizations recognize that not all AI risks are the same, and resources can be allocated purposefully.",
+      "page": 12
+    },
+    {
+      "id": "nist_ai_rmf-gen-009",
+      "type": "factual",
+      "split": "selection",
+      "question": "Why should organizations integrate AI risk management into their broader enterprise strategies?",
+      "quote": "Treating AI risks along with other critical risks, such as cybersecurity and privacy, will yield a more integrated outcome and organizational efficiencies.",
+      "page": 13
+    },
+    {
+      "id": "nist_ai_rmf-gen-010",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "How does the NIST modification to the OECD framework specifically alter the approach to managing risks throughout an AI system's development and use?",
+      "quote": "The NIST modification highlights the importance of test, evaluation, verification, and validation (TEVV) processes throughout an AI lifecycle and generalizes the operational context of an AI system.",
+      "page": 14
+    },
+    {
+      "id": "nist_ai_rmf-gen-011",
+      "type": "multi_part",
+      "split": "selection",
+      "question": "How do diverse groups like civil society and end users contribute to managing risks in artificial intelligence systems, and why is their involvement essential for building trust?",
+      "quote": "environmental groups, civil society organizations, end users, and potentially impacted individuals and communities. These actors can: \u2022 assist in providing context and understanding potential and actual impacts; \u2022 be a source of formal or quasi-formal norms and guidance for AI risk management; \u2022 designate boundaries for AI operation (technical, societal, legal, and ethical); and \u2022 promote discussion of the tradeoffs needed to balance societal values and priorities related to civil liberties and rights, equity, the environment and the planet, and the economy. Successful risk management depends upon a sense of collective responsibility among AI actors shown in Figure 3. The AI RMF functions, described in Section 5, require diverse perspectives, disciplines, professions, and experiences.",
+      "page": 15
+    },
+    {
+      "id": "nist_ai_rmf-gen-012",
+      "type": "factual",
+      "split": "selection",
+      "question": "What is the primary reason that addressing AI trustworthiness characteristics individually fails to guarantee an overall trustworthy AI system?",
+      "quote": "Addressing AI trustworthiness characteristics individually will not ensure AI system trustworthiness; tradeoffs are usually involved, rarely do all characteristics apply in every setting, and some will be more or less important in any given situation.",
+      "page": 17
+    },
+    {
+      "id": "nist_ai_rmf-gen-013",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "Why must stakeholders balance different trustworthiness characteristics when deploying an AI system?",
+      "quote": "Highly secure but unfair systems, accurate but opaque and uninterpretable systems, and inaccurate but secure, privacy-enhanced, and transparent systems are all undesirable. A comprehensive approach to risk management calls for balancing tradeoffs among the trustworthiness characteristics.",
+      "page": 18
+    },
+    {
+      "id": "nist_ai_rmf-gen-015",
+      "type": "factual",
+      "split": "selection",
+      "question": "How does the definition of security differ from resilience in the context of AI systems?",
+      "quote": "Security and resilience are related but distinct characteristics. While resilience is the ability to return to normal function after an unexpected adverse event, security includes resilience but also encompasses protocols to avoid, protect against, respond to, or recover from attacks.",
+      "page": 20
+    },
+    {
+      "id": "nist_ai_rmf-gen-016",
+      "type": "conceptual",
+      "split": "selection",
+      "question": "How can organizations balance the need for public trust with the necessity of protecting their proprietary information when implementing transparency measures?",
+      "quote": "Measures to enhance transparency and accountability should also consider the impact of these efforts on the implementing entity, including the level of necessary resources and the need to safeguard proprietary information.",
+      "page": 21
+    },
+    {
+      "id": "nist_ai_rmf-gen-019",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "How does the AI Risk Management Framework structure its approach to handling risks, and what are the four main functional areas it defines for managing these systems?",
+      "quote": "As illustrated in Figure 5, the Core is composed of four functions: GOVERN, MAP, MEASURE, and MANAGE. Each of these high-level functions is broken down into categories and subcategories.",
+      "page": 25
+    },
+    {
+      "id": "nist_ai_rmf-gen-020",
+      "type": "multi_part",
+      "split": "selection",
+      "question": "How can organizations customize their approach to AI risk management while maintaining flexibility in the order they implement specific functions?",
+      "quote": "Framework users may apply these functions as best suits their needs for managing AI risks based on their resources and capabilities. Some organizations may choose to select from among the categories and subcategories; others may choose and have the capacity to apply all categories and subcategories. Assuming a governance structure is in place, functions may be performed in any order across the AI lifecycle as deemed to add value by a user of the framework.",
+      "page": 26
+    },
+    {
+      "id": "nist_ai_rmf-gen-024",
+      "type": "factual",
+      "split": "confirmation",
+      "question": "What specific benefits does gathering diverse perspectives from internal teams and external stakeholders provide when developing or deploying an AI system?",
+      "quote": "Gathering such broad perspectives can help organizations proactively prevent negative risks and develop more trustworthy AI systems by: \u2022 improving their capacity for understanding contexts; \u2022 checking their assumptions about context of use; \u2022 enabling recognition of when systems are not functional within or out of their intended context; \u2022 identifying positive and beneficial uses of their existing AI systems; \u2022 improving understanding of limitations in AI and ML processes; \u2022 identifying constraints in real-world applications that may lead to negative impacts; \u2022 identifying known and foreseeable negative impacts related to intended use of AI systems; and \u2022 anticipating risks of the use of AI systems beyond intended use.",
+      "page": 30
+    },
+    {
+      "id": "nist_ai_rmf-gen-025",
+      "type": "conceptual",
+      "split": "selection",
+      "question": "How does an organization ensure that its AI systems are built on a foundation of scientific integrity and appropriate data selection?",
+      "quote": "MAP 2.3: Scientific integrity and TEVV considerations are identified and documented, including those related to experimental design, data collection and selection (e.g., availability, representativeness, suitability), system trustwor",
+      "page": 32
+    },
+    {
+      "id": "nist_ai_rmf-gen-031",
+      "type": "conceptual",
+      "split": "selection",
+      "question": "How do organizations determine which specific AI risk management actions to prioritize when they need to improve their current practices?",
+      "quote": "Comparing Current and Target Profiles likely reveals gaps to be addressed to meet AI risk management objectives. Action plans can be developed to address these gaps to fulfill outcomes in a given category or subcategory. Prioritization of gap mitigation is driven",
+      "page": 38
+    },
+    {
+      "id": "nist_ai_rmf-gen-033",
+      "type": "factual",
+      "split": "confirmation",
+      "question": "What specific activities are included in TEVV tasks for operations within the AI lifecycle?",
+      "quote": "TEVV tasks for operations involve ongoing monitoring for periodic updates, testing, and subject matter expert (SME) recalibration of models, the tracking of incidents or errors reported and their management, the detection of emergent properties and related impacts, and processes for redress and response.",
+      "page": 41
+    },
+    {
+      "id": "nist_ai_rmf-gen-034",
+      "type": "conceptual",
+      "split": "selection",
+      "question": "How do third-party entities differ from internal governance actors in terms of their relationship to an organization's AI deployment team?",
+      "quote": "By definition, they are external to the design, development,\nor deployment team of the organization that acquires its technologies or services.",
+      "page": 42
+    },
+    {
+      "id": "nist_ai_rmf-gen-035",
+      "type": "multi_part",
+      "split": "confirmation",
+      "question": "In what specific ways do the dangers posed by artificial intelligence systems differ from those associated with conventional software, particularly regarding data integrity and system adaptability?",
+      "quote": "The data used for building an AI system may not be a true or appropriate representation of the context or intended use of the AI system, and the ground truth may either not exist or not be available. Additionally, harmful bias and other data quality issues can affect AI system trustworthiness, which could lead to negative impacts.",
+      "page": 43
+    },
+    {
+      "id": "nist_ai_rmf-gen-036",
+      "type": "factual",
+      "split": "selection",
+      "question": "Which specific NIST frameworks can organizations use to help reduce security and privacy risks when developing AI systems?",
+      "quote": "As part of the effort to address AI trustworthiness characteristics such as \u201cSecure and Resilient\u201d and \u201cPrivacy-Enhanced,\u201d organizations may consider leveraging available standards and guidance that provide broad guidance to organizations to reduce security and privacy risks, such as, but not limited to, the NIST Cybersecurity Framework, the NIST Privacy Framework, the NIST Risk Management Framework, and the Secure Software Development Framework.",
+      "page": 44
+    },
+    {
+      "id": "nist_ai_rmf-gen-037",
+      "type": "conceptual",
+      "split": "selection",
+      "question": "How can representing complex human behaviors with mathematical models negatively impact the ability to manage risks associated with artificial intelligence?",
+      "quote": "Many of the data-driven approaches that AI systems rely on attempt to convert or represent individual and social observational and decision-making practices into measurable quantities. Representing complex human phenomena with mathematical models can come at the cost of removing necessary context. This loss of context may in turn make it difficult to understand individual and societal impacts that are key to AI risk management efforts.",
+      "page": 45
+    },
+    {
+      "id": "nist_ai_rmf-gen-039",
+      "type": "factual",
+      "split": "confirmation",
+      "question": "What specific types of resources should the AI Risk Management Framework leverage to help organizations manage AI risks?",
+      "quote": "Take advantage of and foster greater awareness of existing standards, guidelines, best practices, methodologies, and tools for managing AI risks \u2013 as well as illustrate the need for additional, improved resources.",
+      "page": 47
+    },
+    {
+      "id": "nist_ai_rmf-gen-040",
+      "type": "factual",
+      "split": "selection",
+      "question": "What are the four core functions that make up the AI Risk Management Framework?",
+      "quote": "5.1 Govern 21\n5.2 Map 24\n5.3 Measure 28\n5.4 Manage 31",
+      "page": 4
+    },
+    {
+      "id": "nist_ai_rmf-gen-041",
+      "type": "conceptual",
+      "split": "selection",
+      "question": "How does the concept of responsible AI relate to broader organizational duties toward society and future generations?",
+      "quote": "Social responsibility can refer to the organization\u2019s responsibility \u201cfor the impacts of its decisions and activities on society and the environment through transparent and ethical behavior\u201d (ISO 26000:2010). Sustainability refers to the \u201cstate of the global system, including environmental, social, and economic aspects, in which the needs of the present are met without compromising the ability of future generations to meet their own needs\u201d (ISO/IEC TR 24368:2022). Responsible AI is meant to result in technology that is also equitable and accountable.",
+      "page": 7
+    },
+    {
+      "id": "nist_ai_rmf-gen-043",
+      "type": "factual",
+      "split": "confirmation",
+      "question": "Why might the assessment of risk change depending on when it is conducted during the development and deployment of an artificial intelligence system?",
+      "quote": "Measuring risk at an earlier stage in the AI lifecycle may yield different results than measuring risk at a later stage; some risks may be latent at a given point in time and may increase as AI systems adapt and evolve.",
+      "page": 11
+    }
+  ],
+  "ingest_timings_s": {
+    "extract": 3.46,
+    "optimize": 548.75,
+    "index_winner": 3.87,
+    "total": 556.08
+  },
+  "winner_chunks_full_document": 45,
+  "meta": {
+    "created": "2026-11-04T06:07:55+00:00",
+    "commit": "0b9c47ba2dad85e053f5d820e56dd41a03af8b0f",
+    "embedding_model": "embeddinggemma:300m",
+    "embedding_digest": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+    "llm_model": "qwen3.5:9b",
+    "embeddings_cached": false
+  }
+}

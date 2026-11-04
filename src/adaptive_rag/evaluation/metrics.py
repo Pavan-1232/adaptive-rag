@@ -26,6 +26,9 @@ class Span:
 
 @dataclass(frozen=True)
 class RankedChunk:
+    """A retrieved chunk's span, and the tokens it costs: its text plus any table context.
+    Context adds cost but no coverage, since gold evidence is matched on the chunk's own range."""
+
     document: str
     start: int
     end: int

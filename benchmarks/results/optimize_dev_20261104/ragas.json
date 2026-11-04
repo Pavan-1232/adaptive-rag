@@ -1,0 +1,1390 @@
+{
+  "document": "ragas.pdf",
+  "optimizer_version": "optimizer-1",
+  "profile": {
+    "version": "profile-1",
+    "format": "pdf",
+    "pages": 8,
+    "tokens": 7922,
+    "sections": 11,
+    "heading_density": 1.389,
+    "median_section_tokens": 471.0,
+    "section_coverage": 1.0,
+    "table_count": 1,
+    "table_share": 0.0104,
+    "chars_per_page": 3961.6,
+    "language": "en",
+    "headings_reliable": true,
+    "has_tables": true
+  },
+  "caps": {
+    "max_questions": 40,
+    "confirmation_questions": 10,
+    "max_llm_calls": 60,
+    "max_candidates": 7,
+    "time_budget_s": 720.0,
+    "generation_share": 0.7,
+    "min_selection_questions": 10
+  },
+  "sample_tokens": 7922,
+  "regions": [
+    [
+      0,
+      31693
+    ]
+  ],
+  "questions_selection": 9,
+  "questions_confirmation": 10,
+  "question_types": {
+    "conceptual": 11,
+    "factual": 6,
+    "multi_part": 2
+  },
+  "rejected": {
+    "copies the quote's wording": 6,
+    "quote not found": 13,
+    "too long": 2,
+    "refers to the passage rather than the topic": 1,
+    "time cap": 19
+  },
+  "llm_calls": 41,
+  "candidates": [
+    {
+      "id": "C1",
+      "status": "scored",
+      "chunks_in_sample": 18,
+      "storage_tokens": 8772,
+      "seconds": 1.71,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": 0.8
+    },
+    {
+      "id": "C2",
+      "status": "scored",
+      "chunks_in_sample": 35,
+      "storage_tokens": 8606,
+      "seconds": 1.63,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": 0.9773
+    },
+    {
+      "id": "C3",
+      "status": "scored",
+      "chunks_in_sample": 17,
+      "storage_tokens": 8492,
+      "seconds": 1.72,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": 0.8
+    },
+    {
+      "id": "C4",
+      "status": "scored",
+      "chunks_in_sample": 10,
+      "storage_tokens": 8604,
+      "seconds": 1.52,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": 0.6
+    },
+    {
+      "id": "C5",
+      "status": "scored",
+      "chunks_in_sample": 21,
+      "storage_tokens": 8236,
+      "seconds": 1.51,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": 0.9
+    },
+    {
+      "id": "C7",
+      "status": "scored",
+      "chunks_in_sample": 19,
+      "storage_tokens": 8530,
+      "seconds": 1.8,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": 0.7
+    },
+    {
+      "id": "C6",
+      "status": "scored",
+      "chunks_in_sample": 24,
+      "storage_tokens": 7914,
+      "seconds": 7.88,
+      "selection_recall": null,
+      "difference_vs_leader": null,
+      "tied_with_leader": null,
+      "confirmation_recall": 0.8996
+    }
+  ],
+  "winner": "C1",
+  "winner_reason": "only 9 selection questions; kept the control",
+  "timings_s": {
+    "questions": 506.84,
+    "query_embeddings": 1.6,
+    "candidates": 17.77,
+    "total": 526.3
+  },
+  "stopped_early": [
+    "question generation hit the time cap"
+  ],
+  "per_question": {
+    "C1": [
+      {
+        "id": "ragas-gen-001",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.09090909090909091,
+        "gold_rank": 11
+      },
+      {
+        "id": "ragas-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-007",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-009",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-010",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-014",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-016",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-019",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.16666666666666666,
+        "gold_rank": 6
+      },
+      {
+        "id": "ragas-gen-022",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-025",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-026",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-027",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-028",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-031",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-034",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-037",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-040",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.16666666666666666,
+        "gold_rank": 6
+      }
+    ],
+    "C2": [
+      {
+        "id": "ragas-gen-001",
+        "recall_at_budget": 0.7734204793028322,
+        "recall_at_5": 0.7734204793028322,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-007",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-009",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-010",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-014",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.14285714285714285,
+        "gold_rank": 7
+      },
+      {
+        "id": "ragas-gen-016",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-019",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.2,
+        "gold_rank": 5
+      },
+      {
+        "id": "ragas-gen-022",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.1,
+        "gold_rank": 10
+      },
+      {
+        "id": "ragas-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-025",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-026",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "gold_rank": 4
+      },
+      {
+        "id": "ragas-gen-027",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-028",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 0.42857142857142855,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.1111111111111111,
+        "gold_rank": 9
+      },
+      {
+        "id": "ragas-gen-031",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.058823529411764705,
+        "gold_rank": 17
+      },
+      {
+        "id": "ragas-gen-034",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-037",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-040",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.2,
+        "gold_rank": 5
+      }
+    ],
+    "C3": [
+      {
+        "id": "ragas-gen-001",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.09090909090909091,
+        "gold_rank": 11
+      },
+      {
+        "id": "ragas-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-007",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-009",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-010",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-014",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-016",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-019",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.14285714285714285,
+        "gold_rank": 7
+      },
+      {
+        "id": "ragas-gen-022",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.16666666666666666,
+        "gold_rank": 6
+      },
+      {
+        "id": "ragas-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-025",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-026",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "gold_rank": 4
+      },
+      {
+        "id": "ragas-gen-027",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-028",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-031",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-034",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-037",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-040",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.2,
+        "gold_rank": 5
+      }
+    ],
+    "C4": [
+      {
+        "id": "ragas-gen-001",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "gold_rank": 4
+      },
+      {
+        "id": "ragas-gen-003",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.16666666666666666,
+        "gold_rank": 6
+      },
+      {
+        "id": "ragas-gen-007",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-009",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-010",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-014",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-016",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-019",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-022",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "gold_rank": 4
+      },
+      {
+        "id": "ragas-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-025",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-026",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.125,
+        "gold_rank": 8
+      },
+      {
+        "id": "ragas-gen-027",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-028",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-031",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-034",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-037",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-040",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "gold_rank": 4
+      }
+    ],
+    "C5": [
+      {
+        "id": "ragas-gen-001",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.125,
+        "gold_rank": 8
+      },
+      {
+        "id": "ragas-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-007",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-009",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-010",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-014",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "gold_rank": 4
+      },
+      {
+        "id": "ragas-gen-016",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-019",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.16666666666666666,
+        "gold_rank": 6
+      },
+      {
+        "id": "ragas-gen-022",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.14285714285714285,
+        "gold_rank": 7
+      },
+      {
+        "id": "ragas-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-025",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-026",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.2,
+        "gold_rank": 5
+      },
+      {
+        "id": "ragas-gen-027",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-028",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-031",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-034",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-037",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-040",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      }
+    ],
+    "C7": [
+      {
+        "id": "ragas-gen-001",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.1111111111111111,
+        "gold_rank": 9
+      },
+      {
+        "id": "ragas-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-007",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-009",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-010",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-014",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-016",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-019",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.125,
+        "gold_rank": 8
+      },
+      {
+        "id": "ragas-gen-022",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.16666666666666666,
+        "gold_rank": 6
+      },
+      {
+        "id": "ragas-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-025",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.2,
+        "gold_rank": 5
+      },
+      {
+        "id": "ragas-gen-026",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.14285714285714285,
+        "gold_rank": 7
+      },
+      {
+        "id": "ragas-gen-027",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-028",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-031",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-034",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-037",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-040",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.2,
+        "gold_rank": 5
+      }
+    ],
+    "C6": [
+      {
+        "id": "ragas-gen-001",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.1111111111111111,
+        "gold_rank": 9
+      },
+      {
+        "id": "ragas-gen-003",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-007",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-009",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-010",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-012",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-014",
+        "recall_at_budget": 0.9964912280701754,
+        "recall_at_5": 0.9964912280701754,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-016",
+        "recall_at_budget": 0.9915254237288136,
+        "recall_at_5": 0.9915254237288136,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-019",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-022",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.1111111111111111,
+        "gold_rank": 9
+      },
+      {
+        "id": "ragas-gen-024",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.25,
+        "gold_rank": 4
+      },
+      {
+        "id": "ragas-gen-025",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-026",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.2,
+        "gold_rank": 5
+      },
+      {
+        "id": "ragas-gen-027",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-028",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 1.0,
+        "gold_rank": 1
+      },
+      {
+        "id": "ragas-gen-031",
+        "recall_at_budget": 0.0,
+        "recall_at_5": 0.0,
+        "hit_at_5": 0.0,
+        "reciprocal_rank": 0.14285714285714285,
+        "gold_rank": 7
+      },
+      {
+        "id": "ragas-gen-034",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.3333333333333333,
+        "gold_rank": 3
+      },
+      {
+        "id": "ragas-gen-037",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.5,
+        "gold_rank": 2
+      },
+      {
+        "id": "ragas-gen-040",
+        "recall_at_budget": 1.0,
+        "recall_at_5": 1.0,
+        "hit_at_5": 1.0,
+        "reciprocal_rank": 0.2,
+        "gold_rank": 5
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "ragas-gen-001",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "How can one assess the effectiveness of a system that combines retrieval and large language models without relying on human-verified correct answers?",
+      "quote": "Evaluating RAG architectures is, however, challenging because there are several dimensions to consider: the ability of the retrieval system to identify relevant and focused context passages, the ability of the LLM to exploit such passages in a faithful way, or the quality of the generation itself. With Ragas, we put forward a suite of metrics which can be used to evaluate these different dimensions without having to rely on ground truth human annotations.",
+      "page": 1
+    },
+    {
+      "id": "ragas-gen-003",
+      "type": "factual",
+      "split": "selection",
+      "question": "How can a standard large language model be adapted to answer questions about events that occurred after its training period?",
+      "quote": "The standard solution to these issues is to rely on Retrieval Augmented Generation (RAG) (Lee et al., 2019; Lewis et al., 2020; Guu et al., 2020). Answering a question then essentially involves retrieving relevant passages from a corpus and feeding these passages, along with the original question, to the LM.",
+      "page": 1
+    },
+    {
+      "id": "ragas-gen-007",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "How do researchers verify the accuracy of answers generated by large language models when they cannot directly access the model's internal probabilities or hidden states?",
+      "quote": "For models that do not provide access to token probabilities, such as ChatGPT and GPT-4, different methods are needed. SelfCheckGPT (Manakul et al., 2023) addresses this problem by instead sampling multiple answers. Their core idea is that factual answers are more stable: when an answer is factual, we can expect that different samples will tend to be semantically similar, whereas this is less likely to be the case for hallucinated answers.",
+      "page": 2
+    },
+    {
+      "id": "ragas-gen-009",
+      "type": "factual",
+      "split": "selection",
+      "question": "How do methods like BERTScore and MoverScore measure the similarity between generated text and reference answers?",
+      "quote": "For instance, BERTScore (Zhang et al., 2020) and MoverScore (Zhao et al., 2019) use contextualised embeddings, produced by a pre-trained BERT model, to compare the similar",
+      "page": 2
+    },
+    {
+      "id": "ragas-gen-010",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "How can the performance of different large language models be compared when human-annotated reference answers are not available?",
+      "quote": "In terms of how ground truth answers or, more generally, generations, have been typically used in the literature, most approaches have relied on the availability of one or more reference answers.",
+      "page": 2
+    },
+    {
+      "id": "ragas-gen-012",
+      "type": "factual",
+      "split": "selection",
+      "question": "What specific quality aspect ensures that the information provided in a generated answer can be logically inferred from the source material?",
+      "quote": "Faithfulness We say that the answer a (q) is s faithful to the context c(q) if the claims that are made in the answer can be inferred from the context.",
+      "page": 3
+    },
+    {
+      "id": "ragas-gen-014",
+      "type": "multi_part",
+      "split": "confirmation",
+      "question": "How do you evaluate whether a generated response directly addresses a user's query without getting sidetracked by factual accuracy issues?",
+      "quote": "Answer relevance We say that the answer a (q) s is relevant if it directly addresses the question in an appropriate way. In particular, our assessment of answer relevance does not take into account factuality, but penalises cases where the answer is incomplete or where it contains red",
+      "page": 3
+    },
+    {
+      "id": "ragas-gen-016",
+      "type": "conceptual",
+      "split": "selection",
+      "question": "How does a system determine if the background information provided for an answer contains unnecessary details?",
+      "quote": "Context relevance The context c(q) is considered relevant to the extent that it exclusively contains information that is needed to answer the question. In particular, this metric aims to penalise the inclusion of redundant information.",
+      "page": 3
+    },
+    {
+      "id": "ragas-gen-019",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "How did the researchers determine the level of agreement between the two human annotators for different quality dimensions?",
+      "quote": "For faithfulness and context relevance, the two annotators agreed in around 95% of cases. For answer relevance, they agreed in around 90% of the cases.",
+      "page": 4
+    },
+    {
+      "id": "ragas-gen-022",
+      "type": "conceptual",
+      "split": "selection",
+      "question": "How does a system determine whether an answer is factually consistent with its source material?",
+      "quote": "Faithfulness measures the information consistency of the answer against the given context. Any claims that are made in the answer that cannot be deduced from context should be penalized.",
+      "page": 5
+    },
+    {
+      "id": "ragas-gen-024",
+      "type": "factual",
+      "split": "confirmation",
+      "question": "Which quality dimension did the researchers find to be the most difficult to evaluate?",
+      "quote": "We found context relevance to be the hardest quality dimension to evaluate. In particular, we observed that ChatGPT often struggles with the task of selecting the sentences from the context that are crucial, especially for longer contexts.",
+      "page": 5
+    },
+    {
+      "id": "ragas-gen-025",
+      "type": "conceptual",
+      "split": "selection",
+      "question": "Why does the automated system struggle more with assessing context relevance compared to faithfulness or answer relevance?",
+      "quote": "In particular, we observed that ChatGPT often struggles with the task of selecting the sentences from the context that are crucial, especially for longer contexts.",
+      "page": 5
+    },
+    {
+      "id": "ragas-gen-026",
+      "type": "multi_part",
+      "split": "confirmation",
+      "question": "How can developers evaluate the quality of their retrieval-augmented generation systems without access to ground truth data, and what specific metrics does this evaluation framework prioritize?",
+      "quote": "To support the development of such a framework, we have introduced WikiEval, a dataset which human judgements of these three different aspects. Finally, we have also described Ragas, our implementation of the three considered quality aspects.",
+      "page": 5
+    },
+    {
+      "id": "ragas-gen-027",
+      "type": "factual",
+      "split": "selection",
+      "question": "What is the title of the 2019 paper that introduced BERT?",
+      "quote": "Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2019. BERT: Pre-training of deep bidirectional transformers for language understanding.",
+      "page": 6
+    },
+    {
+      "id": "ragas-gen-028",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "How does a language model's ability to retrieve information from external sources improve its pre-training process?",
+      "quote": "Kelvin Guu, Kenton Lee, Zora Tung, Panupong Pasupat,\nand Mingwei Chang. 2020. Retrieval augmented\nlanguage model pre-training.",
+      "page": 6
+    },
+    {
+      "id": "ragas-gen-031",
+      "type": "conceptual",
+      "split": "selection",
+      "question": "How do researchers address the issue of language models generating incorrect information when they lack access to specific factual knowledge?",
+      "quote": "When not to trust language models: Investigating effectiveness of parametric and non-parametric memories.",
+      "page": 6
+    },
+    {
+      "id": "ragas-gen-034",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "How does a system retrieve relevant information to enhance the capabilities of a black-box language model?",
+      "quote": "Weijia Shi, Sewon Min, Michihiro Yasunaga, Minjoon Seo, Rich James, Mike Lewis, Luke Zettlemoyer, and Wen-tau Yih. 2023. REPLUG: retrieval-augmented black-box language models.",
+      "page": 7
+    },
+    {
+      "id": "ragas-gen-037",
+      "type": "conceptual",
+      "split": "confirmation",
+      "question": "Who directed the biographical thriller film about J. Robert Oppenheimer released in 2023?",
+      "quote": "penheimer is a 2023 biographical thriller film written High Faithfulness: Christopher penheimer and who stars and directed by Christopher Nolan.",
+      "page": 8
+    },
+    {
+      "id": "ragas-gen-040",
+      "type": "factual",
+      "split": "selection",
+      "question": "How can developers evaluate different aspects of Retrieval-Augmented Generation systems without relying on human-annotated ground truth?",
+      "quote": "With Ragas, we put forward a suite of metrics which can be used to evaluate these different dimensions without having to rely on ground truth human annotations.",
+      "page": 1
+    }
+  ],
+  "ingest_timings_s": {
+    "extract": 0.48,
+    "optimize": 526.3,
+    "index_winner": 1.79,
+    "total": 528.57
+  },
+  "winner_chunks_full_document": 18,
+  "meta": {
+    "created": "2026-11-04T06:16:43+00:00",
+    "commit": "0b9c47ba2dad85e053f5d820e56dd41a03af8b0f",
+    "embedding_model": "embeddinggemma:300m",
+    "embedding_digest": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+    "llm_model": "qwen3.5:9b",
+    "embeddings_cached": false
+  }
+}
