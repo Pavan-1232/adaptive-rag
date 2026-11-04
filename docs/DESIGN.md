@@ -331,7 +331,7 @@ Separate by document, not just by question, so facts from test documents can't l
 |---|---|---|
 | Optimizer questions | LLM | Picking configs at ingest; never final evidence |
 | Dev set | LLM plus human review | Tuning thresholds |
-| Held-out test set | Separate documents; human-written | Final report; run once per release |
+| Held-out test set | Separate documents. Stage 3 set: 30 questions written by Claude in a separate session, with 5 spot-checked by the user; a human-written subset is still the goal | Final report; run once per release |
 
 ### Human benchmark
 

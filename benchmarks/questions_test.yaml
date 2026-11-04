@@ -1,0 +1,369 @@
+# Held-out TEST questions.
+# Written 2026-11-04 by Claude in a separate chat session (claude.ai), at Pavan's request, NOT by a human.
+# The Claude Code session that builds and tunes the system has not seen these questions or the test documents.
+# Every quote was checked against the project's PDF loader output. Pages are PHYSICAL PDF pages.
+# Human review: pending (Pavan to spot-check). Until then, report this set as "AI-written, separately authored".
+
+# ===== apple_10k.pdf =====
+# Trap: Services gross margin (71,050) and Services cost of sales (25,119) sit in nearby tables.
+- id: apple-01
+  document: apple_10k.pdf
+  type: table
+  question: How much revenue did Apple's Services business bring in during fiscal 2024?
+  answerable: true
+  evidence:
+    - page: 26
+      quote: "Services (1) 96,169 13 % 85,200"
+      alternatives:
+        - page: 32
+          quote: "Services 96,169 85,200 78,129"
+        - page: 38
+          quote: "Services (1) 96,169 85,200 78,129"
+  expected_answer: $96,169 million (about $96.2 billion)
+  notes: Do not confuse with Services gross margin of $71,050 million.
+  source: claude-separate-session
+
+# Trap: R&D tax credit (1,397) and capitalized R&D (10,739) also appear.
+- id: apple-02
+  document: apple_10k.pdf
+  type: table
+  question: What did Apple spend on research and development in fiscal 2024?
+  answerable: true
+  evidence:
+    - page: 27
+      quote: "Research and development $ 31,370 5 % $ 29,915"
+      alternatives:
+        - page: 32
+          quote: "Research and development 31,370 29,915 26,251"
+        - page: 50
+          quote: "Research and development expense (31,370) (29,915) (26,251)"
+  expected_answer: $31,370 million, up 5% from 2023
+  notes: Not the R&D tax credit ($1,397 million) or capitalized R&D ($10,739 million).
+  source: claude-separate-session
+
+- id: apple-03
+  document: apple_10k.pdf
+  type: table
+  question: What were Apple's sales in Greater China in 2024, and did they grow or shrink?
+  answerable: true
+  evidence:
+    - page: 25
+      quote: "Greater China 66,952 (8) % 72,559"
+      alternatives:
+        - page: 50
+          quote: "Net sales $ 66,952 $ 72,559 $ 74,200"
+  expected_answer: $66,952 million, down 8% from $72,559 million
+  source: claude-separate-session
+
+- id: apple-04
+  document: apple_10k.pdf
+  type: factual
+  question: Roughly how many full-time staff did Apple have at the end of its 2024 fiscal year?
+  answerable: true
+  evidence:
+    - page: 7
+      quote: "the Company had approximately 164,000 full-time equivalent employees"
+  expected_answer: About 164,000 full-time equivalent employees
+  source: claude-separate-session
+
+- id: apple-05
+  document: apple_10k.pdf
+  type: conceptual
+  question: Why was Apple's tax rate in 2024 so much higher than the standard US federal rate?
+  answerable: true
+  evidence:
+    - page: 28
+      quote: "The Company’s effective tax rate for 2024 was higher than the statutory federal income tax rate due primarily to a one-time income tax charge of $10.2 billion, net, related to the State Aid Decision"
+  expected_answer: Mainly a one-time $10.2 billion tax charge related to the European Commission State Aid Decision, plus state income taxes (effective rate 24.1% vs 21% statutory)
+  source: claude-separate-session
+
+- id: apple-06
+  document: apple_10k.pdf
+  type: multi_part
+  question: In fiscal 2024, how much did Apple spend buying back its own shares, and what total dividend per share did it declare for the year?
+  answerable: true
+  evidence:
+    - page: 29
+      quote: "During 2024, the Company repurchased $95.0 billion of its common stock"
+    - page: 35
+      quote: "Dividends and dividend equivalents declared per share or RSU $ 0.98"
+  expected_answer: $95.0 billion of share repurchases; $0.98 per share in dividends declared
+  source: claude-separate-session
+
+- id: apple-un
+  document: apple_10k.pdf
+  type: near_miss
+  question: How many iPhones did Apple sell in fiscal 2024?
+  answerable: false
+  evidence: []
+  notes: The 10-K reports iPhone net sales in dollars but not unit sales.
+  source: claude-separate-session
+
+- id: apple-un2
+  document: apple_10k.pdf
+  type: out_of_scope
+  question: At what temperature does water boil at the top of Mount Everest?
+  answerable: false
+  evidence: []
+  notes: Unrelated to the document.
+  source: claude-separate-session
+
+# ===== fed_mpr.pdf =====
+- id: fed-01
+  document: fed_mpr.pdf
+  type: factual
+  question: Where has the Fed kept its main policy interest rate so far in 2025?
+  answerable: true
+  evidence:
+    - page: 11
+      quote: "has maintained the target range for the federal funds rate at 4¼ to 4½ percent"
+      alternatives:
+        - page: 13
+          quote: "the FOMC maintained the target range for the federal funds rate at 4¼ to 4½ percent"
+  expected_answer: A target range of 4¼ to 4½ percent
+  source: claude-separate-session
+
+# Trap: core PCE row (3.1) sits right below.
+- id: fed-02
+  document: fed_mpr.pdf
+  type: table
+  question: What do Fed officials expect headline PCE inflation to be at the end of 2025 (median projection), and how does that compare with their March projection?
+  answerable: true
+  evidence:
+    - page: 57
+      quote: "PCE inflation 3.0 2.4 2.1 2.0"
+    - page: 57
+      quote: "March projection 2.7 2.2 2.0 2.0"
+  expected_answer: 3.0 percent, up from 2.7 percent in the March projection
+  notes: Headline PCE, not core PCE (3.1).
+  source: claude-separate-session
+
+- id: fed-03
+  document: fed_mpr.pdf
+  type: conceptual
+  question: Why does the Fed pay special attention to the core PCE price index?
+  answerable: true
+  evidence:
+    - page: 11
+      quote: "which excludes often-volatile food and energy prices and is generally considered a better guide to the future of inflation"
+      alternatives:
+        - page: 15
+          quote: "which exclude often-volatile food and energy prices and are generally considered a better guide for future inflation"
+  expected_answer: It excludes volatile food and energy prices, so it is considered a better guide to future inflation
+  source: claude-separate-session
+
+- id: fed-04
+  document: fed_mpr.pdf
+  type: multi_part
+  question: How many jobs per month were being added in early 2025, and what was the unemployment rate in May?
+  answerable: true
+  evidence:
+    - page: 20
+      quote: "payroll job gains that averaged 124,000 over the first five months of this year"
+    - page: 11
+      quote: "The unemployment rate, at 4.2 percent in May"
+  expected_answer: About 124,000 per month on average; 4.2 percent in May
+  source: claude-separate-session
+
+- id: fed-05
+  document: fed_mpr.pdf
+  type: factual
+  question: By how much has the Fed shrunk its securities holdings since it started reducing them in 2022?
+  answerable: true
+  evidence:
+    - page: 13
+      quote: "bringing the total reduction in securities holdings since mid-2022 to more than $2 trillion"
+  expected_answer: More than $2 trillion (about $180 billion of that in 2025)
+  source: claude-separate-session
+
+- id: fed-un
+  document: fed_mpr.pdf
+  type: near_miss
+  question: What unemployment rate do Fed officials project for 2028?
+  answerable: false
+  evidence: []
+  notes: The projections table covers only 2025, 2026, 2027 and the longer run.
+  source: claude-separate-session
+
+# ===== nist_csf.pdf =====
+- id: csf-01
+  document: nist_csf.pdf
+  type: factual
+  question: What are the six core functions in version 2.0 of the NIST Cybersecurity Framework?
+  answerable: true
+  evidence:
+    - page: 8
+      quote: "The CSF Core Functions — GOVERN, IDENTIFY, PROTECT, DETECT, RESPOND, and RECOVER"
+  expected_answer: Govern, Identify, Protect, Detect, Respond, Recover
+  source: claude-separate-session
+
+- id: csf-02
+  document: nist_csf.pdf
+  type: conceptual
+  question: Why is GOVERN drawn at the middle of the framework's wheel diagram?
+  answerable: true
+  evidence:
+    - page: 9
+      quote: "GOVERN is in the center of the wheel because it informs how an organization will implement the other five Functions."
+  expected_answer: Because it informs how an organization implements the other five functions
+  source: claude-separate-session
+
+- id: csf-03
+  document: nist_csf.pdf
+  type: factual
+  question: What are the names of the four tiers used to describe how rigorous an organization's cybersecurity risk management is?
+  answerable: true
+  evidence:
+    - page: 12
+      quote: "Partial (Tier 1), Risk Informed (Tier 2), Repeatable (Tier 3), and Adaptive (Tier 4)"
+  expected_answer: Partial, Risk Informed, Repeatable, Adaptive
+  source: claude-separate-session
+
+- id: csf-04
+  document: nist_csf.pdf
+  type: multi_part
+  question: Which category identifier covers supply chain risk, and what does its fourth subcategory require?
+  answerable: true
+  evidence:
+    - page: 20
+      quote: "Cybersecurity Supply Chain Risk Management GV.SC"
+    - page: 22
+      quote: "GV.SC-04: Suppliers are known and prioritized by criticality"
+  expected_answer: GV.SC; suppliers are known and prioritized by criticality
+  source: claude-separate-session
+
+- id: csf-05
+  document: nist_csf.pdf
+  type: conceptual
+  question: Which functions help stop incidents before they happen, and which help deal with them afterwards?
+  answerable: true
+  evidence:
+    - page: 10
+      quote: "GOVERN, IDENTIFY, and PROTECT outcomes help prevent and prepare for incidents, while GOVERN, DETECT, RESPOND, and RECOVER outcomes help discover and manage incidents."
+  expected_answer: Govern, Identify and Protect help prevent and prepare; Govern, Detect, Respond and Recover help discover and manage incidents
+  source: claude-separate-session
+
+- id: csf-un
+  document: nist_csf.pdf
+  type: near_miss
+  question: What minimum Tier must an organization reach to be certified as compliant with CSF 2.0?
+  answerable: false
+  evidence: []
+  notes: The CSF describes Tiers but defines no certification or minimum required Tier.
+  source: claude-separate-session
+
+# ===== raptor.pdf =====
+- id: raptor-01
+  document: raptor.pdf
+  type: factual
+  question: How long are the text pieces RAPTOR starts from before it builds its tree?
+  answerable: true
+  evidence:
+    - page: 3
+      quote: "segmenting the retrieval corpus into short, contiguous texts of length 100"
+  expected_answer: About 100 tokens; a sentence that would cross the limit moves whole to the next chunk
+  source: claude-separate-session
+
+- id: raptor-02
+  document: raptor.pdf
+  type: conceptual
+  question: Why did the authors end up preferring the collapsed tree approach over tree traversal?
+  answerable: true
+  evidence:
+    - page: 5
+      quote: "We believe collapsed tree retrieval is better due to offering greater flexibility than tree traversal"
+  expected_answer: It is more flexible, searching all nodes at once so it can pick information at the right level of detail; it also performed better
+  source: claude-separate-session
+
+# Trap: the GPT-3 and UnifiedQA columns sit beside the GPT-4 one.
+- id: raptor-03
+  document: raptor.pdf
+  type: table
+  question: On QASPER with GPT-4 as the reader, what F-1 score did RAPTOR get, and how did that compare with DPR?
+  answerable: true
+  evidence:
+    - page: 8
+      quote: "RAPTOR 53.1 55.7 36.6"
+    - page: 8
+      quote: "DPR 51.3 53.0 32.1"
+  expected_answer: 55.7 for RAPTOR vs 53.0 for DPR
+  notes: GPT-4 column only, not GPT-3 (53.1 vs 51.3).
+  source: claude-separate-session
+
+- id: raptor-04
+  document: raptor.pdf
+  type: multi_part
+  question: Which model does RAPTOR use to embed its chunks, and which model writes the cluster summaries?
+  answerable: true
+  evidence:
+    - page: 3
+      quote: "embedded using SBERT, a BERT-based encoder (multi-qa-mpnet-base-cos-v1)"
+    - page: 4
+      quote: "we use gpt-3.5-turbo to generate the summaries"
+  expected_answer: SBERT (multi-qa-mpnet-base-cos-v1) for embeddings; gpt-3.5-turbo for summaries
+  source: claude-separate-session
+
+- id: raptor-un
+  document: raptor.pdf
+  type: near_miss
+  question: How many US dollars did it cost to build RAPTOR's trees for the QuALITY dataset?
+  answerable: false
+  evidence: []
+  notes: The paper reports token counts and build time, not a monetary cost.
+  source: claude-separate-session
+
+# ===== best_practices.pdf =====
+- id: bp-01
+  document: best_practices.pdf
+  type: factual
+  question: Which vector database did the authors rate as the most complete option they compared?
+  answerable: true
+  evidence:
+    - page: 6
+      quote: "Milvus stands out as the most comprehensive solution among the databases evaluated"
+  expected_answer: Milvus
+  source: claude-separate-session
+
+- id: bp-02
+  document: best_practices.pdf
+  type: conceptual
+  question: What is the trade-off between using big chunks and small chunks?
+  answerable: true
+  evidence:
+    - page: 5
+      quote: "Larger chunks provide more context, enhancing comprehension but increasing process time. Smaller chunks improve retrieval recall and reduce time but may lack sufficient context."
+  expected_answer: Larger chunks give more context but take longer to process; smaller chunks improve recall and speed but may lack context
+  source: claude-separate-session
+
+# Trap: 256 has the highest relevancy (97.78), but 512 has the highest faithfulness.
+- id: bp-03
+  document: best_practices.pdf
+  type: table
+  question: In the chunk-size experiment, which chunk size scored best on average faithfulness, and what was its score?
+  answerable: true
+  evidence:
+    - page: 5
+      quote: "512 97.59 97.41"
+  expected_answer: 512 tokens, with average faithfulness of 97.59
+  notes: Not 256, which has the highest relevancy.
+  source: claude-separate-session
+
+- id: bp-04
+  document: best_practices.pdf
+  type: factual
+  question: Which retrieval method do the authors recommend as the default?
+  answerable: true
+  evidence:
+    - page: 7
+      quote: "we recommend Hybrid Search with HyDE as the default retrieval method"
+  expected_answer: Hybrid search (BM25 plus dense retrieval) combined with HyDE
+  source: claude-separate-session
+
+- id: bp-un
+  document: best_practices.pdf
+  type: out_of_scope
+  question: Who won the 2018 FIFA World Cup?
+  answerable: false
+  evidence: []
+  notes: Unrelated to the document.
+  source: claude-separate-session

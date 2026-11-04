@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
-**Last updated:** 2026-11-03
-**Current state:** Stage 3 in progress. Dev rerun, false-alarm check, and the looser code check are done and committed on branch `stage-3-evaluation-harness` (2026-11-03). Waiting on the user's `questions_test.yaml`; then close Stage 3.
+**Last updated:** 2026-11-04
+**Current state:** Stage 3 approved by the user on 2026-11-04 and committed on branch `stage-3-evaluation-harness` (not merged to `main`). Next is Stage 4. Start it with the start-of-stage plan and wait for the user's go-ahead.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -11,7 +11,7 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 |---|---|---|
 | 1 | Design | Complete; approved 2026-10-30 |
 | 2 | Baseline backend | Complete and committed 2026-10-30 |
-| 3 | Evaluation harness | In progress; dev work done, decisions and test questions outstanding |
+| 3 | Evaluation harness | Complete; approved 2026-11-04 |
 | 4 | Chunking optimization | Not started |
 | 5 | Adaptive retrieval | Not started |
 | 6 | BYOK | Not started |
@@ -51,6 +51,9 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 27 | Evaluation runs save after every question and judge call, and resume with `--resume <results file>` | 2026-11-03 |
 | 28 | Adopt the looser code check (`judge_check` `loose-1`). It was tuned on the dev answers, so its false-alarm rate must be confirmed on the test set before it is reported | 2026-11-03 |
 | 29 | Faithfulness doesn't catch wrong-table answers. Use the citation check (citation off gold evidence) and the gold comparison to detect wrong answers, not faithfulness | 2026-11-03 |
+| 30 | Test questions: 30 written by Claude in a separate chat session, not by the user or this assistant; the user spot-checked 5 against the PDFs. This departs from the design's human-written test set | 2026-11-04 |
+| 31 | User labels for 8 test answers: `bp-03` and `fed-02` wrong; the other 6 correct. Gold for `fed-01` and `apple-06` was too narrow. The test file was left unedited and the test set was not rerun | 2026-11-04 |
+| 32 | Defer the human-written test subset to Stage 8 | 2026-11-04 |
 
 ## Smoke test results (2026-10-30)
 
@@ -246,6 +249,51 @@ Old setup with a 2000-token budget. Not rerun, because the retest is planned for
 
 Table questions had a hit rate@5 of 0.8 for `bge-m3:latest` and 0.4 for `embeddinggemma:300m`, on only 5 questions. Indexing took about 69 s against 38 s, measured on separate days and not as a controlled benchmark. Vectors have 1024 dimensions against 768; models are 1.2 GB against 621 MB. `bge-m3:latest` has no answer or judge run.
 
+### Held-out test run (2026-11-04, run once)
+
+`test_embeddinggemma_300m_20261104T030739`, with the same setup as the dev rerun: audit judge, `loose-1` code check, gold comparison, and a 2560-token budget.
+
+**Question source:** 30 questions (24 answerable: 6 table, 8 factual, 6 conceptual, 4 multi-part; 6 unanswerable: 4 near-miss, 2 out-of-scope) across the 5 test documents.
+- **Who wrote them:** Claude, in a separate chat session, not the user and not this assistant. The user spot-checked 5 against the PDFs.
+- **Evidence fields:** all 24 answerable questions have `expected_answer`, and 5 use `alternatives`.
+- **How they were handled:** validated with an IDs-and-errors-only script; no problems. This assistant did not read the question text.
+
+| Metric | Test | Dev rerun, for reference only |
+|---|---|---|
+| Recall@budget (2560 tokens) | 0.860 (95% CI 0.708–0.985) | 0.862 (0.724–0.966) |
+| Hit rate@5 | 0.875 (0.750–1.000) | 0.862 (0.724–0.966) |
+| MRR | 0.716 (0.572–0.850) | 0.661 (0.521–0.793) |
+| Answerable: answered / partial | 23 / 1 | 28 / 1 |
+| Citation off gold evidence | 3 of 23 | 3 of 28 |
+| Gold comparison: conflicts | 2 of 23 | 2 of 28 |
+| Faithfulness (judge, `loose-1`) | 0.882 (0.771–0.965) | 0.915 with the strict check, so not comparable |
+| Unanswerable refused, gate off | 6 of 6 | 10 of 10 |
+| Generation p50 / p95 | 33.7 s / 40.3 s | 37.5 s / 48.8 s |
+
+These are different questions on different documents. The columns are not a paired comparison.
+
+- **By document,** Recall@budget is 1.0 for the Apple 10-K, RAPTOR, and best-practices papers; 0.80 for NIST CSF; and 0.53 for the Fed report, the weakest.
+- **By type,** hit@5 is 5 of 6 for table questions, 6 of 8 factual, 6 of 6 conceptual, and 4 of 4 multi-part.
+- **Score floor 0.25, replayed on test:** it blocks 0 of 24 answerable questions (lowest top score 0.416) and both out-of-scope ones (0.109 and 0.133). It doesn't stop near-misses (0.56–0.65), as on dev; the LLM refused all 4. This confirms the dev calibration on held-out data.
+
+**Wrong answers, with the user's labels (2026-11-04).** The user checked 8 answer IDs against the PDFs. The other 16 answered or partial results are unlabelled. They are counted as correct below because the citation check and gold comparison both pass them, but no human checked them.
+
+- **Wrong: 2 of 24** answerable. `bp-03` (`answered`) took the 1024-token setting's score (94.26) instead of the right one (97.59). `fed-02` (`partial`) gave the 2027 value (2.1%) instead of the March value in the same table. Both are wrong-cell answers from the right table: the right passage was retrieved, and the wrong figure was read from it.
+- **Correct:** `apple-03`, `fed-01`, `csf-01`, `fed-05`, `raptor-03`, and `apple-06`.
+- **Gold too narrow:** `fed-01`, and `apple-06`, where the equity statement on p. 35 shows 95,846. Per the user, `questions_test.yaml` was not edited and the test set was not rerun, so the report's figures stand as computed with the narrow gold.
+
+How each signal did on the 22 correct and 2 wrong answers:
+
+| Signal | Correct answers flagged (false alarms) | Wrong answers caught |
+|---|---|---|
+| Judge: unsupported claim or off topic (`audit-1` + `loose-1`) | **3 of 22 (14%)**: `apple-06`, `fed-05`, `raptor-03` | 2 of 2 |
+| Citation off gold evidence | 3 of 22: `apple-03`, `fed-01`, `csf-01` | 1 of 2 (`fed-02`) |
+| Gold comparison: conflicts | 1 of 22: `apple-06`, narrow gold | 2 of 2 |
+
+- **Measured false-alarm rate of the looser code check on test: 3 of 22 (14%),** for the judge's combined flag. 16 of the 22 "correct" answers rest on the two signals passing rather than on human labels. Dev was 2 of 25 (8%). With samples this small, the difference is not meaningful. This replaces the 2-of-18 proxy.
+- **Signals compared across sets:** the gold comparison was the most reliable on both. On test, it caught 2 of 2 wrong answers with 1 false alarm, caused by narrow gold; on dev, it caught 2 of 3 with 0 false alarms. The citation check was strong on dev (3 of 3, no false alarms) but weak on test (1 of 2, 3 false alarms), because both test errors cited the right table and read the wrong cell. The judge caught both test errors but none of the 3 on dev.
+- **Practical reading:** use the gold comparison as the main wrong-answer signal, with the citation check and judge as supporting signals. None of them works on live queries, where there is no gold. Decision 29 stands; this result refines it.
+
 ### Implemented
 
 - **Recall@budget is now 2560 tokens** (`RECALL_BUDGET_TOKENS` in `runner.py`). At 2000, only 3 chunks of 512 and 1 of 1024 fit. `compare` refuses runs with different budgets. The two old reports carry a "not comparable" note.
@@ -266,17 +314,15 @@ Table questions had a hit rate@5 of 0.8 for `bge-m3:latest` and 0.4 for `embeddi
 - Git is initialized with `.gitignore`. Stage 2 is committed on `main`; Stage 3 so far is a WIP checkpoint on branch `stage-3-evaluation-harness`, not merged. Commit only when the user asks.
 - The conda env `adaptive-rag` exists (Python 3.11.18) with the project installed in editable mode.
 - Ollama 0.40.13. Models installed: `embeddinggemma:300m`, `bge-m3:latest`, `qwen3.5:9b`, `gemma4:e4b` (same digest as `gemma4:latest`), `deepseek-r1:8b`. `qwen3.5:4b` (the fallback) is not installed.
-- The test documents have not been read, indexed, or run. They are in `benchmarks/documents/test/`, gitignored. `questions_test.yaml` didn't exist at last check; the user is writing it. Don't read the test documents or the user's questions; `validate` prints IDs and errors only.
+- The test documents were indexed into `data/eval/test_embeddinggemma_300m/` (gitignored) for the one held-out run. This assistant has not read the test documents' content or the test questions' text. `benchmarks/questions_test.yaml` is untracked; ask before committing it.
 - No evaluation process is running, and no models are loaded in Ollama.
 
-## Next steps (Stage 3)
+## Next steps
 
-Run from the repo root with `conda activate adaptive-rag`. Use `--resume <results file>` if a run stops.
-
-1. **Wait for the user's `questions_test.yaml`,** then run `validate` on it, which prints IDs and errors only. The user may add `alternatives` wherever a fact appears in several places.
-2. **Close Stage 3** with the end-of-stage report. Report wrong answers through the citation check and the gold comparison, not faithfulness. Stop and wait for approval before Stage 4.
-3. **At the held-out test run** (`run --set test --final`, once per release): report the looser code check's false-alarm rate there before quoting any faithfulness figure.
+1. **Stage 4 (chunking optimization):** begin with the start-of-stage plan covering what, why, approach, and trade-offs, and wait for the user's go-ahead. Include the `bge-m3:latest` retest on table questions. Wrong-cell and wrong-table answers are now the main failure on both sets, so table-aware chunking deserves a candidate.
+2. **Don't rerun the held-out test set** until the next release.
+3. **Merging `stage-3-evaluation-harness` into `main`:** only when the user asks.
 
 ## Open questions
 
-- None waiting on the user, other than `questions_test.yaml`.
+- Stage 8: build a human-written test subset before quoting final numbers publicly? Deferred by the user on 2026-11-04.
