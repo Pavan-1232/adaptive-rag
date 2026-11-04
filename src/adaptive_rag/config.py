@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     num_ctx: int = 8192
     max_answer_tokens: int = 1024
 
+    # "adaptive": registry reuse or optimization per document (Stage 4). "fixed": the Stage 2
+    # chunker with the sizes below, kept for reproducing earlier runs. "C1".."C7": force one.
+    chunking: str = "adaptive"
     chunk_size_tokens: int = 512
     chunk_overlap_tokens: int = 50
     embedding_batch_size: int = 32

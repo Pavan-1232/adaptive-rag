@@ -18,6 +18,8 @@ from adaptive_rag.chunking import (
 from adaptive_rag.context import AppContext
 from adaptive_rag.knowledge_bases import check_embedding_lock
 from adaptive_rag.loaders import LOADERS, ExtractionError, validate_upload
+from adaptive_rag.optimizer.candidates import BY_ID, build_chunks
+from adaptive_rag.optimizer.choose import choose_chunking
 from adaptive_rag.providers import EmbeddingInputTooLong, ProviderUnavailable
 
 logger = logging.getLogger(__name__)
@@ -101,8 +103,10 @@ def _insert_version(
     ).lastrowid
 
 
-def _config_id(conn: sqlite3.Connection, size: int, overlap: int) -> int:
-    values = (FIXED_STRATEGY, size, overlap, FIXED_VERSION)
+def _config_id(
+    conn: sqlite3.Connection, strategy: str, size: int, overlap: int, version: str
+) -> int:
+    values = (strategy, size, overlap, version)
     conn.execute(
         "INSERT OR IGNORE INTO chunking_configs (strategy, size_tokens, overlap_tokens,"
         " chunker_version) VALUES (?, ?, ?, ?)",
@@ -177,15 +181,23 @@ def _ingest(ctx: AppContext, document_id: int) -> None:
 
     loader = LOADERS[doc["format"]]
     extracted = loader.extract(_stored_path(ctx, doc["sha256"], doc["format"]))
-    size, overlap = ctx.settings.chunk_size_tokens, ctx.settings.chunk_overlap_tokens
-    chunks = chunk_fixed(extracted, size=size, overlap=overlap)
+    title = Path(doc["filename"]).stem
+    choice = choose_chunking(ctx, extracted, doc["filename"], doc["format"], loader.version)
+    if choice.candidate_id is None:
+        size, overlap = ctx.settings.chunk_size_tokens, ctx.settings.chunk_overlap_tokens
+        config = (FIXED_STRATEGY, size, overlap, FIXED_VERSION)
+        chunks = chunk_fixed(extracted, size=size, overlap=overlap)
+    else:
+        candidate = BY_ID[choice.candidate_id]
+        config = (candidate.strategy, candidate.size, candidate.overlap, candidate.version)
+        chunks = build_chunks(candidate, extracted, ctx.embedder, title)
     if not chunks:
         raise ExtractionError("No text could be chunked from this document.")
 
     # Clear anything an interrupted attempt left behind.
     ctx.store.delete_document(collection, document_id)
     with ctx.db() as conn:
-        config_id = _config_id(conn, size, overlap)
+        config_id = _config_id(conn, *config)
         conn.execute("DELETE FROM chunks WHERE document_id = ?", (document_id,))
         conn.execute(
             "UPDATE documents SET canonical_text = ?, locator_kind = ?, units = ?, sections = ?,"
@@ -229,8 +241,19 @@ def _ingest(ctx: AppContext, document_id: int) -> None:
                 for chunk_id, chunk in zip(ids, chunks, strict=True)
             ],
         )
+        conn.execute(
+            "INSERT INTO optimization_runs (document_id, registry_id, action, candidate_id,"
+            " detail, seconds) VALUES (?, ?, ?, ?, ?, ?)",
+            (
+                document_id,
+                choice.registry_id,
+                choice.action,
+                choice.candidate_id or "fixed",
+                choice.detail_json(),
+                round(choice.seconds, 2),
+            ),
+        )
 
-    title = Path(doc["filename"]).stem
     texts = [embedding_text(extracted.text, chunk) for chunk in chunks]
     vectors = ctx.embedder.embed_documents(texts, [title] * len(chunks))
     metadatas = [

@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
 **Last updated:** 2026-11-04
-**Current state:** Stage 4 in progress on branch `stage-4-chunking-optimization` (Stage 3 merged into `main` 2026-11-04, not pushed). Steps done: 4th dev document, 15 dev table questions validated and overlap-checked, recursive and C7 table-aware chunkers built and tested. **Waiting for the user's approval before scoring any candidate.** Nothing is committed.
+**Current state:** Stage 4 in progress on branch `stage-4-chunking-optimization`. Checkpoints `010f056` and `0b9c47b`; the registry, ingestion wiring and dev optimizer results are not committed. **On dev, the optimizer picked C1 for every document and B is C1, so A, B and C are identical. Stopped for the user's decision before freezing; see Step 5.** The test set has not been run.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -447,6 +447,52 @@ Recall@budget at 2560 tokens, mean (95% CI). Differences are `bge-m3` minus `emb
 - **Indexing time,** full dev pool of about 185–192k stored tokens: `embeddinggemma` 31 s for C1 and 28 s for C3; `bge-m3` 71 s and 81 s, so about 2.5x slower. The C7 times (10.5 s and 27.4 s) are **not** cold-cache: 257 of its 454 chunks were identical to chunks already cached, so only 197 were embedded.
 
 **Caveat on C7's dev numbers.** The C7 detector rules (the labelled-row minimum, the title-line limit and the "Table N" stop) were adjusted on the dev documents while checking where the dev table gold rows fall in C7 chunks. That check used the 15 new dev table questions. C7's clean-table score of 1.000 on dev is therefore **optimistic** and is not evidence that C7 beats C1. Only the single held-out test run can show that. C1, C3 and the embedding comparison weren't tuned this way.
+
+### Step 5: dev optimizer run, registry, B (2026-11-04)
+
+**Built:**
+- **Registry:** `optimizer/registry.py`, with migration `003_registry.sql` adding the `chunking_registry` and `optimization_runs` tables.
+  - Matching: the format, reliable-headings flag, tables flag and language must be equal.
+    - Strong match: table share within 0.02, and heading density, characters per page and median section tokens each within 1.5x.
+    - Borderline match: within 0.05 and 2.5x.
+    - These tolerances were fixed before regret was measured.
+  - Reuse needs the same embedding model, digest, prompt version, extractor version and chunker version. Entries that differ are marked stale.
+- **Cheap re-test:** `retest_config`, 10 questions comparing the cached config with C1. The cached config is kept unless C1 is clearly better.
+- **Ingestion:** `optimizer/choose.py` is wired into `ingest.py`. The `chunking` setting is `adaptive` (default), `fixed` (Stage 2; used by test fixtures and the Stage 3 runner), or `C1`–`C7`. Every ingest writes an `optimization_runs` row.
+- **Tests:** 8 in `tests/test_registry.py`. Full suite: 243 passed. `ruff` is clean.
+
+**Dev optimizer run** (`benchmarks/results/optimize_dev_20261104/`, embeddings not cached, so timings are cold):
+
+| Document | Ingest total | Question generation | LLM calls | Accepted (target 40) | Candidates | Extract | Index winner |
+|---|---|---|---|---|---|---|---|
+| Tesla 10-K | 608 s | 511 s | 39 | 14 (1 table) | 60 s | 13.1 s | 21.9 s |
+| NIST AI RMF | 556 s | 507 s | 44 | 26 | 39 s | 3.5 s | 3.9 s |
+| Ragas | 529 s | 507 s | 41 | 19 | 18 s | 0.5 s | 1.8 s |
+| Fed MPR, Feb 2025 | 560 s | 506 s | 38 | 16 (0 table) | 38 s | 4.7 s | 9.3 s |
+
+- **Ingest takes 8.8–10.1 minutes per document.** About 90% is question generation, which hit its time cap (70% of 12 minutes) on every document.
+- **LLM calls average 11.5–13.3 s each,** against the smoke test's 5.6 s median on short passages. The 5–9 minute estimate in the plan was too low, and the 40-question target is never reached within the cap.
+- **Acceptance is 35–59%.** Rejections are mostly "quote not found" (11–16 per document) and "copies the quote's wording" (5–9). Table questions came out at 1 on Tesla and 0 on Fed, although the plan asked for at least 3 on Tesla. Rejected outputs weren't saved, so the cause isn't diagnosed.
+- **Bug found and fixed:** the split took its 10 confirmation questions first, so Tesla had only 4 selection questions, Fed 6 and Ragas 9. All three fell below the 10-question minimum and kept C1 automatically. The split now gives confirmation at most a quarter of the questions, with a test.
+- **Selection re-applied offline** to the saved scores with the corrected split (no new LLM calls). **C1 still wins on all 4 documents.** Selection/confirmation counts: Tesla 11/3, NIST 20/6, Ragas 15/4, Fed 12/4.
+  - Tesla: all six scored candidates are tied, with the leader at 1.000 (C2 and C6).
+  - NIST: C2 leads at 0.892 against C1's 0.800, with a CI from −0.265 to +0.052, so they are tied.
+  - Ragas: C1 leads.
+  - Fed: every candidate scores 1.000 or 0.999. The sampled pool is small (25–61 chunks), so the questions are too easy to tell candidates apart.
+
+**B, on the 44 dev benchmark questions.** All 7 candidates were applied globally; the selection rule picks the simplest tied candidate.
+- **B = C1.** C7 leads with Recall@budget 0.955. C1 scores 0.841, and C1 minus C7 is −0.114 (−0.227 to 0.000).
+- That interval's upper end is exactly zero, so by the rule it is a tie, and the simplest wins. It sits on the boundary.
+- C7's lead is also optimistic, because its detector was tuned on dev (decision 41).
+- C6 scores 0.954, C2 0.908, C3 0.886, C5 0.841, and C4 0.727 (clearly worse).
+
+**A vs B vs C on dev:** identical, since all three are C1. Recall@budget is 0.841 on all 44 questions and 0.722 on the 18 clean table questions; the 2 extraction failures score 1.000.
+
+**Regret, leave-one-out (anecdotal, 4 documents):**
+- **The registry finds no match for any dev document,** so every document would get a full optimization.
+- The profiles differ in structure: the reliable-headings flag (Tesla and Fed no; NIST and Ragas yes) and the tables flag (NIST has none; Ragas has one small table).
+- Forced-nearest reuse loses 0.0 everywhere, but only because every winner is C1.
+- **Regret can't be measured meaningfully on this dev set.**
 
 ## Workspace state
 

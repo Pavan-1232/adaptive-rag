@@ -15,7 +15,7 @@ from adaptive_rag.evaluation.questions import generate_for_plan
 from adaptive_rag.loaders import ExtractedDocument
 from adaptive_rag.providers import EmbeddingInputTooLong
 
-from .candidates import CANDIDATES, Candidate, build_chunks
+from .candidates import BY_ID, CANDIDATES, Candidate, build_chunks
 from .profile import Profile, profile_document
 from .sampling import question_plan, sample_regions
 from .scoring import DocumentChunks, InMemoryIndex, question_spans, score_question
@@ -69,6 +69,7 @@ class OptimizationResult:
     timings_s: dict[str, float] = field(default_factory=dict)
     stopped_early: list[str] = field(default_factory=list)
     per_question: dict[str, list[dict]] = field(default_factory=dict)
+    questions: list[dict] = field(default_factory=list)  # optimizer questions, for audit
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -80,8 +81,10 @@ def _in_sample(chunks: list[Chunk], regions: list[tuple[int, int]]) -> list[Chun
 
 
 def _split(questions: list[BenchmarkQuestion], confirmation: int) -> tuple[list, list]:
-    """Every k-th question goes to confirmation, so both sets spread across the document."""
-    if len(questions) <= confirmation:
+    """Selection comes first: confirmation gets at most a quarter of the questions (10 of 40).
+    Every k-th question goes to confirmation, so both sets spread across the document."""
+    confirmation = min(confirmation, len(questions) // 4)
+    if confirmation <= 0:
         return questions, []
     step = len(questions) / confirmation
     picks = {int(i * step + step - 1) for i in range(confirmation)}
@@ -228,4 +231,58 @@ def optimize_document(
         timings_s={k: round(v, 2) for k, v in timings.items()},
         stopped_early=stopped,
         per_question=per_question,
+        questions=[
+            {
+                "id": q.id,
+                "type": q.type,
+                "split": "confirmation" if q in confirmation_qs else "selection",
+                "question": q.question,
+                "quote": q.evidence[0].quote,
+                "page": q.evidence[0].page,
+            }
+            for q in questions
+        ],
     )
+
+
+# The cheap re-test for a borderline registry match (DESIGN.md section 5).
+RETEST_CAPS = Caps(
+    max_questions=10,
+    confirmation_questions=0,
+    max_llm_calls=15,
+    time_budget_s=240.0,
+    min_selection_questions=5,
+)
+
+
+def retest_config(
+    doc: ExtractedDocument,
+    name: str,
+    fmt: str,
+    embedder,
+    llm,
+    candidate_id: str,
+    clock: Callable[[], float] = time.monotonic,
+    profile: Profile | None = None,
+) -> tuple[bool, OptimizationResult]:
+    """Score the cached config against C1 on 10 new questions. Keep it unless C1 is clearly
+    better (C1 leads and the paired CI excludes a tie). Too few questions also keeps it."""
+    result = optimize_document(
+        doc,
+        name,
+        fmt,
+        embedder,
+        llm,
+        RETEST_CAPS,
+        (BY_ID["C1"], BY_ID[candidate_id]),
+        clock,
+        profile,
+    )
+    cached = next((c for c in result.candidates if c.id == candidate_id), None)
+    control = next((c for c in result.candidates if c.id == "C1"), None)
+    if cached is None or control is None or cached.tied_with_leader is None:
+        return True, result
+    c1_clearly_better = not cached.tied_with_leader and (control.selection_recall or 0.0) > (
+        cached.selection_recall or 0.0
+    )
+    return not c1_clearly_better, result

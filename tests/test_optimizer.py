@@ -1,8 +1,5 @@
 """C5, C6, the profiler, sampling, in-memory scoring, the selection rule, and cap enforcement."""
 
-import json
-import re
-
 import numpy as np
 import pytest
 
@@ -22,8 +19,7 @@ from adaptive_rag.optimizer.sampling import (
 )
 from adaptive_rag.optimizer.scoring import DocumentChunks, InMemoryIndex
 from adaptive_rag.optimizer.selection import select
-from adaptive_rag.providers import LLMResult
-from fakes import FakeEmbeddings
+from fakes import FakeEmbeddings, QuestionLLM
 
 
 def make_doc(text: str, sections=()) -> ExtractedDocument:
@@ -176,32 +172,6 @@ def test_selection_tie_within_a_strategy_goes_to_smallest_storage():
 # ---------------------------------------------------------------- caps
 
 
-class QuestionLLM:
-    """Answers each prompt with a question and a quote copied from the passage."""
-
-    id = "fake"
-    model = "fake-llm:1"
-
-    def __init__(self, clock=None, seconds_per_call=0.0):
-        self.calls = 0
-        self.events: list[str] = []
-        self.clock, self.seconds = clock, seconds_per_call
-
-    def generate(self, messages, schema=None, max_tokens=None, temperature=0):
-        self.calls += 1
-        self.events.append("generate")
-        if self.clock:
-            self.clock.now += self.seconds
-        passage = re.search(r"<passage>\n(.*)\n</passage>", messages[0]["content"], re.S).group(1)
-        quote = next(line.strip() for line in passage.split("\n") if len(line.strip()) >= 40)
-        quote = quote[:120].rsplit(" ", 1)[0]
-        payload = {"question": "Which figure is mentioned here?", "evidence_quote": quote}
-        return LLMResult(json.dumps(payload), 100, 20, 5.0, "stop")
-
-    def unload(self):
-        self.events.append("unload")
-
-
 class Clock:
     def __init__(self):
         self.now = 0.0
@@ -300,3 +270,13 @@ def test_embedding_cache_avoids_re_embedding(tmp_path):
 def test_unknown_candidate_strategy_rejected():
     with pytest.raises(KeyError):
         BY_ID["C9"]
+
+
+def test_selection_questions_come_before_confirmation():
+    from adaptive_rag.optimizer.optimize import _split
+
+    for total, confirm in ((40, 10), (14, 3), (3, 0)):
+        questions = list(range(total))
+        selection, confirmation = _split(questions, 10)
+        assert len(confirmation) == confirm and len(selection) == total - confirm
+        assert sorted(selection + confirmation) == questions

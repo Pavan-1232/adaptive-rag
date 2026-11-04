@@ -54,7 +54,10 @@ def _commit() -> str:
 
 def _settings(split: str, model: str) -> Settings:
     slug = model.replace(":", "_")
-    return Settings(data_dir=Path("data") / "eval" / f"{split}_{slug}", embedding_model=model)
+    # System A, as in Stage 3. Stage 4 systems B and C set `chunking` explicitly.
+    return Settings(
+        data_dir=Path("data") / "eval" / f"{split}_{slug}", embedding_model=model, chunking="fixed"
+    )
 
 
 def _providers(settings: Settings):
