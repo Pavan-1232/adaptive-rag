@@ -109,6 +109,8 @@ Testing on real PDFs in Stage 2 showed that pdfplumber's defaults glue words tog
 
 Semantic chunking is tested, not assumed better. A Vectara study found its extra cost wasn't backed by consistent gains.
 
+**Product default (decided 2026-11-04, after the Stage 4 held-out run):** C1 is the default chunking (`chunking = "C1"`). The optimizer (`chunking = "adaptive"`) and C7 (`chunking = "C7"`) are opt-in settings; their code and tests stay. Reasons: the optimizer chose C1 for all 9 dev and test documents at about 10 minutes each, and C7 vs C1 on held-out data was inconclusive (table and overall). See `PROGRESS.md`, decision 44.
+
 **How the candidates work (implemented in Stage 4):**
 
 - **Recursive (C2–C4):** split at paragraphs, then lines, sentences, words and tokens, then merge greedily up to the size. Overlap is at most N trailing tokens of the previous chunk, starting at a sentence boundary where possible and never mid-word.
@@ -326,7 +328,7 @@ class LLMProvider(Protocol):
 | E | D + neighbors and dedupe |
 | F | E + evidence check |
 
-**Stage 4 change (2026-11-04):** on dev, the optimizer chose C1 for every document and B was C1, so A, B and C were the same system. The Stage 4 held-out run therefore compares A (C1) with C7 table-aware as one fixed config, and with C (the optimizer). It is pre-registered in `PROGRESS.md`, decision 42. Later stages use whichever of these the held-out result supports as their chunking base.
+**Stage 4 change (2026-11-04):** on dev, the optimizer chose C1 for every document and B was C1, so A, B and C were the same system. The Stage 4 held-out run therefore compares A (C1) with C7 table-aware as one fixed config, and with C (the optimizer). It is pre-registered in `PROGRESS.md`, decision 42. Later stages use whichever of these the held-out result supports as their chunking base. **Result:** C7 vs A inconclusive and C = A, so Stage 5 builds on A (C1).
 
 ### Measures
 

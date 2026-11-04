@@ -212,3 +212,12 @@ def test_embedding_change_makes_entries_stale_and_triggers_optimization(settings
     _, run, _ = ingest(ctx, kb2, tmp_path, "b.txt", table_report(2))
     assert run["action"] == "optimize"
     assert json.loads(run["detail"])["marked_stale"] == 1
+
+
+def test_default_chunking_is_c1_and_optimizer_is_opt_in(monkeypatch):
+    # Decision 44: C1 is the product default; "adaptive" and "C7" must be set explicitly.
+    from adaptive_rag.config import Settings
+
+    monkeypatch.delenv("ADAPTIVE_RAG_CHUNKING", raising=False)
+    assert Settings(_env_file=None).chunking == "C1"
+    assert Settings(_env_file=None, chunking="adaptive").chunking == "adaptive"

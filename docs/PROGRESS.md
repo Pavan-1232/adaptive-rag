@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
 **Last updated:** 2026-11-04
-**Current state:** Stage 4 on branch `stage-4-chunking-optimization`. Optimizer, registry and ingestion wiring are built; on dev the optimizer chose C1 everywhere and B = C1. The held-out comparison (A vs C7 vs C) is pre-registered and the setup is frozen. **Waiting for the user's go-ahead to run the test set once.**
+**Current state:** Stage 4 approved and merged into `main` (2026-11-04, not pushed). Default chunking is C1; the optimizer and C7 are opt-in (decision 44). **Next: Stage 5 (adaptive retrieval)**, starting with the start-of-stage plan, focused on multi-part retrieval misses and table reading errors.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -12,7 +12,7 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 1 | Design | Complete; approved 2026-10-30 |
 | 2 | Baseline backend | Complete and committed 2026-10-30 |
 | 3 | Evaluation harness | Complete; approved 2026-11-04 |
-| 4 | Chunking optimization | In progress: chunkers C2–C4 and C7 built; waiting for approval to score |
+| 4 | Chunking optimization | Complete; approved 2026-11-04 |
 | 5 | Adaptive retrieval | Not started |
 | 6 | BYOK | Not started |
 | 7 | Frontend | Not started |
@@ -65,6 +65,7 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 41 | C7's detector was tuned on dev, so any B or C dev score that uses C7 is reported as optimistic. The held-out test run is the only evidence for C7 | 2026-11-04 |
 | 42 | Held-out comparison pre-registered: A (C1) vs C7 as a fixed config vs C (optimizer), all on `embeddinggemma:300m`. Primary: C7 minus A on Recall@budget, on test table questions and overall, with the paired CI rule. Replaces B vs C, since on dev A = B = C = C1 | 2026-11-04 |
 | 43 | The optimizer's weaknesses are recorded as Stage 4 findings (about 10 min per document, 14–26 accepted questions, 0–1 table questions, saturated scores on small sampled pools). No further optimizer tuning in Stage 4 | 2026-11-04 |
+| 44 | User's decision: product default chunking is C1. The optimizer (`chunking = "adaptive"`) and C7 are opt-in settings; code and tests kept. Findings recorded as: C7 vs A inconclusive; the optimizer chose C1 for all 9 documents at about 10 min each; remaining errors are table reading and multi-part retrieval depth. Stage 4 approved | 2026-11-04 |
 
 ## Smoke test results (2026-10-30)
 
@@ -541,25 +542,211 @@ Decision 42, the user's design. It replaces the planned B-vs-C comparison, becau
   - No retuning after seeing results.
 - **Reporting:** C7's dev scores are optimistic, because its detector was tuned on dev (decision 41). The held-out result is the only evidence for C7, and whatever it shows will be reported.
 
+### Held-out run: arms complete; C = A by construction (2026-11-04)
+
+The run resumed at 13:31 from the commands in "Held-out run: paused" below. Checked before resuming: HEAD `b386cd9`, no diff in `src/` or `tests/`, model digests unchanged. All runs record `b386cd9+uncommitted`, because the only uncommitted files were `docs/PROGRESS.md` and the A results file; the code was frozen.
+
+| Arm | Flag | Result | Finished |
+|---|---|---|---|
+| A | `--chunking C1` | Complete: 30 answered, 30 judged. `benchmarks/results/test_embeddinggemma_300m_C1_20261104T064322.json` | 13:41 |
+| C7 | `--chunking C7` | Complete: 30 answered, 30 judged. `benchmarks/results/test_embeddinggemma_300m_C7_20261104T081208.json` | 14:15 |
+| C | `--chunking adaptive` | Ingestion complete, then stopped at 15:03:32, after document 5 reached `ready` and **before any question was answered**. No results file; 0 query traces | 15:03 |
+
+**C's result: per-document choices and ingest times.** The optimizer's own timings come from `optimization_runs` in `data/eval/test_embeddinggemma_300m_adaptive/`. No scores are reported here.
+
+| Test document | Action | Chosen | Optimizer time | LLM calls | Questions accepted (selection + confirmation) | Table questions | Why C1 |
+|---|---|---|---|---|---|---|---|
+| Apple 10-K | optimize | **C1** | 565 s | 30 | 9 + 3 | 2 | Only 9 selection questions, so the control is kept |
+| Fed MPR, June 2025 | optimize | **C1** | 545 s | 32 | 6 + 2 | 1 | Only 6 selection questions |
+| NIST CSF 2.0 | optimize | **C1** | 537 s | 40 | 15 + 4 | 0 | C3 led; tied with C1, so the simplest wins |
+| RAPTOR | optimize | **C1** | 572 s | 28 | 7 + 2 | 2 | Only 7 selection questions |
+| Best practices (RAG) | optimize | **C1** | 584 s | 29 | 15 + 4 | 5 | C6 led; tied with C1, so the simplest wins |
+
+- **Question generation stopped at its time cap on every document,** after 505–519 s, the 70% share of the 12-minute budget. Calls averaged about 13–18 s, slower than dev's 11.5–13.3 s.
+- **The registry never matched:** every document ran a full optimization. The registry started empty in this folder, and no later test document matched an earlier one.
+- The Stage 4 findings (decision 43) hold on held-out documents too.
+
+**Why C = A, by construction:**
+- **Same chunks.** All 5 documents in C's index have chunking config `fixed/512/50/fixed-1`, the same file hash and extractor version as A, and identical chunk lists: index, offsets, text, and zero context tokens. That's 193, 88, 29, 43 and 46 chunks.
+- **Same retrieval.** The embedding model, its digest and the embedding input are the same, so retrieval is the same.
+- **Same answers, as far as evidence shows.** Generation was shown deterministic in Stage 3: the 2026-11-03 rerun matched the 2026-10-30 answers word for word on all 39 dev questions. That wasn't re-verified for this run, because C wasn't answered.
+- **Reporting:** C's held-out metrics are A's. C minus A is zero by construction, and C minus C7 equals A minus C7.
+
+**Analysis still to do** (not started; no test metric has been opened):
+- Run the pre-registered report: `python data/eval/stage4_test_report.py <A file> <C7 file> <A file>`. Pass A's file as C, since C = A.
+- Report the primary C7-vs-A result first: table questions (n = 6), then all 24 answerable.
+- Then C (= A), with the choices above, then the post-hoc Fed breakdown.
+- Before committing, move the script into `benchmarks/analysis/` and ask the user.
+
+### Held-out run: paused 2026-11-04, 12:33 (user's request)
+
+The run was stopped cleanly by stopping the background job. No runner process remains. Results are saved after every question and every judge call, so nothing is lost or half-written.
+
+**Where it stopped:**
+
+| Arm | Flag | State | Results file |
+|---|---|---|---|
+| A | `--chunking C1` | **All 30 questions answered and saved.** Judge pass: 8 of 30 rows done (`apple-01` … `apple-06`, `apple-un`, `apple-un2`); **next is `fed-01`**. The other 22 rows aren't judged yet: 18 answered or partial, and 4 unanswerable, which the judge skips. Metadata says `complete: false`; recorded commit `b386cd9` | `benchmarks/results/test_embeddinggemma_300m_C1_20261104T064322.json` |
+| C7 | `--chunking C7` | Not started. No results file, no index folder | none |
+| C | `--chunking adaptive` | Not started. No results file, no index folder | none |
+
+- **A's index:** `data/eval/test_embeddinggemma_300m_C1/`, all 5 test documents `ready`. A resume reuses it.
+- **Started:** A at 12:12:34. Answering took about 20 minutes for 30 questions.
+- **Nothing analysed:** no Stage 4 test metric has been looked at.
+
+**Before resuming,** check the code is still frozen:
+
+```
+git diff --stat b386cd9 -- src tests     # must print nothing
+```
+
+- The untracked A results file, and this PROGRESS.md edit, make `git status` dirty. Resumed and new runs will therefore record `b386cd9+uncommitted`. For A, the runner adds it under `resumed_commits` and keeps `commit: b386cd9`.
+- The code is unchanged, so this is a docs-and-results difference only. Note it in the report. Ask the user before committing anything, which would change the hash.
+
+**Resume commands,** from the repo root, with the conda env `adaptive-rag`, in this order:
+
+```
+SRC='30 test questions written by Claude in a separate chat session; 5 spot-checked against the PDFs by the user; not human-written'
+NOTES='Stage 4 pre-registered held-out run (decision 42)'
+
+# 1. Finish arm A: skips the 30 answered questions and the 8 judged rows, judges the rest.
+python -m adaptive_rag.evaluation run --set test --questions benchmarks/questions_test.yaml \
+  --judge --final --chunking C1 --question-source "$SRC" --notes "$NOTES" \
+  --resume benchmarks/results/test_embeddinggemma_300m_C1_20261104T064322.json
+
+# 2. Arm C7: a fresh start, since nothing was saved.
+python -m adaptive_rag.evaluation run --set test --questions benchmarks/questions_test.yaml \
+  --judge --final --chunking C7 --question-source "$SRC" --notes "$NOTES"
+
+# 3. Arm C: a fresh start. Its optimizer runs at ingest, about 10 minutes per document.
+python -m adaptive_rag.evaluation run --set test --questions benchmarks/questions_test.yaml \
+  --judge --final --chunking adaptive --question-source "$SRC" --notes "$NOTES"
+```
+
+- **If arm C7 or C stops again:** rerun the same command with `--resume <file>`, using the path it printed on its `Saving progress to …` line.
+- **If arm C stops before that line appears,** it stopped during ingestion: no results file exists yet, and a document may be left mid-index. Don't delete its index folder without asking the user. Inspect the `documents` status in `data/eval/test_embeddinggemma_300m_adaptive/adaptive_rag.sqlite` first.
+- **Time left, estimated from Stage 3 and dev timings (not measured):** A's judge pass about 5–10 minutes, C7 about 25–30 minutes, C about 75–80 minutes.
+- **After all three finish:** analyse with `stage4_test_report.py`. It is kept in the gitignored `data/eval/stage4_test_report.py`, so it doesn't mark the tree dirty during the runs; move it to `benchmarks/analysis/` after the runs. Run it as `python <script> <A results> <C7 results> <C results>`. Report in the pre-registered order.
+
+### Held-out results (2026-11-04), as pre-registered (decision 42)
+
+Report: `benchmarks/results/stage4_test_report_20261104T093653.json`, from `benchmarks/analysis/stage4_test_report.py`.
+- **Inputs:** A `test_embeddinggemma_300m_C1_20261104T064322.json` and C7 `test_embeddinggemma_300m_C7_20261104T081208.json`, with A's file standing in for C.
+- **Commits:** A recorded `b386cd9`, and C7 `b386cd9+uncommitted`. The only uncommitted files were docs and results; the code was frozen.
+- **Questions:** 30: 24 answerable (6 table) and 6 unanswerable.
+
+**Primary: C7 minus A, paired bootstrap 95% CI:**
+
+| Subset | Metric | A | C7 | C7 − A | Verdict |
+|---|---|---|---|---|---|
+| Table (n = 6) | **Recall@budget** | 0.833 | 1.000 | **+0.167 (0.000 to +0.500)** | **Inconclusive** (CI includes 0) |
+| Table (n = 6) | Hit@5 | 0.833 | 0.833 | 0.000 (−0.500 to +0.500) | Inconclusive |
+| Table (n = 6) | MRR | 0.617 | 0.444 | −0.172 (−0.500 to +0.133) | Inconclusive |
+| All answerable (n = 24) | **Recall@budget** | 0.860 | 0.860 | **0.000 (−0.125 to +0.125)** | **Inconclusive** |
+| All answerable (n = 24) | Hit@5 | 0.875 | 0.833 | −0.042 (−0.167 to +0.083) | Inconclusive |
+| All answerable (n = 24) | MRR | 0.716 | 0.643 | −0.074 (−0.217 to +0.067) | Inconclusive |
+
+**On held-out data, C7 is not shown to beat A,** on table questions or overall. The table gain is one question (`fed-02`), and the interval's lower end is exactly 0. C7's dev scores, including 1.000 on clean dev table questions, were optimistic as expected (decision 41).
+
+**Question by question:** 14 of 24 answerable questions differ in at least one metric, status or verdict.
+- **C7's gain:** `fed-02` (table). Gold was at rank 6 with Recall@budget 0 under A; under C7 it is at rank 3 with Recall@budget 1.
+- **C7's losses:**
+  - `raptor-01` (factual): gold rank 2 → 7, answered → **insufficient**. This is a new false refusal; A answered it correctly.
+  - `raptor-03` (table): rank 1 → 6, so it loses Hit@5. Recall@budget stays 1.0 because C7's smaller chunks fit more into the budget.
+- **Rank changes with the same outcome:** `apple-01`, `apple-02`, `apple-03`, `fed-01`, `fed-03`, `csf-01`, `csf-03`, `csf-04`, `csf-05` and `bp-04`, some up and some down.
+- **Confound:** C7 also chunks *prose* differently, recursively rather than fixed. The losses on non-table questions such as `raptor-01` come from that, not from table handling. This run can't separate the table effect from the recursive-prose effect.
+
+**Answers:**
+- **A's answers match Stage 3's answers word for word, and retrieval is identical, on all 30 test questions.** So the user's Stage 3 labels apply to A unchanged: `bp-03` and `fed-02` are wrong, the other 6 labelled answers correct.
+
+| Measure | A | C7 |
+|---|---|---|
+| Answerable: answered / partial / insufficient | 23 / 1 / 0 | 23 / 0 / 1 (`raptor-01`) |
+| Gold comparison: conflicts | 2 (`bp-03`, `fed-02`) | 2 (`bp-03`, `fed-02`) |
+| Citation off gold | 3 | 3 |
+| Judge: off topic | 2 | 2 |
+| Faithfulness (judge) | 0.882 (0.771–0.965) | 0.909 (0.801–0.986) |
+| Unanswerable refused | 6 of 6 | 6 of 6 |
+| Generation p50 / p95 | 32.1 s / 37.9 s | 32.3 s / 40.1 s |
+| Average input tokens | 3,151 | 2,517 (−20%) |
+
+- **`bp-03`** is wrong under both systems, retrieved at rank 1 both times. A gives 94.26 for 512 tokens; C7 gives 94.26 for 1024. The gold answer is 97.59. This is a reading error from the right table, which chunking doesn't fix.
+- **`fed-02`** is wrong under both. A missed the table (partial answer, 2.1%). C7 retrieved it but answered 3.0% for both values. **C7 turned a retrieval miss into a reading error.** This fits the flattened Fed Table 1 header (decision 39).
+- **`apple-06`:** the gold comparison moves from conflicts (A) to agrees (C7). The Stage 3 user label marked A's answer correct with narrow gold, so this isn't a C7 correctness gain.
+- **C7's answers have no user labels.** Its wrong-answer count rests on the gold comparison.
+
+**C = A:**
+- **Same chunks:** chunks are identical for all 5 documents.
+- **Same answers:** A matches Stage 3 word for word (above), so generation is deterministic on held-out data.
+- C's per-document choices and ingest times are in the table under "Held-out run: arms complete". The optimizer chose C1 for all 5, at 537–584 s per document.
+
+**Post-hoc Fed breakdown** (test `fed_mpr.pdf`). Computed by code after the run, and not used for tuning:
+
+| ID | Type | A: R@b / gold rank | C7: R@b / gold rank | Gold inside one chunk (A / C7) | Answer (gold comparison, A / C7) | Reading |
+|---|---|---|---|---|---|---|
+| `fed-01` | factual | 0.00 / 6 | 0.00 / 9 | yes / yes | agrees / agrees | Gold too narrow (Stage 3 label: correct answer from another passage) |
+| `fed-02` | table | 0.00 / 6 | 1.00 / 3 | yes / yes | conflicts / conflicts | Table retrieval miss under A; under C7 the table is found but misread (flattened header) |
+| `fed-03` | conceptual | 1.00 / 1 | 1.00 / 2 | yes / yes | agrees / agrees | Fine |
+| `fed-04` | multi_part | 0.64 / 2 | 0.64 / 2 | yes / yes | agrees / agrees | One of two evidence parts not retrieved |
+| `fed-05` | factual | 1.00 / 1 | 1.00 / 1 | yes / yes | agrees / agrees | Fine |
+| `fed-un` | near_miss | n/a | n/a | n/a | refused / refused | Correct refusal |
+
+- **Fed Recall@budget:** A 0.53, the same as Stage 3; C7 0.73 by the same per-question values.
+- **No Fed gold span is split by a chunk boundary** under either system, so boundaries aren't the cause.
+- **The three causes:**
+  1. Narrow gold (`fed-01`), a benchmark artefact.
+  2. A table retrieval miss (`fed-02`), which C7 fixes for retrieval only.
+  3. Partial multi-part coverage (`fed-04`), a retrieval-depth problem for Stage 5.
+- **This is post-hoc, on 5 questions.** Treat it as hypotheses only.
+
+### Stage 4 summary
+
+**Built:**
+- Chunkers: recursive (C2–C4), structure-aware (C5), semantic (C6), and the table detector with table-aware chunking (C7).
+- Context-token charging in every budget.
+- Profiler, sampling, in-memory scoring, the selection rule and caps, embedding cache.
+- Configuration registry with reuse, cheap re-test and staleness, wired into ingestion through the `chunking` setting.
+- Page-aware quote location, and the runner's `--chunking` systems.
+- 246 tests passing, `ruff` clean.
+
+**Measured:**
+- **`bge-m3` retest:** keep `embeddinggemma:300m` (0 of 3 configs favoured `bge-m3`).
+- **Optimizer cost:** about 9–10 minutes per document, on both dev and test.
+- **Optimizer choices:** it picked C1 for all 9 documents, dev and test. B = C1 on dev.
+- **Held-out:** C7 vs A is inconclusive on table questions and overall, and C = A.
+
+**Not shown:** that per-document optimization or table-aware chunking improves retrieval or answers on held-out data.
+
+**Limitations:**
+- Only 6 table test questions.
+- C7's detector was tuned on dev.
+- C7 changes prose chunking as well as tables (a confound).
+- Table extraction flattens headers.
+- Optimizer weaknesses, under decision 43.
+- Regret couldn't be measured.
+- C7's test answers have no human labels.
+
 ## Workspace state
 
-- **Branches:** `main` has Stages 2 and 3 (Stage 3 merged 2026-11-04, not pushed). Stage 4 work is on `stage-4-chunking-optimization`, with checkpoints `010f056`, `0b9c47b` and `39c76a3`, plus the freeze commit for the held-out run. Commit only when the user asks.
+- **Branches:** `main` has Stages 2–4 (Stage 4 merged 2026-11-04, not pushed). `stage-4-chunking-optimization` is kept. Commit only when the user asks.
 - **Environment:** conda env `adaptive-rag` (Python 3.11.18), with the project installed in editable mode.
 - **Ollama 0.40.13.** Models installed: `embeddinggemma:300m` (`85462619ee72`), `qwen3.5:9b` (`6488c96fa5fa`), `gemma4:e4b` (`c6eb396dbd59`), `bge-m3:latest` (kept, but not used after decision 40), and `deepseek-r1:8b`. `qwen3.5:4b` is not installed.
 - **Data folders under `data/eval/`** (all gitignored):
   - `dev_*` folders and `test_embeddinggemma_300m/` from Stage 3.
   - `embcache/`, the Stage 4 embedding cache for dev.
-  - The Stage 4 test folders, `test_embeddinggemma_300m_C1`, `_C7` and `_adaptive`, are created by the held-out run and don't exist yet.
+  - `test_embeddinggemma_300m_C1/`, `_C7/` and `_adaptive/` hold the Stage 4 held-out indexes, each with all 5 documents ready. `_adaptive/` also holds C's registry and `optimization_runs`.
 - **PDFs:** benchmark PDFs, including `dev/fed_mpr_feb2025.pdf`, are in the gitignored `benchmarks/documents/`.
 - **Test set:** `benchmarks/questions_test.yaml` is tracked. This assistant has not read the test questions' text or the test documents' content; only IDs, counts and hashes were used.
-- No evaluation process is running.
+- No evaluation process is running and no models are loaded. The held-out analysis is done.
 
 ## Next steps
 
-1. **Held-out run (Stage 4):** after the user's go-ahead, run A, C7 and C once each on the test set, as pre-registered above. Then report, update DESIGN.md and this file, and close Stage 4 with the end-of-stage summary.
-2. **Don't rerun the held-out test set** after that until the next release.
-3. **Later stage (not Stage 4):** the optimizer fixes listed under the findings above.
-4. **Stage 5 (adaptive retrieval):** don't start it until the user approves the end of Stage 4.
+1. **Stage 5 (adaptive retrieval):** begin with the start-of-stage plan and wait for approval. Focus on the two remaining error types from Stage 4:
+   - **Multi-part retrieval misses** (e.g. `fed-04`, one of two evidence parts not retrieved): retrieval depth, neighbors, per-part coverage.
+   - **Table reading errors** (`bp-03`, `fed-02` under C7): the right table is retrieved but misread; flattened headers (decision 39).
+   Tune on dev only. Base chunking is C1.
+2. **Don't rerun the held-out test set** until the next release.
+3. **Later (not Stage 5 unless asked):** the optimizer fixes listed under decision 43.
 
 ## Open questions
 

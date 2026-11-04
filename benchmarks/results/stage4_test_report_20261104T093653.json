@@ -1,0 +1,731 @@
+{
+  "created": "2026-11-04T09:36:53+00:00",
+  "files": {
+    "A": "benchmarks/results/test_embeddinggemma_300m_C1_20261104T064322.json",
+    "C7": "benchmarks/results/test_embeddinggemma_300m_C7_20261104T081208.json",
+    "C": "benchmarks/results/test_embeddinggemma_300m_C1_20261104T064322.json"
+  },
+  "commits": {
+    "A": "b386cd9",
+    "C7": "b386cd9+uncommitted",
+    "C": "b386cd9"
+  },
+  "same_commit": false,
+  "pre_registered": "PROGRESS.md decision 42",
+  "caveat": "C7's detector was tuned on dev; its dev scores are optimistic. This held-out run is the only evidence for C7.",
+  "primary_C7_vs_A": {
+    "table": {
+      "n": 6,
+      "recall_at_budget": {
+        "difference": [
+          0.16666666666666666,
+          0.0,
+          0.5
+        ],
+        "verdict": "inconclusive (CI includes 0)"
+      },
+      "hit_at_5": {
+        "difference": [
+          0.0,
+          -0.5,
+          0.5
+        ],
+        "verdict": "inconclusive (CI includes 0)"
+      },
+      "reciprocal_rank": {
+        "difference": [
+          -0.17222222222222225,
+          -0.5000000000000001,
+          0.13333333333333333
+        ],
+        "verdict": "inconclusive (CI includes 0)"
+      },
+      "means": {
+        "A": {
+          "recall_at_budget": [
+            0.8333333333333334,
+            0.5,
+            1.0
+          ],
+          "hit_at_5": [
+            0.8333333333333334,
+            0.5,
+            1.0
+          ],
+          "reciprocal_rank": [
+            0.6166666666666667,
+            0.32222222222222224,
+            0.888888888888889
+          ]
+        },
+        "C7": {
+          "recall_at_budget": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "hit_at_5": [
+            0.8333333333333334,
+            0.5,
+            1.0
+          ],
+          "reciprocal_rank": [
+            0.4444444444444444,
+            0.27777777777777773,
+            0.6666666666666666
+          ]
+        }
+      }
+    },
+    "all_answerable": {
+      "n": 24,
+      "recall_at_budget": {
+        "difference": [
+          0.0,
+          -0.125,
+          0.125
+        ],
+        "verdict": "inconclusive (CI includes 0)"
+      },
+      "hit_at_5": {
+        "difference": [
+          -0.041666666666666664,
+          -0.16666666666666666,
+          0.08333333333333333
+        ],
+        "verdict": "inconclusive (CI includes 0)"
+      },
+      "reciprocal_rank": {
+        "difference": [
+          -0.07379298941798944,
+          -0.2169204695767196,
+          0.0670647321428571
+        ],
+        "verdict": "inconclusive (CI includes 0)"
+      },
+      "means": {
+        "A": {
+          "recall_at_budget": [
+            0.8600948509485095,
+            0.7083333333333334,
+            0.9850948509485095
+          ],
+          "hit_at_5": [
+            0.875,
+            0.75,
+            1.0
+          ],
+          "reciprocal_rank": [
+            0.7163194444444446,
+            0.5715277777777779,
+            0.85
+          ]
+        },
+        "C7": {
+          "recall_at_budget": [
+            0.8600948509485095,
+            0.7083333333333334,
+            0.9850948509485095
+          ],
+          "hit_at_5": [
+            0.8333333333333334,
+            0.6666666666666666,
+            0.9583333333333334
+          ],
+          "reciprocal_rank": [
+            0.642526455026455,
+            0.5046296296296297,
+            0.7777777777777777
+          ]
+        }
+      }
+    }
+  },
+  "secondary_C": {
+    "table": {
+      "C_minus_A": {
+        "difference": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "verdict": "inconclusive (CI includes 0)"
+      },
+      "C_minus_C7": {
+        "difference": [
+          -0.16666666666666666,
+          -0.5,
+          0.0
+        ],
+        "verdict": "inconclusive (CI includes 0)"
+      },
+      "C_mean": [
+        0.8333333333333334,
+        0.5,
+        1.0
+      ]
+    },
+    "all_answerable": {
+      "C_minus_A": {
+        "difference": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "verdict": "inconclusive (CI includes 0)"
+      },
+      "C_minus_C7": {
+        "difference": [
+          0.0,
+          -0.125,
+          0.125
+        ],
+        "verdict": "inconclusive (CI includes 0)"
+      },
+      "C_mean": [
+        0.8600948509485095,
+        0.7083333333333334,
+        0.9850948509485095
+      ]
+    }
+  },
+  "summaries": {
+    "A": {
+      "questions": 30,
+      "answerable": 24,
+      "unanswerable": 6,
+      "recall_at_budget": [
+        0.8600948509485095,
+        0.7083333333333334,
+        0.9850948509485095
+      ],
+      "recall_at_5": [
+        0.8600948509485095,
+        0.7083333333333334,
+        0.9850948509485095
+      ],
+      "hit_at_5": [
+        0.875,
+        0.75,
+        1.0
+      ],
+      "reciprocal_rank": [
+        0.7163194444444446,
+        0.5715277777777779,
+        0.85
+      ],
+      "answered": 23,
+      "answerable_status": {
+        "answered": 23,
+        "partial": 1,
+        "insufficient": 0,
+        "null": 0
+      },
+      "wrong_focus_by_citation": 3,
+      "wrong_focus_by_citation_rate": 0.13043478260869565,
+      "wrong_focus_by_judge": 2,
+      "judged": 23,
+      "wrong_focus_by_judge_rate": 0.08695652173913043,
+      "reference_compared": 23,
+      "reference_conflicts": 2,
+      "reference_different_point": 0,
+      "wrong_focus_either": 5,
+      "faithfulness": [
+        0.8819444444444443,
+        0.7708333333333334,
+        0.9652777777777777
+      ],
+      "citation_precision": [
+        0.75,
+        0.5833333333333334,
+        0.8958333333333334
+      ],
+      "false_answers": 0,
+      "unanswerable_refused": 6,
+      "errors": 0,
+      "generation_p50_s": 32.06705,
+      "generation_p95_s": 37.94169999999999,
+      "avg_input_tokens": 3151.4666666666667,
+      "avg_output_tokens": 86.8
+    },
+    "C7": {
+      "questions": 30,
+      "answerable": 24,
+      "unanswerable": 6,
+      "recall_at_budget": [
+        0.8600948509485095,
+        0.7083333333333334,
+        0.9850948509485095
+      ],
+      "recall_at_5": [
+        0.8184281842818427,
+        0.6636178861788619,
+        0.9583333333333334
+      ],
+      "hit_at_5": [
+        0.8333333333333334,
+        0.6666666666666666,
+        0.9583333333333334
+      ],
+      "reciprocal_rank": [
+        0.642526455026455,
+        0.5046296296296297,
+        0.7777777777777777
+      ],
+      "answered": 23,
+      "answerable_status": {
+        "answered": 23,
+        "partial": 0,
+        "insufficient": 1,
+        "null": 0
+      },
+      "wrong_focus_by_citation": 3,
+      "wrong_focus_by_citation_rate": 0.13043478260869565,
+      "wrong_focus_by_judge": 2,
+      "judged": 23,
+      "wrong_focus_by_judge_rate": 0.08695652173913043,
+      "reference_compared": 23,
+      "reference_conflicts": 2,
+      "reference_different_point": 0,
+      "wrong_focus_either": 5,
+      "faithfulness": [
+        0.9094202898550724,
+        0.8007246376811593,
+        0.9855072463768116
+      ],
+      "citation_precision": [
+        0.726086956521739,
+        0.5652173913043478,
+        0.8695652173913043
+      ],
+      "false_answers": 0,
+      "unanswerable_refused": 6,
+      "errors": 0,
+      "generation_p50_s": 32.274849999999994,
+      "generation_p95_s": 40.056135,
+      "avg_input_tokens": 2516.5,
+      "avg_output_tokens": 90.4
+    },
+    "C": {
+      "questions": 30,
+      "answerable": 24,
+      "unanswerable": 6,
+      "recall_at_budget": [
+        0.8600948509485095,
+        0.7083333333333334,
+        0.9850948509485095
+      ],
+      "recall_at_5": [
+        0.8600948509485095,
+        0.7083333333333334,
+        0.9850948509485095
+      ],
+      "hit_at_5": [
+        0.875,
+        0.75,
+        1.0
+      ],
+      "reciprocal_rank": [
+        0.7163194444444446,
+        0.5715277777777779,
+        0.85
+      ],
+      "answered": 23,
+      "answerable_status": {
+        "answered": 23,
+        "partial": 1,
+        "insufficient": 0,
+        "null": 0
+      },
+      "wrong_focus_by_citation": 3,
+      "wrong_focus_by_citation_rate": 0.13043478260869565,
+      "wrong_focus_by_judge": 2,
+      "judged": 23,
+      "wrong_focus_by_judge_rate": 0.08695652173913043,
+      "reference_compared": 23,
+      "reference_conflicts": 2,
+      "reference_different_point": 0,
+      "wrong_focus_either": 5,
+      "faithfulness": [
+        0.8819444444444443,
+        0.7708333333333334,
+        0.9652777777777777
+      ],
+      "citation_precision": [
+        0.75,
+        0.5833333333333334,
+        0.8958333333333334
+      ],
+      "false_answers": 0,
+      "unanswerable_refused": 6,
+      "errors": 0,
+      "generation_p50_s": 32.06705,
+      "generation_p95_s": 37.94169999999999,
+      "avg_input_tokens": 3151.4666666666667,
+      "avg_output_tokens": 86.8
+    }
+  },
+  "C_choices": [
+    {
+      "document": "apple_10k.pdf",
+      "action": "optimize",
+      "candidate": "C1",
+      "seconds": 564.8,
+      "match": "no similar document in the registry",
+      "reason": "only 9 selection questions; kept the control",
+      "questions": [
+        9,
+        3
+      ],
+      "question_types": {
+        "factual": 4,
+        "conceptual": 4,
+        "multi_part": 2,
+        "table": 2
+      },
+      "stopped_early": [
+        "question generation hit the time cap"
+      ],
+      "timings_s": {
+        "questions": 506.26,
+        "query_embeddings": 1.37,
+        "candidates": 56.58,
+        "total": 564.74
+      }
+    },
+    {
+      "document": "fed_mpr.pdf",
+      "action": "optimize",
+      "candidate": "C1",
+      "seconds": 544.61,
+      "match": "no similar document in the registry",
+      "reason": "only 6 selection questions; kept the control",
+      "questions": [
+        6,
+        2
+      ],
+      "question_types": {
+        "conceptual": 4,
+        "factual": 2,
+        "multi_part": 1,
+        "table": 1
+      },
+      "stopped_early": [
+        "question generation hit the time cap"
+      ],
+      "timings_s": {
+        "questions": 505.41,
+        "query_embeddings": 1.25,
+        "candidates": 37.68,
+        "total": 544.56
+      }
+    },
+    {
+      "document": "nist_csf.pdf",
+      "action": "optimize",
+      "candidate": "C1",
+      "seconds": 537.21,
+      "match": "no similar document in the registry",
+      "reason": "leader C3; tied with leader: C3, C5, C2, C1, C6; simplest tied wins",
+      "questions": [
+        15,
+        4
+      ],
+      "question_types": {
+        "conceptual": 6,
+        "multi_part": 5,
+        "factual": 8
+      },
+      "stopped_early": [
+        "question generation hit the time cap"
+      ],
+      "timings_s": {
+        "questions": 505.71,
+        "query_embeddings": 1.52,
+        "candidates": 29.67,
+        "total": 537.18
+      }
+    },
+    {
+      "document": "raptor.pdf",
+      "action": "optimize",
+      "candidate": "C1",
+      "seconds": 571.73,
+      "match": "no similar document in the registry",
+      "reason": "only 7 selection questions; kept the control",
+      "questions": [
+        7,
+        2
+      ],
+      "question_types": {
+        "conceptual": 4,
+        "multi_part": 1,
+        "factual": 2,
+        "table": 2
+      },
+      "stopped_early": [
+        "question generation hit the time cap"
+      ],
+      "timings_s": {
+        "questions": 516.2,
+        "query_embeddings": 1.63,
+        "candidates": 53.72,
+        "total": 571.69
+      }
+    },
+    {
+      "document": "best_practices.pdf",
+      "action": "optimize",
+      "candidate": "C1",
+      "seconds": 584.32,
+      "match": "no similar document in the registry",
+      "reason": "leader C6; tied with leader: C6, C2, C5, C7, C1, C4; simplest tied wins",
+      "questions": [
+        15,
+        4
+      ],
+      "question_types": {
+        "multi_part": 4,
+        "factual": 4,
+        "table": 5,
+        "conceptual": 6
+      },
+      "stopped_early": [
+        "question generation hit the time cap"
+      ],
+      "timings_s": {
+        "questions": 518.59,
+        "query_embeddings": 1.91,
+        "candidates": 63.45,
+        "total": 584.23
+      }
+    }
+  ],
+  "tracked_wrong_answers": {
+    "bp-03": {
+      "A": {
+        "status": "answered",
+        "recall_at_budget": 1.0,
+        "gold_rank": 1,
+        "reference_verdict": "conflicts",
+        "citation_on_evidence": true,
+        "answer": "In the chunk-size experiment, a chunk size of 512 tokens scored best on average faithfulness with a score of 94.26 [E1]."
+      },
+      "C7": {
+        "status": "answered",
+        "recall_at_budget": 1.0,
+        "gold_rank": 1,
+        "reference_verdict": "conflicts",
+        "citation_on_evidence": true,
+        "answer": "In the chunk-size experiment, a chunk size of 1024 scored best on average faithfulness with a score of 94.26 [E1]."
+      },
+      "C": {
+        "status": "answered",
+        "recall_at_budget": 1.0,
+        "gold_rank": 1,
+        "reference_verdict": "conflicts",
+        "citation_on_evidence": true,
+        "answer": "In the chunk-size experiment, a chunk size of 512 tokens scored best on average faithfulness with a score of 94.26 [E1]."
+      }
+    },
+    "fed-02": {
+      "A": {
+        "status": "partial",
+        "recall_at_budget": 0.0,
+        "gold_rank": 6,
+        "reference_verdict": "conflicts",
+        "citation_on_evidence": false,
+        "answer": "Fed officials' median projection for headline PCE inflation at the end of 2025 is approximately 2.1% [E4]. However, the specific value of the March projection for headline PCE inflation at the end of 2025 is not explicitly stated in the provided evidence blocks; only ranges and other years' data are visible in the tables referenced."
+      },
+      "C7": {
+        "status": "answered",
+        "recall_at_budget": 1.0,
+        "gold_rank": 3,
+        "reference_verdict": "conflicts",
+        "citation_on_evidence": true,
+        "answer": "Fed officials expect headline PCE inflation to be 3.0 percent at the end of 2025, based on the median projection [E3]. This compares with a March projection of 3.0 percent for the same period [E3]."
+      },
+      "C": {
+        "status": "partial",
+        "recall_at_budget": 0.0,
+        "gold_rank": 6,
+        "reference_verdict": "conflicts",
+        "citation_on_evidence": false,
+        "answer": "Fed officials' median projection for headline PCE inflation at the end of 2025 is approximately 2.1% [E4]. However, the specific value of the March projection for headline PCE inflation at the end of 2025 is not explicitly stated in the provided evidence blocks; only ranges and other years' data are visible in the tables referenced."
+      }
+    }
+  },
+  "fed_post_hoc": [
+    {
+      "id": "fed-01",
+      "type": "factual",
+      "answerable": true,
+      "A": {
+        "status": "answered",
+        "recall_at_budget": 0.0,
+        "gold_rank": 6,
+        "reference_verdict": "agrees",
+        "citation_on_evidence": false,
+        "gold_in_one_chunk": true
+      },
+      "C7": {
+        "status": "answered",
+        "recall_at_budget": 0.0,
+        "gold_rank": 9,
+        "reference_verdict": "agrees",
+        "citation_on_evidence": false,
+        "gold_in_one_chunk": true
+      },
+      "C": {
+        "status": "answered",
+        "recall_at_budget": 0.0,
+        "gold_rank": 6,
+        "reference_verdict": "agrees",
+        "citation_on_evidence": false,
+        "gold_in_one_chunk": true
+      }
+    },
+    {
+      "id": "fed-02",
+      "type": "table",
+      "answerable": true,
+      "A": {
+        "status": "partial",
+        "recall_at_budget": 0.0,
+        "gold_rank": 6,
+        "reference_verdict": "conflicts",
+        "citation_on_evidence": false,
+        "gold_in_one_chunk": true
+      },
+      "C7": {
+        "status": "answered",
+        "recall_at_budget": 1.0,
+        "gold_rank": 3,
+        "reference_verdict": "conflicts",
+        "citation_on_evidence": true,
+        "gold_in_one_chunk": true
+      },
+      "C": {
+        "status": "partial",
+        "recall_at_budget": 0.0,
+        "gold_rank": 6,
+        "reference_verdict": "conflicts",
+        "citation_on_evidence": false,
+        "gold_in_one_chunk": true
+      }
+    },
+    {
+      "id": "fed-03",
+      "type": "conceptual",
+      "answerable": true,
+      "A": {
+        "status": "answered",
+        "recall_at_budget": 1.0,
+        "gold_rank": 1,
+        "reference_verdict": "agrees",
+        "citation_on_evidence": true,
+        "gold_in_one_chunk": true
+      },
+      "C7": {
+        "status": "answered",
+        "recall_at_budget": 1.0,
+        "gold_rank": 2,
+        "reference_verdict": "agrees",
+        "citation_on_evidence": true,
+        "gold_in_one_chunk": true
+      },
+      "C": {
+        "status": "answered",
+        "recall_at_budget": 1.0,
+        "gold_rank": 1,
+        "reference_verdict": "agrees",
+        "citation_on_evidence": true,
+        "gold_in_one_chunk": true
+      }
+    },
+    {
+      "id": "fed-04",
+      "type": "multi_part",
+      "answerable": true,
+      "A": {
+        "status": "answered",
+        "recall_at_budget": 0.6422764227642277,
+        "gold_rank": 2,
+        "reference_verdict": "agrees",
+        "citation_on_evidence": true,
+        "gold_in_one_chunk": true
+      },
+      "C7": {
+        "status": "answered",
+        "recall_at_budget": 0.6422764227642277,
+        "gold_rank": 2,
+        "reference_verdict": "agrees",
+        "citation_on_evidence": true,
+        "gold_in_one_chunk": true
+      },
+      "C": {
+        "status": "answered",
+        "recall_at_budget": 0.6422764227642277,
+        "gold_rank": 2,
+        "reference_verdict": "agrees",
+        "citation_on_evidence": true,
+        "gold_in_one_chunk": true
+      }
+    },
+    {
+      "id": "fed-05",
+      "type": "factual",
+      "answerable": true,
+      "A": {
+        "status": "answered",
+        "recall_at_budget": 1.0,
+        "gold_rank": 1,
+        "reference_verdict": "agrees",
+        "citation_on_evidence": true,
+        "gold_in_one_chunk": true
+      },
+      "C7": {
+        "status": "answered",
+        "recall_at_budget": 1.0,
+        "gold_rank": 1,
+        "reference_verdict": "agrees",
+        "citation_on_evidence": true,
+        "gold_in_one_chunk": true
+      },
+      "C": {
+        "status": "answered",
+        "recall_at_budget": 1.0,
+        "gold_rank": 1,
+        "reference_verdict": "agrees",
+        "citation_on_evidence": true,
+        "gold_in_one_chunk": true
+      }
+    },
+    {
+      "id": "fed-un",
+      "type": "near_miss",
+      "answerable": false,
+      "A": {
+        "status": "insufficient",
+        "recall_at_budget": null,
+        "gold_rank": null,
+        "reference_verdict": null,
+        "citation_on_evidence": null
+      },
+      "C7": {
+        "status": "insufficient",
+        "recall_at_budget": null,
+        "gold_rank": null,
+        "reference_verdict": null,
+        "citation_on_evidence": null
+      },
+      "C": {
+        "status": "insufficient",
+        "recall_at_budget": null,
+        "gold_rank": null,
+        "reference_verdict": null,
+        "citation_on_evidence": null
+      }
+    }
+  ]
+}

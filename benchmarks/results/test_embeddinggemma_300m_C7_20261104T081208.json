@@ -1,0 +1,1378 @@
+{
+ "metadata": {
+  "system": "C7 (table-aware 512/50, top-5)",
+  "chunking": "C7",
+  "set": "test",
+  "created_at": "2026-11-04T08:12:08+00:00",
+  "commit": "b386cd9+uncommitted",
+  "embedding_model": "embeddinggemma:300m",
+  "embedding_version": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+  "llm_model": "qwen3.5:9b",
+  "judge_model": "gemma4:e4b",
+  "judge_prompt": "audit-1",
+  "judge_check": "loose-1",
+  "recall_budget_tokens": 2560,
+  "questions_sha256": "521c907c829411135c76f229818b1d0a306b786b7a4d834aa5e913ac601697e7",
+  "retrieval_only": false,
+  "machine": "arm64 Darwin 27.0.0",
+  "question_source": "30 test questions written by Claude in a separate chat session; 5 spot-checked against the PDFs by the user; not human-written",
+  "notes": "Stage 4 pre-registered held-out run (decision 42)",
+  "complete": true
+ },
+ "results": [
+  {
+   "id": "apple-01",
+   "document": "apple_10k.pdf",
+   "type": "table",
+   "question": "How much revenue did Apple's Services business bring in during fiscal 2024?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.6837524175643921,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "status": "answered",
+   "answer": "Apple's Services business brought in $96,169 million in net sales during fiscal 2024 [E3].",
+   "citations": [
+    "apple_10k.pdf, p. 38"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "Apple's Services business brought in $96,169 million in net sales during fiscal 2024",
+     "evidence_quote": "Services (1) 96,169 85,200 78,129",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 1778,
+   "output_tokens": 58,
+   "timings_ms": {
+    "retrieval": 26.3,
+    "generation": 23878.0
+   },
+   "error": null
+  },
+  {
+   "id": "apple-02",
+   "document": "apple_10k.pdf",
+   "type": "table",
+   "question": "What did Apple spend on research and development in fiscal 2024?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.6715295314788818,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "status": "answered",
+   "answer": "Apple spent $31,370 million on research and development in fiscal 2024 [E2].",
+   "citations": [
+    "apple_10k.pdf, p. 27"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "Apple spent $31,370 million on research and development in fiscal 2024",
+     "evidence_quote": "Research and development $ 31,370 5 % $ 29,915 14 % $ 26,251",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 1277,
+   "output_tokens": 55,
+   "timings_ms": {
+    "retrieval": 22.4,
+    "generation": 15769.5
+   },
+   "error": null
+  },
+  {
+   "id": "apple-03",
+   "document": "apple_10k.pdf",
+   "type": "table",
+   "question": "What were Apple's sales in Greater China in 2024, and did they grow or shrink?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.678013265132904,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "status": "answered",
+   "answer": "Apple's net sales in Greater China were $66,952 million in 2024 [E2][E3]. These sales decreased by 8% compared to 2023 [E3], indicating they shrank.",
+   "citations": [
+    "apple_10k.pdf, p. 50",
+    "apple_10k.pdf, p. 25"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 0.6666666666666666,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "Apple's net sales in Greater China were $66,952 million in 2024.",
+     "evidence_quote": "Greater China 66,952",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "These sales decreased by 8% compared to 2023.",
+     "evidence_quote": "Greater China 66,952 (8) % 72,559",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "indicating they shrank.",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false,
+     "verified": false
+    }
+   ],
+   "input_tokens": 1884,
+   "output_tokens": 85,
+   "timings_ms": {
+    "retrieval": 22.7,
+    "generation": 24124.2
+   },
+   "error": null
+  },
+  {
+   "id": "apple-04",
+   "document": "apple_10k.pdf",
+   "type": "factual",
+   "question": "Roughly how many full-time staff did Apple have at the end of its 2024 fiscal year?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.6370217204093933,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "As of September 28, 2024, which marks the end of Apple's 2024 fiscal year, the company had approximately 164,000 full-time equivalent employees [E1].",
+   "citations": [
+    "apple_10k.pdf, pp. 6-7"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "As of September 28, 2024, which marks the end of Apple's 2024 fiscal year, the company had approximately 164,000 full-time equivalent employees",
+     "evidence_quote": "As of September 28, 2024, the Company had approximately 164,000 full-time equivalent employees.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2422,
+   "output_tokens": 78,
+   "timings_ms": {
+    "retrieval": 25.3,
+    "generation": 28853.6
+   },
+   "error": null
+  },
+  {
+   "id": "apple-05",
+   "document": "apple_10k.pdf",
+   "type": "conceptual",
+   "question": "Why was Apple's tax rate in 2024 so much higher than the standard US federal rate?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.6832987666130066,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "Apple's effective tax rate for 2024 was higher than the statutory federal income tax rate primarily due to a one-time income tax charge of $10.2 billion, net, related to the State Aid Decision [E1][E4]. Additionally, state income taxes contributed to the higher rate [E1]. These factors were partially offset by a lower effective tax rate on foreign earnings, the impact of the U.S. federal R&D credit, and tax benefits from share-based compensation [E1]. The specific components showing the difference between the provision for income taxes and the computed expected tax (based on the 21% statutory rate) include state taxes, net of federal effect ($1,162 million), the impact of the State Aid Decision ($10,246 million), earnings of foreign subsidiaries (-$5,311 million), research and development credit, net (-$1,397 million), excess tax benefits from equity awards (-$893 million), and other items ($10 million) [E4].",
+   "citations": [
+    "apple_10k.pdf, p. 28",
+    "apple_10k.pdf, p. 43",
+    "apple_10k.pdf, p. 43",
+    "apple_10k.pdf, p. 28",
+    "apple_10k.pdf, pp. 27-28"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.2,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "Apple's effective tax rate for 2024 was higher than the statutory federal income tax rate primarily due to a one-time income tax charge of $10.2 billion, net, related to the State Aid Decision",
+     "evidence_quote": "The Company’s effective tax rate for 2024 was higher than the statutory federal income tax rate due primarily to a one-time\nincome tax charge of $10.2 billion, net, related to the State Aid Decision (refer to Note 7, “Income Taxes” in the Notes to\nConsolidated Financial Statements in Part II, Item 8 of this Form 10-K) and state income taxes, partially offset by a lower\neffective tax rate on foreign earnings, the impact of the U.S. federal R&D credit, and tax benefits from share-based\ncompensation.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Additionally, state income taxes contributed to the higher rate",
+     "evidence_quote": "The Company’s effective tax rate for 2024 was higher than the statutory federal income tax rate due primarily to a one-time\nincome tax charge of $10.2 billion, net, related to the State Aid Decision (refer to Note 7, “Income Taxes” in the Notes to\nConsolidated Financial Statements in Part II, Item 8 of this Form 10-K) and state income taxes, partially offset by a lower\neffective tax rate on foreign earnings, the impact of the U.S. federal R&D credit, and tax benefits from share-based\ncompensation.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "These factors were partially offset by a lower effective tax rate on foreign earnings, the impact of the U.S. federal R&D credit, and tax benefits from share-based compensation",
+     "evidence_quote": "The Company’s effective tax rate for 2024 was higher than the statutory federal income tax rate due primarily to a one-time\nincome tax charge of $10.2 billion, net, related to the State Aid Decision (refer to Note 7, “Income Taxes” in the Notes to\nConsolidated Financial Statements in Part II, Item 8 of this Form 10-K) and state income taxes, partially offset by a lower\neffective tax rate on foreign earnings, the impact of the U.S. federal R&D credit, and tax benefits from share-based\ncompensation.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The specific components showing the difference between the provision for income taxes and the computed expected tax (based on the 21% statutory rate) include state taxes, net of federal effect ($1,162 million)",
+     "evidence_quote": "State taxes, net of federal effect 1,162 1,124 1,518",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "the impact of the State Aid Decision ($10,246 million)",
+     "evidence_quote": "Impact of the State Aid Decision 10,246 — —",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "earnings of foreign subsidiaries (-$5,311 million)",
+     "evidence_quote": "Earnings of foreign subsidiaries (5,311) (5,744) (4,366)",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "research and development credit, net (-$1,397 million)",
+     "evidence_quote": "Research and development credit, net (1,397) (1,212) (1,153)",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "excess tax benefits from equity awards (-$893 million)",
+     "evidence_quote": "Excess tax benefits from equity awards (893) (1,120) (1,871)",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "and other items ($10 million)",
+     "evidence_quote": "Other 10 (192) 160",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 1493,
+   "output_tokens": 263,
+   "timings_ms": {
+    "retrieval": 30.7,
+    "generation": 36577.6
+   },
+   "error": null
+  },
+  {
+   "id": "apple-06",
+   "document": "apple_10k.pdf",
+   "type": "multi_part",
+   "question": "In fiscal 2024, how much did Apple spend buying back its own shares, and what total dividend per share did it declare for the year?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.6603574156761169,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "status": "answered",
+   "answer": "In fiscal 2024, Apple spent $95.0 billion on share repurchases [E2][E3]. The company declared a total dividend of $0.98 per share for the year [E4].",
+   "citations": [
+    "apple_10k.pdf, p. 29",
+    "apple_10k.pdf, pp. 28-29",
+    "apple_10k.pdf, p. 35"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "In fiscal 2024, Apple spent $95.0 billion on share repurchases.",
+     "evidence_quote": "During 2024, the Company repurchased $95.0 billion of its common stock",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The company declared a total dividend of $0.98 per share for the year.",
+     "evidence_quote": "Dividends and dividend equivalents declared per share or RSU $ 0.98",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2612,
+   "output_tokens": 86,
+   "timings_ms": {
+    "retrieval": 38.3,
+    "generation": 32258.7
+   },
+   "error": null
+  },
+  {
+   "id": "apple-un",
+   "document": "apple_10k.pdf",
+   "type": "near_miss",
+   "question": "How many iPhones did Apple sell in fiscal 2024?",
+   "answerable": false,
+   "source": "claude-separate-session",
+   "top_score": 0.647255003452301,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": true,
+   "judge_claims": [],
+   "input_tokens": 1736,
+   "output_tokens": 62,
+   "timings_ms": {
+    "retrieval": 32.2,
+    "generation": 22143.4
+   },
+   "error": null
+  },
+  {
+   "id": "apple-un2",
+   "document": "apple_10k.pdf",
+   "type": "out_of_scope",
+   "question": "At what temperature does water boil at the top of Mount Everest?",
+   "answerable": false,
+   "source": "claude-separate-session",
+   "top_score": 0.12429022789001465,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": true,
+   "judge_claims": [],
+   "input_tokens": 2339,
+   "output_tokens": 58,
+   "timings_ms": {
+    "retrieval": 31.0,
+    "generation": 27595.4
+   },
+   "error": null
+  },
+  {
+   "id": "fed-01",
+   "document": "fed_mpr.pdf",
+   "type": "factual",
+   "question": "Where has the Fed kept its main policy interest rate so far in 2025?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.5960756540298462,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.1111111111111111,
+   "status": "answered",
+   "answer": "The Federal Open Market Committee (FOMC) has maintained the target range for the federal funds rate at 4¼ to 4½ percent since the beginning of 2025 [E4].",
+   "citations": [
+    "fed_mpr.pdf, pp. 45-48"
+   ],
+   "citation_on_evidence": false,
+   "citation_precision": 0.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The Federal Open Market Committee (FOMC) has maintained the target range for the federal funds rate at 4¼ to 4½ percent since the beginning of 2025",
+     "evidence_quote": "With the labor market at or near maximum employment, and inflation continuing to moderate toward 2 percent, the Federal Open Market Committee (FOMC) has maintained the target range for the federal funds rate at 4¼ to 4½ percent since the beginning of the year (figure 47).",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2718,
+   "output_tokens": 72,
+   "timings_ms": {
+    "retrieval": 29.9,
+    "generation": 32291.0
+   },
+   "error": null
+  },
+  {
+   "id": "fed-02",
+   "document": "fed_mpr.pdf",
+   "type": "table",
+   "question": "What do Fed officials expect headline PCE inflation to be at the end of 2025 (median projection), and how does that compare with their March projection?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.6218051910400391,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "status": "answered",
+   "answer": "Fed officials expect headline PCE inflation to be 3.0 percent at the end of 2025, based on the median projection [E3]. This compares with a March projection of 3.0 percent for the same period [E3].",
+   "citations": [
+    "fed_mpr.pdf, p. 57"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "conflicts",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "Fed officials expect headline PCE inflation to be 3.0 percent at the end of 2025, based on the median projection",
+     "evidence_quote": "PCE inflation 3.0",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "This compares with a March projection of 3.0 percent for the same period",
+     "evidence_quote": "March projection 3.0",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3007,
+   "output_tokens": 83,
+   "timings_ms": {
+    "retrieval": 34.4,
+    "generation": 36238.3
+   },
+   "error": null
+  },
+  {
+   "id": "fed-03",
+   "document": "fed_mpr.pdf",
+   "type": "conceptual",
+   "question": "Why does the Fed pay special attention to the core PCE price index?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.5314883589744568,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "status": "answered",
+   "answer": "The Fed pays special attention to the core PCE price index because it excludes often-volatile food and energy prices and is generally considered a better guide for future inflation [E2].",
+   "citations": [
+    "fed_mpr.pdf, pp. 14-16"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The Fed pays special attention to the core PCE price index because it excludes often-volatile food and energy prices and is generally considered a better guide for future inflation",
+     "evidence_quote": "The core PCE price index—which excludes often-volatile food and energy prices and is generally considered a better guide for future inflation—rose 2.5 percent over the 12 months ending in April, below the 2.9 percent increase observed at the end of last year.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3041,
+   "output_tokens": 57,
+   "timings_ms": {
+    "retrieval": 35.7,
+    "generation": 37604.0
+   },
+   "error": null
+  },
+  {
+   "id": "fed-04",
+   "document": "fed_mpr.pdf",
+   "type": "multi_part",
+   "question": "How many jobs per month were being added in early 2025, and what was the unemployment rate in May?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.6141576170921326,
+   "recall_at_budget": 0.6422764227642277,
+   "recall_at_5": 0.6422764227642277,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "status": "answered",
+   "answer": "In early 2025, the pace of monthly payroll job gains averaged 124,000 over the first five months of the year [E2]. The unemployment rate was 4.2 percent in May [E2].",
+   "citations": [
+    "fed_mpr.pdf, pp. 20-21"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": false,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "In early 2025, the pace of monthly payroll job gains averaged 124,000 over the first five months of the year",
+     "evidence_quote": "The low and fairly stable unemployment rate has coincided with a pace of monthly payroll job gains that averaged 124,000 over the first five months of this year—a moderate pace that is a bit slower than the average monthly gain of 168,000 recorded last year (figure 12).",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The unemployment rate was 4.2 percent in May",
+     "evidence_quote": "The Percent unemployment rate, at 4.2 percent in May,",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3246,
+   "output_tokens": 72,
+   "timings_ms": {
+    "retrieval": 49.1,
+    "generation": 38153.2
+   },
+   "error": null
+  },
+  {
+   "id": "fed-05",
+   "document": "fed_mpr.pdf",
+   "type": "factual",
+   "question": "By how much has the Fed shrunk its securities holdings since it started reducing them in 2022?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.6323028206825256,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "The Federal Reserve has reduced its holdings of Treasury and agency securities by more than $2 trillion since mid-2022 [E1]. Additionally, the total size of the balance sheet is noted as being $2.2 trillion smaller since the reduction in the size of the SOMA portfolio began in June 2022 [E2].",
+   "citations": [
+    "fed_mpr.pdf, pp. 13-14",
+    "fed_mpr.pdf, p. 50"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 1.0,
+   "addresses_question": false,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The Federal Reserve has reduced its holdings of Treasury and agency securities by more than $2 trillion since mid-2022",
+     "evidence_quote": "bringing the total reduction in securities holdings since mid-2022 to more than $2 trillion.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "the total size of the balance sheet is noted as being $2.2 trillion smaller since the reduction in the size of the SOMA portfolio began in June 2022",
+     "evidence_quote": "leaving the total size of the balance sheet at $6.7 trillion, $2.2 trillion smaller since the reduction in the size of the SOMA portfolio began in June 2022 (table A and fi gure A).1",
+     "same_subject": false,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2877,
+   "output_tokens": 105,
+   "timings_ms": {
+    "retrieval": 34.3,
+    "generation": 37585.4
+   },
+   "error": null
+  },
+  {
+   "id": "fed-un",
+   "document": "fed_mpr.pdf",
+   "type": "near_miss",
+   "question": "What unemployment rate do Fed officials project for 2028?",
+   "answerable": false,
+   "source": "claude-separate-session",
+   "top_score": 0.5580894947052002,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": true,
+   "judge_claims": [],
+   "input_tokens": 2878,
+   "output_tokens": 100,
+   "timings_ms": {
+    "retrieval": 31.0,
+    "generation": 37024.4
+   },
+   "error": null
+  },
+  {
+   "id": "csf-01",
+   "document": "nist_csf.pdf",
+   "type": "factual",
+   "question": "What are the six core functions in version 2.0 of the NIST Cybersecurity Framework?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.609638512134552,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.16666666666666666,
+   "status": "answered",
+   "answer": "The six core functions in version 2.0 of the NIST Cybersecurity Framework are GOVERN, IDENTIFY, PROTECT, DETECT, RESPOND, and RECOVER [E1][E3].",
+   "citations": [
+    "nist_csf.pdf, p. 9",
+    "nist_csf.pdf, pp. 9-10"
+   ],
+   "citation_on_evidence": false,
+   "citation_precision": 0.0,
+   "faithfulness": 0.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The six core functions in version 2.0 of the NIST Cybersecurity Framework are GOVERN, IDENTIFY, PROTECT, DETECT, RESPOND, and RECOVER",
+     "evidence_quote": "• PROTECT (PR) — Safeguards to manage the organization’s cybersecurity risks are used.\n... \n• DETECT (DE) — Possible cybersecurity attacks and compromises are found and analyzed.\n... \n• RESPOND (RS) — Actions regarding a detected cybersecurity incident are taken.\n... \n• RECOVER (RC) — Assets and operations affected by a cybersecurity incident are restored.",
+     "same_subject": true,
+     "supported": false,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2677,
+   "output_tokens": 77,
+   "timings_ms": {
+    "retrieval": 38.6,
+    "generation": 33302.9
+   },
+   "error": null
+  },
+  {
+   "id": "csf-02",
+   "document": "nist_csf.pdf",
+   "type": "conceptual",
+   "question": "Why is GOVERN drawn at the middle of the framework's wheel diagram?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.5192942023277283,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "GOVERN is drawn in the center of the wheel because it informs how an organization will implement the other five Functions [E1]. Additionally, GOVERN provides outcomes to inform what an organization may do to achieve and prioritize the outcomes of the other five Functions in the context of its mission and stakeholder expectations [E2].",
+   "citations": [
+    "nist_csf.pdf, pp. 9-10",
+    "nist_csf.pdf, pp. 7-9"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "GOVERN is drawn in the center of the wheel because it informs how an organization will implement the other five Functions",
+     "evidence_quote": "GOVERN is in the center of the wheel because it informs how an organization will implement the other five Functions.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "GOVERN provides outcomes to inform what an organization may do to achieve and prioritize the outcomes of the other five Functions in the context of its mission and stakeholder expectations",
+     "evidence_quote": "The GOVERN Function provides outcomes to inform what an organization may do to achieve and prioritize the outcomes of the other five Functions in the context of its mission and stakeholder expectations.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2667,
+   "output_tokens": 98,
+   "timings_ms": {
+    "retrieval": 33.1,
+    "generation": 35409.4
+   },
+   "error": null
+  },
+  {
+   "id": "csf-03",
+   "document": "nist_csf.pdf",
+   "type": "factual",
+   "question": "What are the names of the four tiers used to describe how rigorous an organization's cybersecurity risk management is?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.6478338241577148,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "The four tiers used to describe an organization's cybersecurity risk governance and management practices are Partial (Tier 1), Risk Informed (Tier 2), Repeatable (Tier 3), and Adaptive (Tier 4) [E4]. These tiers reflect a progression from informal, ad hoc responses to approaches that are agile, risk-informed, and continuously improving [E1].",
+   "citations": [
+    "nist_csf.pdf, pp. 31-32",
+    "nist_csf.pdf, pp. 12-14"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The four tiers used to describe an organization's cybersecurity risk governance and management practices are Partial (Tier 1), Risk Informed (Tier 2), Repeatable (Tier 3), and Adaptive (Tier 4)",
+     "evidence_quote": "There are four Tiers: Partial (Tier 1), Risk Informed (Tier 2), Repeatable (Tier 3), and Adaptive (Tier 4).",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "These tiers reflect a progression from informal, ad hoc responses to approaches that are agile, risk-informed, and continuously improving",
+     "evidence_quote": "The Tiers, as shown in Fig. 4 and notionally illustrated in Appendix B, reflect an organization’s practices for managing cybersecurity risk as Partial (Tier 1), Risk Informed (Tier 2), Repeatable (Tier 3), and Adaptive (Tier 4). The Tiers describe a progression from informal, ad hoc responses to approaches that are agile, risk-informed, and continuously improving.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2556,
+   "output_tokens": 110,
+   "timings_ms": {
+    "retrieval": 34.1,
+    "generation": 35185.3
+   },
+   "error": null
+  },
+  {
+   "id": "csf-04",
+   "document": "nist_csf.pdf",
+   "type": "multi_part",
+   "question": "Which category identifier covers supply chain risk, and what does its fourth subcategory require?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.47698092460632324,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "status": "answered",
+   "answer": "The category identifier that covers supply chain risk is GV.SC [E4]. Its fourth subcategory, GV.SC-04, requires that suppliers are known and prioritized by criticality [E3].",
+   "citations": [
+    "nist_csf.pdf, pp. 19-20",
+    "nist_csf.pdf, p. 22"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The category identifier that covers supply chain risk is GV.SC",
+     "evidence_quote": "Cybersecurity Supply Chain Risk Management GV.SC",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Its fourth subcategory is GV.SC-04",
+     "evidence_quote": "GV.SC-04: Suppliers are known and prioritized by criticality",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "GV.SC-04 requires that suppliers are known and prioritized by criticality",
+     "evidence_quote": "GV.SC-04: Suppliers are known and prioritized by criticality",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2627,
+   "output_tokens": 66,
+   "timings_ms": {
+    "retrieval": 31.6,
+    "generation": 31937.6
+   },
+   "error": null
+  },
+  {
+   "id": "csf-05",
+   "document": "nist_csf.pdf",
+   "type": "conceptual",
+   "question": "Which functions help stop incidents before they happen, and which help deal with them afterwards?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.49763941764831543,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "status": "answered",
+   "answer": "The Functions that help prevent and prepare for incidents are GOVERN, IDENTIFY, and PROTECT [E2]. The Functions that help discover and manage incidents (dealing with them afterwards) are GOVERN, DETECT, RESPOND, and RECOVER [E2]. Specifically, the DETECT Function enables the timely discovery of attacks and compromises [E1], while the RESPOND Function supports actions to contain the effects of cybersecurity incidents [E1]. The RECOVER Function supports the restoration of normal operations after an incident [E1].",
+   "citations": [
+    "nist_csf.pdf, pp. 9-10",
+    "nist_csf.pdf, p. 9"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The Functions that help prevent and prepare for incidents are GOVERN, IDENTIFY, and PROTECT",
+     "evidence_quote": "GOVERN, IDENTIFY, and PROTECT outcomes help prevent and prepare for incidents",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The Functions that help discover and manage incidents (dealing with them afterwards) are GOVERN, DETECT, RESPOND, and RECOVER",
+     "evidence_quote": "while GOVERN, DETECT, RESPOND, and RECOVER outcomes help discover and manage incidents.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "the DETECT Function enables the timely discovery of attacks and compromises",
+     "evidence_quote": "DETECT enables the timely discovery and analysis of anomalies, indicators of compromise, and other potentially adverse events that may indicate that cybersecurity attacks and incidents are occurring.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "the RESPOND Function supports actions to contain the effects of cybersecurity incidents",
+     "evidence_quote": "RESPOND supports the ability to contain the effects of cybersecurity incidents.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The RECOVER Function supports the restoration of normal operations after an incident",
+     "evidence_quote": "RECOVER supports the timely restoration of normal operations to reduce the effects of cybersecurity incidents and enable appropriate communication during recovery efforts.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2733,
+   "output_tokens": 142,
+   "timings_ms": {
+    "retrieval": 29.8,
+    "generation": 40070.4
+   },
+   "error": null
+  },
+  {
+   "id": "csf-un",
+   "document": "nist_csf.pdf",
+   "type": "near_miss",
+   "question": "What minimum Tier must an organization reach to be certified as compliant with CSF 2.0?",
+   "answerable": false,
+   "source": "claude-separate-session",
+   "top_score": 0.5835027098655701,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": true,
+   "judge_claims": [],
+   "input_tokens": 2731,
+   "output_tokens": 145,
+   "timings_ms": {
+    "retrieval": 31.1,
+    "generation": 40372.9
+   },
+   "error": null
+  },
+  {
+   "id": "raptor-01",
+   "document": "raptor.pdf",
+   "type": "factual",
+   "question": "How long are the text pieces RAPTOR starts from before it builds its tree?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.6200718879699707,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.14285714285714285,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": true,
+   "judge_claims": [],
+   "input_tokens": 2927,
+   "output_tokens": 90,
+   "timings_ms": {
+    "retrieval": 31.4,
+    "generation": 38960.0
+   },
+   "error": null
+  },
+  {
+   "id": "raptor-02",
+   "document": "raptor.pdf",
+   "type": "conceptual",
+   "question": "Why did the authors end up preferring the collapsed tree approach over tree traversal?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.5282572507858276,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "The authors preferred the collapsed tree approach because it offers greater flexibility than tree traversal [E1]. Specifically, by searching through all nodes simultaneously, the collapsed tree retrieves information at the correct level of granularity for a given question [E1]. In contrast, tree traversal maintains a constant ratio of nodes from each level regardless of the question, meaning the ratio of higher-order thematic information to granular details remains the same [E1]. Additionally, empirical testing on 20 stories from the QASPER dataset showed that the collapsed tree approach consistently performs better [E1].",
+   "citations": [
+    "raptor.pdf, pp. 5-6"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The authors preferred the collapsed tree approach because it offers greater flexibility than tree traversal.",
+     "evidence_quote": "The collapsed tree approach consistently performs better. We believe collapsed tree retrieval is better due to offering greater flexibility than tree traversal; i.e., by searching through all the nodes simultaneously, it retrieves information that is at the correct level of granularity for a given question.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "By searching through all nodes simultaneously, the collapsed tree retrieves information at the correct level of granularity for a given question.",
+     "evidence_quote": "We believe collapsed tree retrieval is better due to offering greater flexibility than tree traversal; i.e., by searching through all the nodes simultaneously, it retrieves information that is at the correct level of granularity for a given question.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "In contrast, tree traversal maintains a constant ratio of nodes from each level regardless of the question, meaning the ratio of higher-order thematic information to granular details remains the same.",
+     "evidence_quote": "In comparison, while using tree traversal with the same values of d and k, the ratio of nodes from each level of the tree will be constant. So, the ratio of higher-order thematic information to granular details will remain the same regardless of the question.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Additionally, empirical testing on 20 stories from the QASPER dataset showed that the collapsed tree approach consistently performs better.",
+     "evidence_quote": "We tested both approaches on 20 stories from the QASPER dataset. Figure 3 shows the performance of tree traversal with different top- sizes and collapsed tree with different maximum token numbers. The collapsed tree approach consistently performs better.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2935,
+   "output_tokens": 143,
+   "timings_ms": {
+    "retrieval": 31.9,
+    "generation": 40038.7
+   },
+   "error": null
+  },
+  {
+   "id": "raptor-03",
+   "document": "raptor.pdf",
+   "type": "table",
+   "question": "On QASPER with GPT-4 as the reader, what F-1 score did RAPTOR get, and how did that compare with DPR?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.7391583323478699,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.16666666666666666,
+   "status": "answered",
+   "answer": "On the QASPER dataset using GPT-4, RAPTOR achieved an F-1 score of 55.7% [E2]. This score surpassed the performance of DPR by a margin of 2.7 points [E2].",
+   "citations": [
+    "raptor.pdf, pp. 6-7"
+   ],
+   "citation_on_evidence": false,
+   "citation_precision": 0.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "On the QASPER dataset using GPT-4, RAPTOR achieved an F-1 score of 55.7%",
+     "evidence_quote": "RAPTOR’s F-1 Match scores are 53.1%, 55.7%, and 36.6% when using GPT-3, GPT-4, and UnifiedQA, respectively.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "This score surpassed the performance of DPR by a margin of 2.7 points",
+     "evidence_quote": "These scores surpass DPR by margins of 1.8, 2.7, and 4.5 points, and outdo BM25 by 6.5, 5.5, and 10.2 points across the respective LLMs.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 1962,
+   "output_tokens": 81,
+   "timings_ms": {
+    "retrieval": 34.7,
+    "generation": 24968.3
+   },
+   "error": null
+  },
+  {
+   "id": "raptor-04",
+   "document": "raptor.pdf",
+   "type": "multi_part",
+   "question": "Which model does RAPTOR use to embed its chunks, and which model writes the cluster summaries?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.7185558676719666,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "RAPTOR uses SBERT, specifically a BERT-based encoder (multi-qa-mpnet-base-cos-v1), to embed its chunks [E1]. The cluster summaries are written by gpt-3.5-turbo [E3].",
+   "citations": [
+    "raptor.pdf, pp. 3-4",
+    "raptor.pdf, pp. 4-5"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 0.5,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "RAPTOR uses SBERT, specifically a BERT-based encoder (multi-qa-mpnet-base-cos-v1), to embed its chunks",
+     "evidence_quote": "These texts are then embedded using SBERT, a BERT-based encoder (multi-qa-mpnet-base-cos-v1) (Reimers & Gurevych, 2019).",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The cluster summaries are written by gpt-3.5-turbo",
+     "evidence_quote": "While the summarization model generally produces reliable summaries, a focused annotation study revealed that about 4% of the summaries contained minor hallucinations.",
+     "same_subject": false,
+     "supported": false,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2965,
+   "output_tokens": 86,
+   "timings_ms": {
+    "retrieval": 30.2,
+    "generation": 34249.2
+   },
+   "error": null
+  },
+  {
+   "id": "raptor-un",
+   "document": "raptor.pdf",
+   "type": "near_miss",
+   "question": "How many US dollars did it cost to build RAPTOR's trees for the QuALITY dataset?",
+   "answerable": false,
+   "source": "claude-separate-session",
+   "top_score": 0.5943406224250793,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": true,
+   "judge_claims": [],
+   "input_tokens": 2415,
+   "output_tokens": 69,
+   "timings_ms": {
+    "retrieval": 39.4,
+    "generation": 27999.6
+   },
+   "error": null
+  },
+  {
+   "id": "bp-01",
+   "document": "best_practices.pdf",
+   "type": "factual",
+   "question": "Which vector database did the authors rate as the most complete option they compared?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.5463841557502747,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "The authors rated Milvus as the most comprehensive solution among the databases evaluated, noting that it met all essential criteria and outperformed other open-source options [E1].",
+   "citations": [
+    "best_practices.pdf, p. 6"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The authors rated Milvus as the most comprehensive solution among the databases evaluated.",
+     "evidence_quote": "Our evaluation indicates that Milvus stands out as the most comprehensive solution among the databases evaluated, meeting all the essential criteria and outperforming other open-source options.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2680,
+   "output_tokens": 64,
+   "timings_ms": {
+    "retrieval": 25.0,
+    "generation": 30073.8
+   },
+   "error": null
+  },
+  {
+   "id": "bp-02",
+   "document": "best_practices.pdf",
+   "type": "conceptual",
+   "question": "What is the trade-off between using big chunks and small chunks?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.46421635150909424,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "The trade-off between using big chunks and small chunks involves balancing context, retrieval recall, process time, and faithfulness. Larger chunks provide more context, which enhances comprehension but increases process time [E1]. Conversely, smaller chunks improve retrieval recall and reduce processing time but may lack sufficient context [E1]. Finding the optimal chunk size requires a balance between metrics such as faithfulness (whether the response matches retrieved texts) and relevancy (whether retrieved texts match queries) [E1].",
+   "citations": [
+    "best_practices.pdf, p. 5"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 0.75,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The trade-off between using big chunks and small chunks involves balancing context, retrieval recall, process time, and faithfulness.",
+     "evidence_quote": "Finding the optimal chunk size involves a balance between some metrics such as faithfulness, and relevancy.",
+     "same_subject": false,
+     "supported": false,
+     "verified": true
+    },
+    {
+     "claim": "Larger chunks provide more context, which enhances comprehension but increases process time [E1].",
+     "evidence_quote": "Larger chunks provide more context, enhancing comprehension but increasing process time.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Conversely, smaller chunks improve retrieval recall and reduce processing time but may lack sufficient context [E1].",
+     "evidence_quote": "Smaller chunks improve retrieval recall and reduce time but may lack sufficient context.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Finding the optimal chunk size requires a balance between metrics such as faithfulness (whether the response matches retrieved texts) and relevancy (whether retrieved texts match queries) [E1].",
+     "evidence_quote": "Faithfulness measures whether the response is hallucinated or matches the retrieved texts. Relevancy measures whether the retrieved texts and responses match queries.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2250,
+   "output_tokens": 118,
+   "timings_ms": {
+    "retrieval": 30.2,
+    "generation": 30897.5
+   },
+   "error": null
+  },
+  {
+   "id": "bp-03",
+   "document": "best_practices.pdf",
+   "type": "table",
+   "question": "In the chunk-size experiment, which chunk size scored best on average faithfulness, and what was its score?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.5458115339279175,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "In the chunk-size experiment, a chunk size of 1024 scored best on average faithfulness with a score of 94.26 [E1].",
+   "citations": [
+    "best_practices.pdf, p. 5"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "conflicts",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "In the chunk-size experiment, a chunk size of 1024 scored best on average faithfulness",
+     "evidence_quote": "1024 94.26 95.56",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2465,
+   "output_tokens": 56,
+   "timings_ms": {
+    "retrieval": 33.7,
+    "generation": 27955.3
+   },
+   "error": null
+  },
+  {
+   "id": "bp-04",
+   "document": "best_practices.pdf",
+   "type": "factual",
+   "question": "Which retrieval method do the authors recommend as the default?",
+   "answerable": true,
+   "source": "claude-separate-session",
+   "top_score": 0.5505183935165405,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "status": "answered",
+   "answer": "The authors recommend Hybrid Search with HyDE as the default retrieval method [E1].",
+   "citations": [
+    "best_practices.pdf, p. 7"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The authors recommend Hybrid Search with HyDE as the default retrieval method",
+     "evidence_quote": "Considering the best performance and tolerated latency, we recommend Hybrid Search with HyDE as the default retrieval method.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3063,
+   "output_tokens": 38,
+   "timings_ms": {
+    "retrieval": 32.9,
+    "generation": 32148.4
+   },
+   "error": null
+  },
+  {
+   "id": "bp-un",
+   "document": "best_practices.pdf",
+   "type": "out_of_scope",
+   "question": "Who won the 2018 FIFA World Cup?",
+   "answerable": false,
+   "source": "claude-separate-session",
+   "top_score": 0.10858780145645142,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "status": "insufficient",
+   "answer": "I couldn't find enough evidence in this knowledge base to answer that.",
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": true,
+   "judge_claims": [],
+   "input_tokens": 2534,
+   "output_tokens": 95,
+   "timings_ms": {
+    "retrieval": 36.3,
+    "generation": 32070.4
+   },
+   "error": null
+  }
+ ]
+}
