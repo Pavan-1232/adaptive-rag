@@ -95,7 +95,7 @@ Testing on real PDFs in Stage 2 showed that pdfplumber's defaults glue words tog
 
 ## 5. Chunking optimization
 
-### Candidates (maximum 6)
+### Candidates (maximum 7)
 
 | ID | Strategy | Size / overlap (tokens) | Condition |
 |---|---|---|---|
@@ -105,6 +105,7 @@ Testing on real PDFs in Stage 2 showed that pdfplumber's defaults glue words tog
 | C4 | Recursive | 1024 / 100 | Always |
 | C5 | Structure-aware | Up to 512 | Only if reliable headings are found |
 | C6 | Semantic (embedding breakpoints) | Up to 512 | Skipped when cost caps are reached |
+| C7 | Table-aware recursive | Up to 512 | Only if tables are detected. Tables become their own chunks, split only between rows; continuation chunks carry a second character range for the table title and header (added 2026-11-04) |
 
 Semantic chunking is tested, not assumed better. A Vectara study found its extra cost wasn't backed by consistent gains.
 
@@ -147,7 +148,7 @@ Many documents will tie and get a simple config. The system must not claim a dif
 
 ### Cost controls (starting values, calibrate in Stage 4)
 
-- At most 6 candidates and 40 questions per document (30 selection, 10 confirmation).
+- At most 7 candidates and 40 questions per document (30 selection, 10 confirmation).
 - The smoke test measured a median of 5.6 s per question with `think=False`, so the 40-question limit stays.
 - Sample about 25% of tokens, capped at 30,000. Short documents are evaluated in full.
 - A time budget per document. When it runs out, stop and keep the best result so far.

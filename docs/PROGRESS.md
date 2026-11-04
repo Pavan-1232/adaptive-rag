@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
 **Last updated:** 2026-11-04
-**Current state:** Stage 3 approved by the user on 2026-11-04 and committed on branch `stage-3-evaluation-harness` (not merged to `main`). Next is Stage 4. Start it with the start-of-stage plan and wait for the user's go-ahead.
+**Current state:** Stage 4 in progress on branch `stage-4-chunking-optimization` (Stage 3 merged into `main` 2026-11-04, not pushed). Steps done: 4th dev document, 15 dev table questions validated and overlap-checked, recursive and C7 table-aware chunkers built and tested. **Waiting for the user's approval before scoring any candidate.** Nothing is committed.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -12,7 +12,7 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 1 | Design | Complete; approved 2026-10-30 |
 | 2 | Baseline backend | Complete and committed 2026-10-30 |
 | 3 | Evaluation harness | Complete; approved 2026-11-04 |
-| 4 | Chunking optimization | Not started |
+| 4 | Chunking optimization | In progress: chunkers C2–C4 and C7 built; waiting for approval to score |
 | 5 | Adaptive retrieval | Not started |
 | 6 | BYOK | Not started |
 | 7 | Frontend | Not started |
@@ -54,6 +54,13 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 30 | Test questions: 30 written by Claude in a separate chat session, not by the user or this assistant; the user spot-checked 5 against the PDFs. This departs from the design's human-written test set | 2026-11-04 |
 | 31 | User labels for 8 test answers: `bp-03` and `fed-02` wrong; the other 6 correct. Gold for `fed-01` and `apple-06` was too narrow. The test file was left unedited and the test set was not rerun | 2026-11-04 |
 | 32 | Defer the human-written test subset to Stage 8 | 2026-11-04 |
+| 33 | Stage 4 adds a 7th chunking candidate, C7 table-aware recursive (up to 512 tokens), measured separately from structure-aware C5 | 2026-11-04 |
+| 34 | About 15 new dev table questions, written by Claude in a separate chat session and spot-checked by the user. Record `source` that way. They must be in before any candidate is scored | 2026-11-04 |
+| 35 | Add the Federal Reserve Monetary Policy Report, February 2025, as a 4th dev document (`dev/fed_mpr_feb2025.pdf`; public domain, cite the Board; SHA-256 checked). The Fed report on test (June 2025) is not opened or analysed before the final run | 2026-11-04 |
+| 36 | `bge-m3:latest` switching rule, fixed before the run: switch only if it is better on dev table questions with a 95% CI that excludes zero, and not clearly worse overall (CI of the overall difference not entirely below zero). Otherwise keep `embeddinggemma:300m` | 2026-11-04 |
+| 37 | Quote location prefers a match that starts on the stated page, else the first match. Needed because the same table row can appear on several pages. It moved 0 of 34 dev and 0 of 37 test gold quotes, so earlier results stand | 2026-11-04 |
+| 38 | When extraction scrambles a gold row, shorten the quote to the part that survives intact, keep the question and answer unchanged, and record it as a known extraction failure in `notes`. Applied to `tbl-nist-01` and `tbl-nist-04` | 2026-11-04 |
+| 39 | Table extraction stays unchanged in Stage 4, so B vs C measures chunking only. The flattened Fed Table 1 header is a known limitation | 2026-11-04 |
 
 ## Smoke test results (2026-10-30)
 
@@ -309,6 +316,69 @@ How each signal did on the 22 correct and 2 wrong answers:
 - `data/eval/dev_bge-m3/` is an empty leftover from the earlier failed attempt. The real index is `data/eval/dev_bge-m3_latest/`. Both are gitignored.
 - The stopped rerun added extra rows to `query_traces` in `data/eval/dev_embeddinggemma_300m/`. They are harmless and gitignored.
 
+## Stage 4 progress
+
+### Step 1: 4th dev document (2026-11-04)
+
+- **Source:** linked from the Fed's MPR page; the URL is `/publications/files/20250207_mprfullreport.pdf`, not the `/monetarypolicy/files/` path the June edition uses. PDF metadata title: "Monetary Policy Report, February 2025", 83 pages.
+- **Licence:** the Board's site says its information is public domain unless marked otherwise, and asks for the Board to be cited.
+- **`download`:** all 9 manifest hashes are ok. Leakage tests pass (2 passed).
+- **Extraction with the current PDF loader:** about 44k tokens, 100 sections. One warning: no text on pages 2, 4 and 82.
+
+Rough dev-document profile. `numeric lines` is a crude count of lines that are at least half figures, a one-off check and not the C7 table detector:
+
+| Document | Pages with text | Tokens | Numeric lines | Extract time |
+|---|---|---|---|---|
+| Tesla 10-K | 142 | 100,400 | 363 (7%) | 13.1 s |
+| NIST AI RMF | 47 | 20,442 | 11 (1%); Tables 1–4 are text tables that continue across pages | 1.7 s |
+| Ragas | 8 | 7,922 | 3; one small table with its caption below it | 0.4 s |
+| Fed MPR, Feb 2025 | 80 | 44,211 | 131 (4%); Tables 1 and 2 | 4.1 s |
+
+**Finding, dev only:** in the Fed's Table 1 (economic projections), extraction flattens the header. "Longer run" becomes the lines `Longer Longer Longer` and `Variable run run run`, so each row is 15 numbers whose columns can't be read reliably from the text. Chunking can keep the header with the rows, but it can't make the columns readable. This is an extraction problem.
+
+### Step 2: dev table questions (2026-11-04)
+
+`benchmarks/questions_dev_tables.yaml`: 15 table questions (6 Fed, 4 Tesla, 4 NIST, 1 Ragas), written by Claude in a separate chat session. The user spot-checked `tbl-fed-03`, `tbl-fed-06`, `tbl-tsla-02` and `tbl-ragas-01` against the PDFs and found them correct. With the 5 existing Tesla table questions, dev now has 20 table questions.
+
+- **First `validate`:** all 6 Fed quotes matched, including footnote markers.
+  - `tbl-tsla-01`: the same row appears on pages 40, 52 and 58, and matching always took the first, so the stated page and its alternatives were reported wrong. This was a harness bug, fixed by decision 37.
+  - `tbl-nist-01` and `tbl-nist-04`: not found. The loader interleaves these rows line by line with the table's left column, so the sentence is never contiguous. Handled by decision 38.
+- **After the fixes:** all 15 quotes are found on their stated pages. `questions_dev.yaml` and `questions_test.yaml` still validate.
+- **Overlap with test questions** (`benchmarks/analysis/question_overlap.py`, results in `question_overlap_20261104T051951.json`). It prints IDs and scores only. Thresholds fixed before the run: question Jaccard ≥ 0.5, cosine ≥ 0.85 (`embeddinggemma:300m`), or an identical quote. **0 of 15 flagged.** The closest pair is `tbl-fed-05` and test `fed-02`, with cosine 0.779 and Jaccard 0.294, as expected for two editions of the same report.
+
+### Step 3: chunkers (2026-11-04)
+
+Built:
+- `chunking/recursive.py` (C2–C4): splits at paragraphs, then lines, sentences, words and tokens, then merges greedily up to the size. Overlap is the last ≤N tokens of the previous chunk, starting at a sentence boundary if there is one, else at a word boundary. The first version repeated only whole pieces, so on paragraph-sized pieces it gave no overlap at all; a test caught this.
+- `chunking/tables.py`: a table detector based on line rules. A row is a line that ends in 2 or more figures. A table needs at least 3 rows with a text label, so chart axis ticks don't count. Its title is up to 6 lines above, stopping at a blank line, a sentence end or a "Table N" line. A caption directly below is included.
+- `chunking/table_aware.py` (C7): a table that fits is one chunk. A larger table is split only at line ends, and each continuation chunk carries the header as a second character range (`context_start`/`context_end`, at most 150 tokens). That range is counted inside the chunk size.
+
+**Tests:** 24 new, in `tests/test_chunking_stage4.py`. They cover offsets, sizes, coverage, multibyte text, paragraph preference, overlap bounds, token fallback, settings, table rules (chart ticks, prose with numbers, captions, header cap), C7 row-only splits with header context, and C7 equalling recursive when there are no tables. Full suite: 210 passed, 7 Ollama tests deselected. `ruff` is clean.
+
+**Structural check on the dev documents.** This is not a retrieval score.
+
+| Document | Tables found | Table share of tokens | C7 chunks (table / with context) | C3 chunks |
+|---|---|---|---|---|
+| Tesla 10-K | 51 | 10.7% | 281 (55 / 4) | 224 |
+| NIST AI RMF | 0 | 0% | 49 | 49 |
+| Ragas | 1 | 1.0% | 19 (1 / 0) | 17 |
+| Fed MPR, Feb 2025 | 5 | 3.7% | 105 (7 / 2) | 100 |
+
+- The gold row of all 20 dev table questions lies inside one C7 chunk. For the 16 in numeric tables, that chunk is a table chunk; Tesla R&D (`tesla-a1`) now sits in a 93-token chunk with its title.
+- **Fed tuning (dev):** the detector first found 22 Fed "tables", about 15 of them chart axis labels. The labelled-row rule cut this to 5: Tables 1 and 2, Table A in two parts, and one false positive where a chart legend runs into prose. The rule was chosen by reasoning about what a table row looks like, then checked on this dev document.
+- **Fed Table 1** (about 1,050 tokens) is split into 3 chunks. Pieces 2 and 3 carry the header, starting at "Table 1.". The header itself is still flattened (decision 39).
+
+**Not done yet:**
+- The DB schema doesn't store `context_start`, `context_end` or `is_table`.
+- Ingestion and retrieval don't use C7 or `embedding_text`.
+- The evidence budget doesn't yet count context tokens.
+- C5 structure-aware and C6 semantic aren't built.
+- Nothing has been scored.
+
+**Known limitations:**
+- Text-only tables, such as NIST's category tables, aren't detected, so C7 treats them as prose. Their rows are also scrambled by extraction.
+- A row's label line can end up at the end of the previous piece, as with Fed "Memo: Projected appropriate policy path".
+
 ## Workspace state
 
 - Git is initialized with `.gitignore`. Stage 2 is committed on `main`; Stage 3 so far is a WIP checkpoint on branch `stage-3-evaluation-harness`, not merged. Commit only when the user asks.
@@ -316,6 +386,7 @@ How each signal did on the 22 correct and 2 wrong answers:
 - Ollama 0.40.13. Models installed: `embeddinggemma:300m`, `bge-m3:latest`, `qwen3.5:9b`, `gemma4:e4b` (same digest as `gemma4:latest`), `deepseek-r1:8b`. `qwen3.5:4b` (the fallback) is not installed.
 - The test documents were indexed into `data/eval/test_embeddinggemma_300m/` (gitignored) for the one held-out run. This assistant has not read the test documents' content or the test questions' text. `benchmarks/questions_test.yaml` is untracked; ask before committing it.
 - No evaluation process is running, and no models are loaded in Ollama.
+- `benchmarks/documents/dev/fed_mpr_feb2025.pdf` is downloaded (gitignored, like the other PDFs).
 
 ## Next steps
 

@@ -27,7 +27,7 @@ from .metrics import (
     recall_at_k,
     reciprocal_rank,
 )
-from .spans import locate_quote, overlap
+from .spans import locate_quote, overlap, page_range
 
 POOL_SIZE = 30
 # Matches five 512-token chunks. At 2000, only three fit and a 1024-token chunk fits once.
@@ -99,8 +99,13 @@ def build_index(
 def evidence_spans(question: BenchmarkQuestion, indexed: dict[str, dict]) -> list[Span]:
     spans: list[Span] = []
     text = indexed[question.document]["canonical_text"]
+    units = indexed[question.document]["units"]
+    units = json.loads(units) if isinstance(units, str) else units
     for item in question.evidence:
-        found = [locate_quote(text, option.quote) for option in (item, *item.alternatives)]
+        found = [
+            locate_quote(text, option.quote, page_range(units, option.page))
+            for option in (item, *item.alternatives)
+        ]
         if None in found:
             raise ValueError(f"{question.id}: evidence quote not found in {question.document}")
         alternatives = tuple(Span(question.document, *where) for where in found[1:])

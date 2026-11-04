@@ -30,7 +30,7 @@ from .runner import (
     run_benchmark,
     save_results,
 )
-from .spans import locate_quote
+from .spans import locate_quote, page_range
 from .stats import is_tie, paired_difference_ci
 
 DOCUMENTS = BENCHMARK_DIR / "documents"
@@ -95,7 +95,7 @@ def cmd_validate(args: argparse.Namespace) -> int:
         doc = texts[question.document]
         options = [o for evidence in question.evidence for o in (evidence, *evidence.alternatives)]
         for evidence in options:
-            found = locate_quote(doc.text, evidence.quote)
+            found = locate_quote(doc.text, evidence.quote, page_range(doc.units, evidence.page))
             if found is None:
                 problems.append(f"{question.id}: quote not found")
                 continue
