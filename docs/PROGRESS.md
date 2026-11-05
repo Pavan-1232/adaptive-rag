@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
 **Last updated:** 2026-11-05
-**Current state:** Stage 5 on branch `stage-5-adaptive-retrieval`. Finalist S is reviewed (decisions 53–55). Held-out A vs S pre-registration in progress.
+**Current state:** Stage 5 on branch `stage-5-adaptive-retrieval`. Finalist S is reviewed (decisions 53–55). The held-out A vs S comparison is pre-registered (decision 56) and frozen. **Waiting for the user's go-ahead to run the test set once.**
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -77,6 +77,7 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 53 | Hybrid keyword search **off** for S: recall within 0.002 of the hybrid version, simpler, and hybrid loses `tbl-fed-05`. It stays an opt-in switch (`adaptive_hybrid`) | 2026-11-05 |
 | 54 | Neighbor reserve **0** for S. This is a measured deviation from DESIGN.md's 30%: the 30% reserve was swept on dev and lowered recall at 2560 (0.854 → 0.834). The reserve stays a setting | 2026-11-05 |
 | 55 | `config.py`'s `adaptive_*` defaults and `evidence_target_tokens` (2560) are set to finalist S, so `--retrieval adaptive` runs exactly S without environment variables. `retrieval` stays `"baseline"` by default, so product behaviour is unchanged until the held-out result | 2026-11-05 |
+| 56 | Stage 5 held-out comparison pre-registered: A (Stage 4's C1 file) vs S at 2,560 tokens. Primary: S minus A on recall over sent evidence, all 24 answerable, paired 95% CI must exclude 0. Details under "Held-out comparison, pre-registered 2026-11-05" | 2026-11-05 |
 
 ## Smoke test results (2026-10-30)
 
@@ -835,6 +836,57 @@ C1, top-5, index `data/eval/dev_embeddinggemma_300m_C1/` (all 4 dev documents). 
 - **Dev result for this S** (sweep 2, the "without hybrid" row): recall over sent evidence 0.852. S minus A is +0.018 (0.000 to +0.054). Tables 0.800, part coverage 0.750, all parts covered 5 of 12, 2,306 tokens. This is selected on dev, so it's optimistic.
 - **Multi-part spot-check (decision c): not recorded.** The user's message of 2026-11-05 still held the template placeholder (`[IDs, or "none"]`). Ask the user for the IDs. Until then, the dev multi-part questions count as written by a separate Claude session, spot-checked by the user (IDs unknown).
 
+### Held-out comparison, pre-registered 2026-11-05, before any Stage 5 test result (decision 56)
+
+**Systems,** both on the 5 test documents:
+
+- **A:** reused, not rerun (decision 48). `benchmarks/results/test_embeddinggemma_300m_C1_20261104T064322.json`, SHA-256 `1cbd2e4a87043389…`, from commit `b386cd9`: C1, fixed top-5, 30 answered and 30 judged.
+  - **A's recall over sent evidence is its saved `recall_at_budget`.** The two were equal on every dev question in the regression check. On test this is checked again: the retrieval-only replay of A (secondary 1) also measures A's recall over sent evidence directly. If it differs from the saved `recall_at_budget` on any question, the primary result is reported with both values for A, and the difference is named.
+- **S:** `--chunking C1 --retrieval adaptive`, using `config.py`'s defaults at the freeze commit (decision 55). That is budget 2,560, part splitting on, delta off, gap cutoff on, minimum 3 chunks, maximum chunks per type {factual 5, table 5, multi-part 8, comparative 10, broad 10}, neighbors on (threshold 0.5, reserve 0), floor 0.25, pool 30, and hybrid, dedupe, merge, doc cap and table prompt all off. The uncovered-part notice is on.
+  - **Index:** S reuses Stage 4's C1 test index `data/eval/test_embeddinggemma_300m_C1/`, the same chunks A used. Opening it applies migrations 004 and 005: a trace column and an FTS5 table filled from the existing chunks. The chunks are not changed.
+- **Common setup:** `embeddinggemma:300m` (`85462619ee72`), `qwen3.5:9b` (`6488c96fa5fa`), and judge `gemma4:e4b` (`c6eb396dbd59`) with `audit-1`, `loose-1` and the gold comparison. Score gate off during the run. Ollama 0.40.14; A ran on 0.40.13, and dev embeddings were identical across that change.
+- **Questions:** `benchmarks/questions_test.yaml`, unedited, SHA-256 `521c907c82941113…`. 30 questions: 24 answerable, including 6 table and 4 multi-part, and 6 unanswerable.
+
+**Primary:**
+- **Metric:** S minus A on **recall over sent evidence**, all **24 answerable** questions.
+- **Test:** paired bootstrap 95% CI, 10,000 resamples, seed 13.
+- **Verdict:** if the CI is entirely above 0, S is better; if entirely below 0, S is worse; if it includes 0, the result is **inconclusive**, and S doesn't count as beating A.
+
+**Secondary (descriptive, no pass/fail):**
+1. **Part coverage on the 4 multi-part questions:** S's part coverage over sent evidence, and the number with all parts covered.
+   - A's file has no part coverage, so A's is recomputed **after** S's run by a retrieval-only replay of baseline top-5 on the same index.
+   - The replay must reproduce A's saved `recall_at_budget` on all 24 answerable questions. If any question differs, A's part coverage is reported as unavailable and the mismatch is reported.
+2. **Gold correctness on the 6 table questions:** the number with gold comparison "agrees", S against A's saved verdicts.
+
+**Guardrails** (reported against these thresholds, all measured):
+- **Refusals:** S must refuse **6 of 6** unanswerable questions. Fewer is a guardrail failure.
+- **False refusals:** answerable questions S answers `insufficient`. A had 0.
+- **Latency:** p50 generation latency, S against A's 32.1 s.
+
+**Also reported (descriptive):**
+- Tokens sent; hit@5 and MRR where defined; judge flags; citations off gold.
+- **Seen questions:** `fed-02`, `fed-04` and `bp-03` are reported **separately as "seen"**, since they shaped Stage 5's focus. They stay in the primary 24, as the user specified.
+
+**Caveats fixed now:**
+- **The answer prompt differs:** Stage 5 adds the uncovered-part notice, and A's answers come from the Stage 4 prompt. Answer-level differences therefore mix a retrieval change with a prompt change. The primary metric is retrieval-only and isn't affected.
+- **S was chosen on dev** as the best of 1,536 configs at 2,560 on 56 questions, so its dev gain (+0.018) is optimistic.
+- **The 4,000-token budget is not run on test.** It stays a dev-only trade-off (decision 50).
+
+**Procedure:**
+- One run of S, with `--final` and the judge. A crash is continued with `--resume`, never rerun.
+- No code changes during the run. New scripts stay outside the repo, or in gitignored `data/`, until it finishes.
+- **The run is valid only if** its recorded `adaptive_params` match the frozen defaults above, and its recorded commit is the freeze commit.
+- No retuning after seeing results. Whatever the result, it is reported.
+
+**Command,** from the repo root with the conda env `adaptive-rag`:
+
+```
+python -m adaptive_rag.evaluation run --set test --questions benchmarks/questions_test.yaml \
+  --judge --final --chunking C1 --retrieval adaptive \
+  --question-source '30 test questions written by Claude in a separate chat session; 5 spot-checked against the PDFs by the user; not human-written' \
+  --notes 'Stage 5 pre-registered held-out run (decision 56)'
+```
+
 ## Workspace state
 
 - **Branches:** `main` has Stages 2–4 (not pushed). `stage-5-adaptive-retrieval` has checkpoint `e4fd733`; the audit work, sweep 2 and table-prompt runs are uncommitted. Commit only when the user asks.
@@ -847,7 +899,7 @@ C1, top-5, index `data/eval/dev_embeddinggemma_300m_C1/` (all 4 dev documents). 
 ## Next steps
 
 1. **User:** name the dev multi-part questions spot-checked (decision c is still open).
-2. Pre-register held-out A vs S in this file and freeze it by commit.
+2. **Held-out run:** after the user's go-ahead, run S once as pre-registered (decision 56), then analyse and report. Close Stage 5 with the end-of-stage summary.
 3. Run the held-out comparison once. Report 4000 as a trade-off only.
 
 ## Open questions
