@@ -69,3 +69,7 @@ Knowledge bases: users create several (e.g. "MBA Materials", "Research Papers"),
 ## Continuity
 - `docs/DESIGN.md` holds the approved architecture. Keep it current when a design decision changes.
 - `docs/PROGRESS.md` holds stage status, decisions taken, and open questions. Update it at the end of every stage so a fresh session can pick up where we left off.
+
+## Approved design is protected
+- `docs/DESIGN.md` is approved. Do not simplify, remove, or replace any part of it (for example adaptive chunking or adaptive k) without asking me first.
+- This applies even when a simpler option looks better or a "minimal change" style is active: propose it, explain the trade-off, and wait for my decision.

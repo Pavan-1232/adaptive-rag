@@ -21,10 +21,20 @@ class RetrievedChunk:
     # C7 table header shown before the chunk text; its tokens are charged to the budget.
     context_text: str | None = None
     context_tokens: int = 0
+    # Hybrid search: BM25 strength in 0..1 (1 = best keyword hit for the query). 0 when off.
+    keyword: float = 0.0
+    # A merged evidence block: the chunks it was built from, in document order. Empty for a
+    # plain chunk. The block's own fields span all members; score is the best direct score.
+    members: tuple["RetrievedChunk", ...] = ()
 
     @property
     def evidence_tokens(self) -> int:
         return self.token_count + self.context_tokens
+
+    @property
+    def pieces(self) -> tuple["RetrievedChunk", ...]:
+        """The stored chunks behind this evidence: its members, or itself."""
+        return self.members or (self,)
 
     @property
     def evidence_text(self) -> str:

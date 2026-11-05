@@ -28,6 +28,12 @@ def summarize(results: list[dict]) -> dict:
     for key in ("recall_at_budget", "recall_at_5", "hit_at_5", "reciprocal_rank"):
         values = _values(answerable, key)
         summary[key] = mean_ci(values) if values else None
+    # Part coverage is reported for questions with two or more required facts only.
+    multi = [r for r in answerable if (r.get("parts") or 0) >= 2]
+    summary["multi_part_questions"] = len(multi)
+    for key in ("part_coverage", "all_parts_covered"):
+        values = _values(multi, key)
+        summary[key] = mean_ci(values) if values else None
 
     answered = [r for r in answerable if r.get("status") == "answered"]
     summary["answered"] = len(answered)
@@ -108,6 +114,9 @@ def render_markdown(metadata: dict, summary: dict) -> str:
         f"| Recall@5 | {_ci(summary['recall_at_5'])} |",
         f"| Hit rate@5 | {_ci(summary['hit_at_5'])} |",
         f"| MRR | {_ci(summary['reciprocal_rank'])} |",
+        f"| Part coverage ({summary.get('multi_part_questions', 0)} questions with 2+ parts) | "
+        f"{_ci(summary.get('part_coverage'))} |",
+        f"| All parts covered | {_ci(summary.get('all_parts_covered'))} |",
         "",
         "## Answers",
         "",

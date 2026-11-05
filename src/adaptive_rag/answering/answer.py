@@ -9,10 +9,10 @@ from typing import Literal
 from pydantic import BaseModel, ValidationError
 
 from adaptive_rag.context import AppContext
-from adaptive_rag.retrieval import RetrievedChunk, fit_to_budget, retrieve_baseline
+from adaptive_rag.retrieval import Evidence, RetrievedChunk, retrieve_evidence
 
 from .citations import Citation, build_citation, ids_in_text, strip_unknown_ids
-from .prompts import ANSWER_SCHEMA, build_messages, evidence_id
+from .prompts import ANSWER_SCHEMA, build_messages, evidence_id, has_table
 
 INSUFFICIENT_MESSAGE = "I couldn't find enough evidence in this knowledge base to answer that."
 
@@ -65,26 +65,30 @@ def _write_trace(
     kb: sqlite3.Row,
     question: str,
     status: str,
-    retrieved: list[RetrievedChunk],
+    evidence: Evidence,
     used: list[RetrievedChunk],
     input_tokens: int | None,
     output_tokens: int | None,
     timings: dict[str, float],
 ) -> int:
-    used_ids = {chunk.chunk_id for chunk in used}
+    pieces = [piece for chunk in used for piece in chunk.pieces]  # merged blocks unpacked
+    used_ids = {piece.chunk_id for piece in pieces}
+    candidate_ids = {chunk.chunk_id for chunk in evidence.candidates}
+    # Expansions aren't in the scored pool, so they are added to the trace explicitly.
+    listed = evidence.candidates + [p for p in pieces if p.chunk_id not in candidate_ids]
     rows = [
         {
             "chunk_id": chunk.chunk_id,
             "score": round(chunk.score, 4),
-            "source": chunk.source,
+            "source": next((p.source for p in pieces if p.chunk_id == chunk.chunk_id), "direct"),
             "used": chunk.chunk_id in used_ids,
         }
-        for chunk in retrieved
+        for chunk in listed
     ]
     with ctx.db() as conn:
         return conn.execute(
             "INSERT INTO query_traces (kb_id, question, status, retrieved, input_tokens,"
-            " output_tokens, timings_ms) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            " output_tokens, timings_ms, retrieval) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 kb["id"],
                 question,
@@ -93,6 +97,7 @@ def _write_trace(
                 input_tokens,
                 output_tokens,
                 json.dumps(timings),
+                json.dumps(evidence.info),
             ),
         ).lastrowid
 
@@ -102,11 +107,12 @@ def answer_question(ctx: AppContext, kb: sqlite3.Row, question: str) -> AnswerRe
     timings: dict[str, float] = {}
 
     started = time.perf_counter()
-    retrieved = retrieve_baseline(ctx, kb, question, settings.top_k)
+    retrieved = retrieve_evidence(ctx, kb, question)
     timings["retrieval"] = round((time.perf_counter() - started) * 1000, 1)
 
     # Gate 1: clearly weak evidence gets no LLM call.
-    if not retrieved or retrieved[0].score < settings.floor_for(kb["embedding_model"]):
+    top = retrieved.top_score
+    if top is None or not retrieved.used or top < settings.floor_for(kb["embedding_model"]):
         trace_id = _write_trace(
             ctx, kb, question, "insufficient", retrieved, [], None, None, timings
         )
@@ -114,12 +120,15 @@ def answer_question(ctx: AppContext, kb: sqlite3.Row, question: str) -> AnswerRe
             "insufficient", INSUFFICIENT_MESSAGE, [], [], None, None, timings, trace_id
         )
 
-    used = fit_to_budget(retrieved, settings.evidence_max_tokens)
+    used = retrieved.used
     evidence = {evidence_id(position): chunk for position, chunk in enumerate(used)}
+    uncovered = retrieved.uncovered_parts if settings.adaptive_part_notice else []
+    table_rule = settings.table_prompt and has_table(used)
+    retrieved.info["table_prompt_applied"] = table_rule
 
     # Gate 2 is the model's own status. Gate 3 is citation validation in _resolve.
     result = ctx.llm.generate(
-        build_messages(question, used),
+        build_messages(question, used, uncovered, table_rule),
         schema=ANSWER_SCHEMA,
         max_tokens=settings.max_answer_tokens,
     )

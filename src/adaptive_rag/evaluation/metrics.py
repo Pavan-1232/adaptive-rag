@@ -76,8 +76,8 @@ def recall_at_k(chunks: list[RankedChunk], evidence: list[Span], k: int) -> floa
     return evidence_recall(chunks[:k], evidence)
 
 
-def recall_at_budget(chunks: list[RankedChunk], evidence: list[Span], budget: int) -> float:
-    """Evidence covered by whole chunks, in rank order, until the next one wouldn't fit."""
+def within_budget(chunks: list[RankedChunk], budget: int) -> list[RankedChunk]:
+    """Whole chunks in rank order, until the next one wouldn't fit."""
     selected: list[RankedChunk] = []
     used = 0
     for chunk in chunks:
@@ -85,7 +85,21 @@ def recall_at_budget(chunks: list[RankedChunk], evidence: list[Span], budget: in
             break
         selected.append(chunk)
         used += chunk.token_count
-    return evidence_recall(selected, evidence)
+    return selected
+
+
+def recall_at_budget(chunks: list[RankedChunk], evidence: list[Span], budget: int) -> float:
+    """Evidence covered by whole chunks, in rank order, until the next one wouldn't fit."""
+    return evidence_recall(within_budget(chunks, budget), evidence)
+
+
+def part_coverage(chunks: list[RankedChunk], evidence: list[Span], budget: int) -> float:
+    """Share of required facts hit by a chunk within the budget. Recall can be high while a
+    short, separate part is missed entirely; this shows the miss."""
+    if not evidence:
+        return 0.0
+    selected = within_budget(chunks, budget)
+    return sum(any(is_hit(c, [span]) for c in selected) for span in evidence) / len(evidence)
 
 
 def is_hit(chunk: RankedChunk, evidence: list[Span]) -> bool:

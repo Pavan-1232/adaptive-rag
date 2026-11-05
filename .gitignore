@@ -29,5 +29,8 @@ htmlcov/
 .idea/
 .DS_Store
 
+# Claude Code local settings
+.claude/settings.local.json
+
 # Benchmark PDFs: links and hashes live in benchmarks/manifest.yaml
 benchmarks/documents/

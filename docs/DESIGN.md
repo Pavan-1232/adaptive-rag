@@ -203,17 +203,27 @@ Stage 4 measures the regret of reuse: quality lost by reusing a config instead o
 | Step | Design | Evaluated by | Version |
 |---|---|---|---|
 | Baseline | Fixed top-5 by cosine similarity | Reference for everything else | v1 |
-| Query type | Rules only: factual, comparative, broad | Accuracy on labelled dev questions | v1 |
+| Query type | Rules only: factual, table lookup, multi-part, comparative, broad | Accuracy on labelled dev questions | v1 |
+| Per-part retrieval | Rule-based split of multi-part questions; each part embedded and searched separately; coverage-first selection (added 2026-11-04, decision 46) | Part coverage, Recall over sent evidence | v1 |
 | Dynamic depth | Fetch 30, then apply the cutoff rules below | Recall@budget, tokens used | v1 |
-| Evidence check | Score gate, LLM status, citation validation | False-answer and false-refusal rates | v1 |
+| Evidence check | Score gate, LLM status, citation validation; parts with no candidate above the floor are named as uncovered | False-answer and false-refusal rates | v1 |
+| Table-reading prompt | Switch: when evidence contains a table (line-rule detector, `find_tables`), state the row label and column header for every number reported (decision 47). Not added when no table is detected | Gold-comparison correctness on dev table questions | v1, off unless dev shows a gain |
 | Neighbors | Algorithm below | Recall gain vs extra tokens | v1 |
-| Dedupe | Merge overlapping spans; drop near-identical chunks | Duplicate tokens removed | v1 |
-| Diversity | Per-document cap for comparative and broad questions only | Sources covered, recall | v1 |
+| Dedupe | Merge overlapping or adjacent spans of one document into one block, so chunk overlap is sent and charged once (`merge_spans`); drop near-identical chunks (`dedupe`) | Duplicate tokens removed | v1 |
+| Diversity | Per-document cap for comparative and broad questions only (`doc_cap`, default 3). Soft: chunks over the cap are used only if other documents run out of candidates, so a single-document answer isn't starved | Sources covered, recall | v1 |
 | Token budget | Greedy fill with hard limits | Never exceeded (tested) | v1 |
-| Keyword + vector search (SQLite FTS5) | Hybrid scoring | Comparison against vector-only | v1.1, top candidate |
+| Keyword + vector search (SQLite FTS5) | Hybrid: FTS5 BM25 hits join each pool; rank by cosine + weight × BM25 strength; floors stay on cosine (`hybrid`) | Comparison against vector-only, on dev only | v1 switch (user, 2026-11-05). **Off for S** (user, 2026-11-05): on dev it changed 3 questions (+2, −1, including the loss of `tbl-fed-05`) for recall within 0.002. It stays an opt-in switch |
 | Cross-encoder reranking | Heavy dependency on 16 GB | Compare later | Later |
-| Query rewriting, multi-hop | Extra LLM calls and latency | Compare later | Later |
+| LLM query rewriting, multi-hop | Extra LLM calls and latency. Rule-based splitting is v1 (above) | Compare later | Later |
 | Per-entity coverage check | Harder comparative logic | Compare later | Later |
+
+### Per-part retrieval (added 2026-11-04)
+
+1. Rules split a multi-part question into parts: at "and" between clauses, "while also", "both … and", a second question mark, or a list of items. No LLM call.
+2. Each part is embedded and searched separately (about 50 ms per part). Candidates are pooled per document, keeping each chunk's best score and the parts it matched.
+3. Coverage-first selection: the best chunk for each part goes in first, then the rest fill by score under the same depth rules and budget.
+4. A part with no candidate above the floor is recorded as uncovered in the trace and named in the prompt, so the answer should be `partial`.
+5. A single-part question behaves exactly as without this feature.
 
 ### Dynamic depth
 
@@ -227,7 +237,7 @@ Keep chunks in score order and stop at the first of:
 
 - The chunk's score falls below the floor.
 - The score falls below `top_score − delta`.
-- The largest score gap in the range is reached.
+- The largest score gap in the range is reached. The range is positions `min_chunks` to the type's maximum; the gap after the maximum also counts, so a list with no real drop isn't cut early (`gap_cutoff`).
 - The type's maximum is reached.
 
 The floor and delta are tuned on dev questions and stored per embedding model. The floor is set in Stage 3 (`score_floors` in `config.py`); delta is tuned in Stage 5.
@@ -254,6 +264,10 @@ order: blocks by best direct score, text inside a block in document order
 ```
 
 The merged block records which chunks were direct hits and which came from expansion, and so does the trace log.
+
+Implementation notes (2026-11-05): the reserve is a setting (`neighbor_reserve`). direct hits are limited to 70% of the budget when neighbors are on; neighbors may use the reserve plus any room direct hits left.
+
+**Measured deviation (user's decision, 2026-11-05):** finalist S uses a neighbor reserve of **0**, not 30%. In dev sweep 2, at 2,560 tokens, the 30% reserve lowered recall over sent evidence from 0.854 to 0.834, because it leaves room for only 3 direct chunks. The 30% reserve stays available as a setting. Merging is the `merge_spans` switch and also applies to direct hits that overlap each other. A gap between non-touching chunks is joined with a newline.
 
 ### Token budget (starting values, `num_ctx` = 8192)
 
@@ -450,6 +464,13 @@ Each stage ends with user approval and updates to this file and `PROGRESS.md`.
 - **Tests:** same-document expansion, no duplicates, budget never exceeded, direct/expansion marking, refusal behaviour.
 - **Acceptance:** A–F held-out report complete, with any feature that doesn't help disabled by default.
 - **Deliverable:** adaptive pipeline and report.
+- **Outcome (2026-11-05):** on held-out data, S vs A was inconclusive on recall over sent evidence (−0.019, CI −0.144 to +0.106), with 11% fewer tokens and all guardrails passed. `retrieval = "baseline"` stays the default; adaptive retrieval is opt-in with all its switches (`PROGRESS.md` decision 57).
+
+### Stage 5b: Table extraction (added 2026-11-04, decision 47; deferred 2026-11-05 as the top future-work item, decision 58)
+
+- **Objective:** fix table reading errors at the source by keeping table structure (row labels and column headers) in the extracted text.
+- **Why separate:** it changes the loader and chunk text and needs a reindex, so it would confound the Stage 5 retrieval comparison.
+- **Acceptance:** dev table correctness measured before and after; one held-out check; extractor version bumped so stale indexes are detected.
 
 ### Stage 6: BYOK
 

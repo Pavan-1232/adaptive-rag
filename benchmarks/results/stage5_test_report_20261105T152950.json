@@ -1,0 +1,416 @@
+{
+  "created": "2026-11-05T15:29:50+00:00",
+  "pre_registered": "PROGRESS.md decision 56",
+  "files": {
+    "A": "benchmarks/results/test_embeddinggemma_300m_C1_20261104T064322.json",
+    "S": "benchmarks/results/test_embeddinggemma_300m_C1_S_20261105T145919.json"
+  },
+  "commits": {
+    "A": "b386cd9",
+    "S": "378783b"
+  },
+  "replay_mismatch": [],
+  "primary": {
+    "n": 24,
+    "A_mean": [
+      0.8600948509485095,
+      0.7083333333333334,
+      0.9850948509485095
+    ],
+    "S_mean": [
+      0.841576332429991,
+      0.6934281842818427,
+      0.9583333333333334
+    ],
+    "S_minus_A": [
+      -0.018518518518518517,
+      -0.14351851851851852,
+      0.10648148148148147
+    ],
+    "verdict": "inconclusive (CI includes 0)"
+  },
+  "changed_questions": [
+    [
+      "fed-02",
+      0.0,
+      1.0
+    ],
+    [
+      "csf-03",
+      1.0,
+      0.0
+    ],
+    [
+      "csf-04",
+      1.0,
+      0.5555555555555556
+    ]
+  ],
+  "secondary_parts": {
+    "n": 4,
+    "S_part_coverage_sent": [
+      1.0,
+      0.5,
+      0.5,
+      1.0
+    ],
+    "S_all_parts": 2,
+    "A_part_coverage_sent": [
+      1.0,
+      0.5,
+      1.0,
+      1.0
+    ],
+    "A_all_parts": 3,
+    "ids": [
+      "apple-06",
+      "fed-04",
+      "csf-04",
+      "raptor-04"
+    ]
+  },
+  "secondary_tables": {
+    "n": 6,
+    "A_agrees": 4,
+    "S_agrees": 5,
+    "rows": {
+      "apple-01": [
+        "agrees",
+        "agrees"
+      ],
+      "apple-02": [
+        "agrees",
+        "agrees"
+      ],
+      "apple-03": [
+        "agrees",
+        "agrees"
+      ],
+      "fed-02": [
+        "conflicts",
+        "conflicts"
+      ],
+      "raptor-03": [
+        "agrees",
+        "agrees"
+      ],
+      "bp-03": [
+        "conflicts",
+        "agrees"
+      ]
+    }
+  },
+  "guardrails": {
+    "S_refused": 6,
+    "of": 6,
+    "S_false_refusals": [],
+    "A_false_refusals": [],
+    "p50_s": {
+      "A": 32.06705,
+      "S": 31.46215
+    }
+  },
+  "tokens_sent_S": [
+    2273.7083333333335,
+    2124.375,
+    2410.6666666666665
+  ],
+  "summaries": {
+    "A": {
+      "questions": 30,
+      "answerable": 24,
+      "unanswerable": 6,
+      "recall_at_budget": [
+        0.8600948509485095,
+        0.7083333333333334,
+        0.9850948509485095
+      ],
+      "recall_at_5": [
+        0.8600948509485095,
+        0.7083333333333334,
+        0.9850948509485095
+      ],
+      "hit_at_5": [
+        0.875,
+        0.75,
+        1.0
+      ],
+      "reciprocal_rank": [
+        0.7163194444444446,
+        0.5715277777777779,
+        0.85
+      ],
+      "multi_part_questions": 0,
+      "part_coverage": null,
+      "all_parts_covered": null,
+      "answered": 23,
+      "answerable_status": {
+        "answered": 23,
+        "partial": 1,
+        "insufficient": 0,
+        "null": 0
+      },
+      "wrong_focus_by_citation": 3,
+      "wrong_focus_by_citation_rate": 0.13043478260869565,
+      "wrong_focus_by_judge": 2,
+      "judged": 23,
+      "wrong_focus_by_judge_rate": 0.08695652173913043,
+      "reference_compared": 23,
+      "reference_conflicts": 2,
+      "reference_different_point": 0,
+      "wrong_focus_either": 5,
+      "faithfulness": [
+        0.8819444444444443,
+        0.7708333333333334,
+        0.9652777777777777
+      ],
+      "citation_precision": [
+        0.75,
+        0.5833333333333334,
+        0.8958333333333334
+      ],
+      "false_answers": 0,
+      "unanswerable_refused": 6,
+      "errors": 0,
+      "generation_p50_s": 32.06705,
+      "generation_p95_s": 37.94169999999999,
+      "avg_input_tokens": 3151.4666666666667,
+      "avg_output_tokens": 86.8
+    },
+    "S": {
+      "questions": 30,
+      "answerable": 24,
+      "unanswerable": 6,
+      "recall_at_budget": [
+        0.8600948509485095,
+        0.7083333333333334,
+        0.9850948509485095
+      ],
+      "recall_at_5": [
+        0.8600948509485095,
+        0.7083333333333334,
+        0.9850948509485095
+      ],
+      "hit_at_5": [
+        0.875,
+        0.75,
+        1.0
+      ],
+      "reciprocal_rank": [
+        0.7163194444444446,
+        0.5715277777777779,
+        0.85
+      ],
+      "multi_part_questions": 6,
+      "part_coverage": [
+        0.75,
+        0.4166666666666667,
+        1.0
+      ],
+      "all_parts_covered": [
+        0.6666666666666666,
+        0.3333333333333333,
+        1.0
+      ],
+      "answered": 24,
+      "answerable_status": {
+        "answered": 24,
+        "partial": 0,
+        "insufficient": 0,
+        "null": 0
+      },
+      "wrong_focus_by_citation": 3,
+      "wrong_focus_by_citation_rate": 0.125,
+      "wrong_focus_by_judge": 2,
+      "judged": 24,
+      "wrong_focus_by_judge_rate": 0.08333333333333333,
+      "reference_compared": 24,
+      "reference_conflicts": 2,
+      "reference_different_point": 0,
+      "wrong_focus_either": 5,
+      "faithfulness": [
+        0.923611111111111,
+        0.8472222222222222,
+        0.986111111111111
+      ],
+      "citation_precision": [
+        0.7534722222222222,
+        0.5972222222222222,
+        0.888888888888889
+      ],
+      "false_answers": 0,
+      "unanswerable_refused": 6,
+      "errors": 0,
+      "generation_p50_s": 31.46215,
+      "generation_p95_s": 36.171980000000005,
+      "avg_input_tokens": 2893.9285714285716,
+      "avg_output_tokens": 87.67857142857143
+    }
+  },
+  "seen": {
+    "fed-02": {
+      "A": {
+        "recall_sent": 0.0,
+        "status": "partial",
+        "reference_verdict": "conflicts",
+        "answer": "Fed officials' median projection for headline PCE inflation at the end of 2025 is approximately 2.1% [E4]. However, the specific value of the March projection for headline PCE inflation at the end of 2025 is not explicitly stated in the provided evidence blocks; only ranges and other years' data are"
+      },
+      "S": {
+        "recall_sent": 1.0,
+        "status": "answered",
+        "reference_verdict": "conflicts",
+        "answer": "Fed officials expect headline PCE inflation to be 2.8% at the end of 2025, based on the median projection [E5]. This is higher than their March projection of 2.7% for the same period [E5]."
+      }
+    },
+    "fed-04": {
+      "A": {
+        "recall_sent": 0.6422764227642277,
+        "status": "answered",
+        "reference_verdict": "agrees",
+        "answer": "In early 2025 (specifically over the first five months of the year), monthly payroll job gains averaged 124,000 [E2]. The unemployment rate in May was 4.2 percent [E2]."
+      },
+      "S": {
+        "recall_sent": 0.6422764227642277,
+        "status": "answered",
+        "reference_verdict": "agrees",
+        "answer": "In early 2025, monthly payroll job gains averaged 124,000 over the first five months of the year [E1]. The civilian unemployment rate was 4.2 percent in May [E1]."
+      }
+    },
+    "bp-03": {
+      "A": {
+        "recall_sent": 1.0,
+        "status": "answered",
+        "reference_verdict": "conflicts",
+        "answer": "In the chunk-size experiment, a chunk size of 512 tokens scored best on average faithfulness with a score of 94.26 [E1]."
+      },
+      "S": {
+        "recall_sent": 1.0,
+        "status": "answered",
+        "reference_verdict": "agrees",
+        "answer": "In the chunk-size experiment, a chunk size of 512 scored best on average faithfulness with a score of 97.59 [E2]."
+      }
+    }
+  },
+  "replay_A": {
+    "apple-01": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "apple-02": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "apple-03": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "apple-04": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "apple-05": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "apple-06": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "fed-01": {
+      "recall_at_budget": 0.0,
+      "recall_sent": 0.0,
+      "part_coverage_sent": 0.0
+    },
+    "fed-02": {
+      "recall_at_budget": 0.0,
+      "recall_sent": 0.0,
+      "part_coverage_sent": 0.0
+    },
+    "fed-03": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "fed-04": {
+      "recall_at_budget": 0.6422764227642277,
+      "recall_sent": 0.6422764227642277,
+      "part_coverage_sent": 0.5
+    },
+    "fed-05": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "csf-01": {
+      "recall_at_budget": 0.0,
+      "recall_sent": 0.0,
+      "part_coverage_sent": 0.0
+    },
+    "csf-02": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "csf-03": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "csf-04": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "csf-05": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "raptor-01": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "raptor-02": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "raptor-03": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "raptor-04": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "bp-01": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "bp-02": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "bp-03": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    },
+    "bp-04": {
+      "recall_at_budget": 1.0,
+      "recall_sent": 1.0,
+      "part_coverage_sent": 1.0
+    }
+  }
+}
