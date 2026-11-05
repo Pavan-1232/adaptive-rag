@@ -25,7 +25,7 @@ class Evidence:
 
     @property
     def top_score(self) -> float | None:
-        return self.candidates[0].score if self.candidates else None
+        return max((c.score for c in self.candidates), default=None)
 
 
 def retrieve_evidence(ctx: AppContext, kb: sqlite3.Row, question: str) -> Evidence:
@@ -48,6 +48,8 @@ def retrieve_evidence(ctx: AppContext, kb: sqlite3.Row, question: str) -> Eviden
         "stop_reason": result.stop_reason,
         "duplicates_dropped": result.duplicates_dropped,
         "duplicate_tokens": result.duplicate_tokens,
+        "merged_tokens_saved": result.merged_tokens_saved,
+        "blocks": [[p.chunk_id for p in c.pieces] for c in result.chunks],
         "evidence_tokens": result.tokens,
         "budget": params.budget,
     }

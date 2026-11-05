@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import chromadb
+import numpy as np
 from chromadb.config import Settings as ChromaSettings
 
 
@@ -66,6 +67,22 @@ class VectorStore:
                 result["ids"][0], result["metadatas"][0], result["distances"][0], strict=True
             )
         ]
+
+    def similarity(
+        self, collection: str, embedding: list[float], ids: list[str]
+    ) -> dict[str, float]:
+        """Cosine similarity of stored vectors to a query, for hits found another way."""
+        if not ids:
+            return {}
+        result = self._collection(collection).get(ids=ids, include=["embeddings"])
+        query = np.asarray(embedding, dtype=float)
+        scores = {}
+        for chunk_id, vector in zip(result["ids"], result["embeddings"], strict=True):
+            vector = np.asarray(vector, dtype=float)
+            scores[chunk_id] = float(
+                vector @ query / (np.linalg.norm(vector) * np.linalg.norm(query))
+            )
+        return scores
 
     def delete_document(self, collection: str, document_id: int) -> None:
         self._collection(collection).delete(where={"document_id": document_id})

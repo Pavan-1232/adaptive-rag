@@ -9,7 +9,7 @@ import re
 from dataclasses import dataclass
 from typing import Literal
 
-QueryKind = Literal["factual", "table", "multi_part", "broad"]
+QueryKind = Literal["factual", "table", "multi_part", "comparative", "broad"]
 
 # Words that start a new clause after "and" or a comma: "..., and how long does it ...".
 _CLAUSE_START = (
@@ -29,6 +29,9 @@ _TABLE_WORDS = re.compile(
     r"\b(how much|how many|percent|percentage|rate|ratio|total|median|projection|"
     r"revenue|income|cost|margin|figure|number|amount|billion|million|table|row|column)\b",
     re.IGNORECASE,
+)
+_COMPARATIVE_WORDS = re.compile(
+    r"\b(compare[ds]?|comparing|comparison|versus|vs\.?|contrast|differ(?:s|ence|ences)?)\b", re.I
 )
 _BROAD_WORDS = re.compile(r"\b(overview|summari[sz]e|main (?:themes|points)|in general)\b", re.I)
 MIN_PART_WORDS = 4
@@ -97,6 +100,9 @@ def split_parts(question: str) -> list[str]:
 
 def analyze(question: str, split: bool = True) -> QueryPlan:
     parts = split_parts(question) if split else [question.strip()]
+    # Comparative wins over multi-part: same per-part search, plus the per-document cap.
+    if _COMPARATIVE_WORDS.search(question):
+        return QueryPlan("comparative", tuple(parts))
     if len(parts) > 1:
         return QueryPlan("multi_part", tuple(parts))
     if _BROAD_WORDS.search(question):

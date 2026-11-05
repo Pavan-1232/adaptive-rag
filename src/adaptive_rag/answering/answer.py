@@ -12,7 +12,7 @@ from adaptive_rag.context import AppContext
 from adaptive_rag.retrieval import Evidence, RetrievedChunk, retrieve_evidence
 
 from .citations import Citation, build_citation, ids_in_text, strip_unknown_ids
-from .prompts import ANSWER_SCHEMA, build_messages, evidence_id
+from .prompts import ANSWER_SCHEMA, build_messages, evidence_id, has_table
 
 INSUFFICIENT_MESSAGE = "I couldn't find enough evidence in this knowledge base to answer that."
 
@@ -71,15 +71,16 @@ def _write_trace(
     output_tokens: int | None,
     timings: dict[str, float],
 ) -> int:
-    used_ids = {chunk.chunk_id for chunk in used}
+    pieces = [piece for chunk in used for piece in chunk.pieces]  # merged blocks unpacked
+    used_ids = {piece.chunk_id for piece in pieces}
     candidate_ids = {chunk.chunk_id for chunk in evidence.candidates}
     # Expansions aren't in the scored pool, so they are added to the trace explicitly.
-    listed = evidence.candidates + [c for c in used if c.chunk_id not in candidate_ids]
+    listed = evidence.candidates + [p for p in pieces if p.chunk_id not in candidate_ids]
     rows = [
         {
             "chunk_id": chunk.chunk_id,
             "score": round(chunk.score, 4),
-            "source": next((c.source for c in used if c.chunk_id == chunk.chunk_id), "direct"),
+            "source": next((p.source for p in pieces if p.chunk_id == chunk.chunk_id), "direct"),
             "used": chunk.chunk_id in used_ids,
         }
         for chunk in listed
@@ -122,10 +123,12 @@ def answer_question(ctx: AppContext, kb: sqlite3.Row, question: str) -> AnswerRe
     used = retrieved.used
     evidence = {evidence_id(position): chunk for position, chunk in enumerate(used)}
     uncovered = retrieved.uncovered_parts if settings.adaptive_part_notice else []
+    table_rule = settings.table_prompt and has_table(used)
+    retrieved.info["table_prompt_applied"] = table_rule
 
     # Gate 2 is the model's own status. Gate 3 is citation validation in _resolve.
     result = ctx.llm.generate(
-        build_messages(question, used, uncovered, settings.table_prompt),
+        build_messages(question, used, uncovered, table_rule),
         schema=ANSWER_SCHEMA,
         max_tokens=settings.max_answer_tokens,
     )

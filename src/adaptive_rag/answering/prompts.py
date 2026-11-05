@@ -4,6 +4,7 @@ import html
 import json
 import re
 
+from adaptive_rag.chunking.tables import find_tables
 from adaptive_rag.retrieval import RetrievedChunk
 
 SYSTEM_PROMPT = """You answer questions using only the evidence blocks provided.
@@ -27,6 +28,12 @@ TABLE_RULE = (
     '"Revenue, 2024 column: $4.5 billion [E1]." If several columns or rows look similar, '
     "check that the one you used matches the question's year, unit and measure."
 )
+
+
+def has_table(chunks: list[RetrievedChunk]) -> bool:
+    """The table rule is applied only when the evidence holds a detected table."""
+    return any(find_tables(chunk.evidence_text) for chunk in chunks)
+
 
 ANSWER_SCHEMA = {
     "type": "object",

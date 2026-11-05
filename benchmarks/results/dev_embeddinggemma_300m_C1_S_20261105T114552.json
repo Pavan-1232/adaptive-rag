@@ -1,0 +1,1377 @@
+{
+ "metadata": {
+  "system": "S (adaptive retrieval on C1)",
+  "retrieval": "adaptive",
+  "table_prompt": false,
+  "adaptive_params": {
+   "budget": 2560,
+   "pool_size": 30,
+   "split_parts": true,
+   "floor": 0.25,
+   "delta": null,
+   "gap_cutoff": true,
+   "min_chunks": 3,
+   "max_chunks": {
+    "factual": 5,
+    "table": 5,
+    "multi_part": 8,
+    "comparative": 10,
+    "broad": 10
+   },
+   "dedupe": false,
+   "dedupe_jaccard": 0.9,
+   "merge_spans": false,
+   "doc_cap": null,
+   "neighbors": true,
+   "expand_threshold": 0.5,
+   "neighbor_reserve": 0.0,
+   "hybrid": true,
+   "keyword_weight": 0.05,
+   "keyword_pool": 10
+  },
+  "chunking": "C1",
+  "set": "dev",
+  "created_at": "2026-11-05T11:45:52+00:00",
+  "commit": "e4fd733+uncommitted",
+  "embedding_model": "embeddinggemma:300m",
+  "embedding_version": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+  "llm_model": "qwen3.5:9b",
+  "judge_model": "gemma4:e4b",
+  "judge_prompt": "audit-1",
+  "judge_check": "loose-1",
+  "recall_budget_tokens": 2560,
+  "questions_sha256": "03fd41009c6062bc23488dd74e209a0ce213ef0efcefacf74ac7973c13bcb18e",
+  "retrieval_only": false,
+  "machine": "arm64 Darwin 27.0.0",
+  "question_source": "claude-separate-session, user spot-checked (decision 34)",
+  "notes": "Stage 5 table-prompt test, finalist S from stage5_sweep_20261105T114432",
+  "complete": true
+ },
+ "results": [
+  {
+   "id": "tbl-fed-01",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "table",
+   "question": "In the December 2024 projections, what median unemployment rate did Fed officials expect for the end of 2025?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6597958207130432,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.1111111111111111,
+   "parts": 1,
+   "part_coverage": 0.0,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.0,
+   "part_coverage_sent": 0.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "In the December 2024 projections, what median unemployment rate did Fed officials expect for the end of 2025?"
+    ],
+    "part_top_scores": [
+     0.6598
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-70"
+     ],
+     [
+      "4-72"
+     ],
+     [
+      "4-73"
+     ],
+     [
+      "4-74"
+     ],
+     [
+      "4-82"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "partial",
+   "answer": "The evidence provides a chart (Figure 1 in E3 and E4) showing the median projection for the unemployment rate for 2025, but the specific numerical value is not explicitly stated in the text or clearly readable from the provided image descriptions. The text notes that projections are for the average civilian unemployment rate in the fourth quarter of the year indicated (E2).",
+   "citations": [
+    "fed_mpr_feb2025.pdf, pp. 59-61",
+    "fed_mpr_feb2025.pdf, pp. 61-63"
+   ],
+   "citation_on_evidence": false,
+   "citation_precision": 0.0,
+   "faithfulness": 0.6666666666666666,
+   "addresses_question": false,
+   "reference_verdict": "conflicts",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The evidence provides a chart (Figure 1 in E3 and E4) showing the median projection for the unemployment rate for 2025",
+     "evidence_quote": "Figure 1. Medians, central tendencies, and ranges of economic projections, 2024–27 and over the longer run",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "the specific numerical value is not explicitly stated in the text or clearly readable from the provided image descriptions",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false,
+     "verified": false
+    },
+    {
+     "claim": "The text notes that projections are for the average civilian unemployment rate in the fourth quarter of the year indicated",
+     "evidence_quote": "Projections for the unemployment rate are for the average civilian unemployment rate in the fourth quarter of the year indicated.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3178,
+   "output_tokens": 110,
+   "timings_ms": {
+    "retrieval": 37.5,
+    "generation": 33083.2
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-fed-02",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "table",
+   "question": "Where do Fed participants expect the federal funds rate to settle over the long term, according to the December 2024 median?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.653021514415741,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.1,
+   "parts": 1,
+   "part_coverage": 0.0,
+   "all_parts_covered": 0.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "Where do Fed participants expect the federal funds rate to settle over the long term, according to the December 2024 median?"
+    ],
+    "part_top_scores": [
+     0.653
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-72"
+     ],
+     [
+      "4-73"
+     ],
+     [
+      "4-74"
+     ],
+     [
+      "4-70"
+     ],
+     [
+      "4-79"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "partial",
+   "answer": "According to the evidence, the longer-run projection for the federal funds rate is based on each participant's assessment of the rate to which the variable would be expected to converge under appropriate monetary policy [E1]. The projections for the federal funds rate represent the midpoint of the projected appropriate target range or level at the end of the specified calendar year or over the longer run [E2]. Figure 3.E shows the distribution of participants' judgments of the midpoint of the appropriate target range for the federal funds rate, including data for 2024 through the longer run [E5]. However, the specific median value for the longer-run federal funds rate from the December 2024 projections is not explicitly stated as a single number in the provided text; the figures show ranges and distributions of individual judgments rather than a summarized median point for the 'longer run' category specifically labeled with a value.",
+   "citations": [
+    "fed_mpr_feb2025.pdf, p. 59",
+    "fed_mpr_feb2025.pdf, pp. 59-61",
+    "fed_mpr_feb2025.pdf, pp. 66-67"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.3333333333333333,
+   "faithfulness": 0.75,
+   "addresses_question": true,
+   "reference_verdict": "conflicts",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The longer-run projection for the federal funds rate is based on each participant's assessment of the rate to which the variable would be expected to converge under appropriate monetary policy.",
+     "evidence_quote": "Longer-run projections represent each participant’s assessment of the rate to which each variable would be expected to converge under appropriate monetary policy and in the absence of further shocks to the economy.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The projections for the federal funds rate represent the midpoint of the projected appropriate target range or level at the end of the specified calendar year or over the longer run.",
+     "evidence_quote": "The projections for the federal funds rate are the value of the midpoint of the projected appropriate target range for the federal funds rate or the projected appropriate target level for the federal funds rate at the end of the specified calendar year or over the longer run.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Figure 3.E shows the distribution of participants' judgments of the midpoint of the appropriate target range for the federal funds rate, including data for 2024 through the longer run.",
+     "evidence_quote": "Figure 3.E. Distribution of participants’ judgments of the midpoint of the appropriate target range for the federal funds rate or the appropriate target level for the federal funds rate, 2024–27 and over the longer run",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The specific median value for the longer-run federal funds rate from the December 2024 projections is not explicitly stated as a single number in the provided text; the figures show ranges and distributions of individual judgments rather than a summarized median point for the 'longer run' category specifically labeled with a value.",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false,
+     "verified": false
+    }
+   ],
+   "input_tokens": 3213,
+   "output_tokens": 218,
+   "timings_ms": {
+    "retrieval": 58.5,
+    "generation": 33761.2
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-fed-03",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "table",
+   "question": "Back in September 2024, what median federal funds rate had officials pencilled in for the end of 2025?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6711812019348145,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "Back in September 2024, what median federal funds rate had officials pencilled in for the end of 2025?"
+    ],
+    "part_top_scores": [
+     0.6712
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-72"
+     ],
+     [
+      "4-73"
+     ],
+     [
+      "4-70"
+     ],
+     [
+      "4-56"
+     ],
+     [
+      "4-44"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "answered",
+   "answer": "In September 2024, officials projected a median federal funds rate of 3.1 percent for the end of 2025 [E1].",
+   "citations": [
+    "fed_mpr_feb2025.pdf, p. 59"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 0.0,
+   "addresses_question": true,
+   "reference_verdict": "conflicts",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "In September 2024, officials projected a median federal funds rate of 3.1 percent for the end of 2025",
+     "evidence_quote": "September projection 3.1–3.6 2.8–3.6 4.4–4.6 3.1–4.4 2.4–3.9 2.4–3.9",
+     "same_subject": true,
+     "supported": false,
+     "verified": false
+    }
+   ],
+   "input_tokens": 3187,
+   "output_tokens": 55,
+   "timings_ms": {
+    "retrieval": 29.7,
+    "generation": 25568.0
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-fed-04",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "table",
+   "question": "What median core inflation (PCE excluding food and energy) did participants project for 2026 in December 2024?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6177630424499512,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.047619047619047616,
+   "parts": 1,
+   "part_coverage": 0.0,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.0,
+   "part_coverage_sent": 0.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "What median core inflation (PCE excluding food and energy) did participants project for 2026 in December 2024?"
+    ],
+    "part_top_scores": [
+     0.6178
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-77"
+     ],
+     [
+      "4-78"
+     ],
+     [
+      "4-15"
+     ],
+     [
+      "4-74"
+     ],
+     [
+      "4-83"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "partial",
+   "answer": "The provided evidence shows distribution charts for PCE inflation projections for 2026 [E1] and core PCE inflation projections for 2026 [E2], but neither chart explicitly states the median projection value for December 2024. The charts display the number of participants across various percent ranges, allowing for an estimation of the median based on where the cumulative count reaches half the total participants, but the specific median figure is not stated in the text.",
+   "citations": [
+    "fed_mpr_feb2025.pdf, pp. 64-65",
+    "fed_mpr_feb2025.pdf, pp. 65-66"
+   ],
+   "citation_on_evidence": false,
+   "citation_precision": 0.0,
+   "faithfulness": 0.5,
+   "addresses_question": false,
+   "reference_verdict": "conflicts",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The provided evidence shows distribution charts for PCE inflation projections for 2026",
+     "evidence_quote": "Figure 3.C. Distribution of participants’ projections for PCE inflation, 2024–27 and over the longer run",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "The provided evidence shows distribution charts for core PCE inflation projections for 2026",
+     "evidence_quote": "Figure 3.D. Distribution of participants’ projections for core PCE inflation, 2024–27",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "neither chart explicitly states the median projection value for December 2024",
+     "evidence_quote": "Figure 3.C. Distribution of participants’ projections for PCE inflation, 2024–27 and over the longer run",
+     "same_subject": false,
+     "supported": false,
+     "verified": false
+    },
+    {
+     "claim": "The charts display the number of participants across various percent ranges",
+     "evidence_quote": "Number of participants",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "allowing for an estimation of the median based on where the cumulative count reaches half the total participants",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false,
+     "verified": false
+    },
+    {
+     "claim": "but the specific median figure is not stated in the text",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false,
+     "verified": false
+    }
+   ],
+   "input_tokens": 3175,
+   "output_tokens": 121,
+   "timings_ms": {
+    "retrieval": 28.3,
+    "generation": 30411.2
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-fed-05",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "table",
+   "question": "In the September 2024 projections, what median headline PCE inflation was expected for 2025?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6032798290252686,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.25,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 0.0,
+   "part_coverage_sent": 0.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "In the September 2024 projections, what median headline PCE inflation was expected for 2025?"
+    ],
+    "part_top_scores": [
+     0.6033
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-72"
+     ],
+     [
+      "4-73"
+     ],
+     [
+      "4-74"
+     ],
+     [
+      "4-16"
+     ],
+     [
+      "4-77"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "partial",
+   "answer": "The provided evidence includes a table of projected values and notes explaining that projections are percent changes from the fourth quarter of the previous year. It also contains figures showing the distribution of participants' projections for PCE inflation in 2025 (E5). However, the specific median headline PCE inflation value for 2025 from the September 2024 projections is not explicitly stated in the text or clearly readable from the provided image descriptions.",
+   "citations": [
+    "fed_mpr_feb2025.pdf, p. 59",
+    "fed_mpr_feb2025.pdf, pp. 64-65"
+   ],
+   "citation_on_evidence": false,
+   "citation_precision": 0.0,
+   "faithfulness": 0.6666666666666666,
+   "addresses_question": true,
+   "reference_verdict": "conflicts",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The provided evidence includes a table of projected values and notes explaining that projections are percent changes from the fourth quarter of the previous year.",
+     "evidence_quote": "Note: Projections of change in real gross domestic product (GDP) and projections for both measures of inflation are percent changes from the fourth quarter of the previous year to the fourth quarter of the year indicated.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "It also contains figures showing the distribution of participants' projections for PCE inflation in 2025 (E5).",
+     "evidence_quote": "Figure 3.C. Distribution of participants’ projections for PCE inflation, 2024–27 and over the longer run",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "However, the specific median headline PCE inflation value for 2025 from the September 2024 projections is not explicitly stated in the text or clearly readable from the provided image descriptions.",
+     "evidence_quote": "",
+     "same_subject": false,
+     "supported": false,
+     "verified": false
+    }
+   ],
+   "input_tokens": 3186,
+   "output_tokens": 116,
+   "timings_ms": {
+    "retrieval": 35.5,
+    "generation": 32506.1
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-fed-06",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "table",
+   "question": "Based on past forecasting errors, how wide is the typical error band around the unemployment rate projection for 2026?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.5897190570831299,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "Based on past forecasting errors, how wide is the typical error band around the unemployment rate projection for 2026?"
+    ],
+    "part_top_scores": [
+     0.5897
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-82"
+     ],
+     [
+      "4-87"
+     ],
+     [
+      "4-88"
+     ],
+     [
+      "4-89"
+     ],
+     [
+      "4-84"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "answered",
+   "answer": "Based on past forecasting errors, the typical error band around the unemployment rate projection for 2026 is plus or minus 1.6 percentage points [E2]. This range represents about a 70 percent probability that actual outcomes will fall within it [E3].",
+   "citations": [
+    "fed_mpr_feb2025.pdf, pp. 73-74",
+    "fed_mpr_feb2025.pdf, pp. 74-75"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "Based on past forecasting errors, the typical error band around the unemployment rate projection for 2026 is plus or minus 1.6 percentage points.",
+     "evidence_quote": "Unemployment rate1 ± 0.1 ± 1.1 ± 1.6 ± 2.0",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "This range represents about a 70 percent probability that actual outcomes will fall within it.",
+     "evidence_quote": "As described in the box “Forecast Uncertainty,” under certain assumptions, there is about a 70 percent probability that actual outcomes for real GDP, unemployment, consumer prices, and the federal funds rate will be in ranges implied by the average size of projection errors made in the past.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3192,
+   "output_tokens": 90,
+   "timings_ms": {
+    "retrieval": 36.4,
+    "generation": 31526.2
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-tsla-01",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "How much revenue did Tesla make from selling regulatory credits in 2024?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6420183777809143,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "How much revenue did Tesla make from selling regulatory credits in 2024?"
+    ],
+    "part_top_scores": [
+     0.642
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-70"
+     ],
+     [
+      "1-96"
+     ],
+     [
+      "1-97"
+     ],
+     [
+      "1-87"
+     ],
+     [
+      "1-73"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "answered",
+   "answer": "Tesla made $2,763 million in revenue from selling automotive regulatory credits in 2024 [E4]. This represents an increase of $973 million, or 54%, compared to the previous year [E1].",
+   "citations": [
+    "tesla_10k.pdf, p. 52",
+    "tesla_10k.pdf, pp. 40-41"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "Tesla made $2,763 million in revenue from selling automotive regulatory credits in 2024",
+     "evidence_quote": "Automotive regulatory credits 2,763",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "This represents an increase of $973 million, or 54%, compared to the previous year",
+     "evidence_quote": "Automotive regulatory credits revenue increased $973 million, or 54%, in the year ended December 31, 2024 as compared to the year ended December 31, 2023",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3347,
+   "output_tokens": 76,
+   "timings_ms": {
+    "retrieval": 31.6,
+    "generation": 37027.1
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-tsla-02",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "What was Tesla's pre-tax profit for 2024?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6413785219192505,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "What was Tesla's pre-tax profit for 2024?"
+    ],
+    "part_top_scores": [
+     0.6414
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-135"
+     ],
+     [
+      "1-136"
+     ],
+     [
+      "1-137"
+     ],
+     [
+      "1-151"
+     ],
+     [
+      "1-72"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "answered",
+   "answer": "Tesla's income before provision for (benefit from) income taxes for the year ended December 31, 2024 was $8,990 million [E2].",
+   "citations": [
+    "tesla_10k.pdf, pp. 84-85"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": false,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "Tesla's income before provision for (benefit from) income taxes for the year ended December 31, 2024 was $8,990 million",
+     "evidence_quote": "Year Ended December 31, 2024 2023 2022\nDomestic $ 2,292 $ 3,196 $ 5,524\nNoncontrolling interest and redeemable noncontrolling interest 62 (23) 31\nForeign 6,636 6,800 8,164\nIncome before income taxes $ 8,990 $ 9,973 $ 13,719",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3474,
+   "output_tokens": 60,
+   "timings_ms": {
+    "retrieval": 36.8,
+    "generation": 38651.8
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-tsla-03",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "How much did Tesla spend on buying property and equipment in 2024, per the cash flow statement?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6800646185874939,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "How much did Tesla spend on buying property and equipment in 2024, per the cash flow statement?"
+    ],
+    "part_top_scores": [
+     0.6801
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-123"
+     ],
+     [
+      "1-124"
+     ],
+     [
+      "1-125"
+     ],
+     [
+      "1-86"
+     ],
+     [
+      "1-90"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "answered",
+   "answer": "Tesla spent $11,339 million on purchasing property and equipment in 2024, according to the cash flow statement.",
+   "citations": [
+    "tesla_10k.pdf, pp. 54-55"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "Tesla spent $11,339 million on purchasing property and equipment in 2024, according to the cash flow statement.",
+     "evidence_quote": "Purchases of property and equipment excluding finance leases, net of sales (11,339) (8,898) (7,158)",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3644,
+   "output_tokens": 49,
+   "timings_ms": {
+    "retrieval": 32.8,
+    "generation": 37470.6
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-tsla-04",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "What gross profit did Tesla's energy generation and storage business earn in 2023?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6384210586547852,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "What gross profit did Tesla's energy generation and storage business earn in 2023?"
+    ],
+    "part_top_scores": [
+     0.6384
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-72"
+     ],
+     [
+      "1-73"
+     ],
+     [
+      "1-74"
+     ],
+     [
+      "1-87"
+     ],
+     [
+      "1-152"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "answered",
+   "answer": "Tesla's energy generation and storage business earned a gross profit of $1,141 million in 2023 [E5].",
+   "citations": [
+    "tesla_10k.pdf, pp. 94-95"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "Tesla's energy generation and storage business earned a gross profit of $1,141 million in 2023",
+     "evidence_quote": "Gross profit $ 2,640 $ 1,141 $ 288",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3503,
+   "output_tokens": 59,
+   "timings_ms": {
+    "retrieval": 31.4,
+    "generation": 38455.1
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-nist-01",
+   "document": "nist_ai_rmf.pdf",
+   "type": "table",
+   "question": "What does the GOVERN function expect organisations to have ready in case third-party data or AI systems fail?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.5583228468894958,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2048,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "What does the GOVERN function expect organisations to have ready in case third-party data or AI systems fail?"
+    ],
+    "part_top_scores": [
+     0.5583
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-22"
+     ],
+     [
+      "2-23"
+     ],
+     [
+      "2-24"
+     ],
+     [
+      "2-25"
+     ]
+    ],
+    "evidence_tokens": 2048,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "answered",
+   "answer": "In case of failures or incidents in third-party data or AI systems deemed to be high-risk, organizations should have contingency processes in place [E4].",
+   "citations": [
+    "nist_ai_rmf.pdf, pp. 28-29"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "In case of failures or incidents in third-party data or AI systems deemed to be high-risk, organizations should have contingency processes in place",
+     "evidence_quote": "GOVERN 6.2: Contingency processes are in place to handle arising from failures or incidents in third-party data or AI systems deemed to be high-risk.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2452,
+   "output_tokens": 51,
+   "timings_ms": {
+    "retrieval": 60.9,
+    "generation": 31959.5
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-nist-02",
+   "document": "nist_ai_rmf.pdf",
+   "type": "table",
+   "question": "Under the MAP function, what must be true of the processes for humans overseeing an AI system?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.5710659027099609,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "Under the MAP function, what must be true of the processes for humans overseeing an AI system?"
+    ],
+    "part_top_scores": [
+     0.5711
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-26"
+     ],
+     [
+      "2-27"
+     ],
+     [
+      "2-28"
+     ],
+     [
+      "2-29"
+     ],
+     [
+      "2-42"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "answered",
+   "answer": "Under the MAP function, processes for human oversight must be defined, assessed, and documented in accordance with organizational policies from the GOVERN function [E3]. Additionally, these processes should address operator and practitioner proficiency with AI system performance and trustworthiness concepts, as well as relevant technical standards and certifications [E5].",
+   "citations": [
+    "nist_ai_rmf.pdf, pp. 31-32",
+    "nist_ai_rmf.pdf, pp. 45-46"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 0.5,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "Under the MAP function, processes for human oversight must be defined, assessed, and documented in accordance with organizational policies from the GOVERN function.",
+     "evidence_quote": "MAP 3.5: Processes for human oversight are defined, assessed, and documented in accordance with organizational policies from the GOVERN function.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "Additionally, these processes should address operator and practitioner proficiency with AI system performance and trustworthiness concepts, as well as relevant technical standards and certifications.",
+     "evidence_quote": "The MAP function suggests opportunities to define and document processes for operator and practitioner proficiency with AI system performance and trustworthiness concepts, and to define relevant technical standards and certifications.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 2991,
+   "output_tokens": 97,
+   "timings_ms": {
+    "retrieval": 25.0,
+    "generation": 36001.7
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-nist-03",
+   "document": "nist_ai_rmf.pdf",
+   "type": "table",
+   "question": "Which MEASURE subcategory deals with an AI system's privacy risk, and what does it require?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6328099966049194,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "multi_part",
+    "parts": [
+     "Which MEASURE subcategory deals with an AI system's privacy risk",
+     "What does it require?"
+    ],
+    "part_top_scores": [
+     0.6309,
+     0.2734
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-30"
+     ],
+     [
+      "2-31"
+     ],
+     [
+      "2-32"
+     ],
+     [
+      "2-33"
+     ],
+     [
+      "2-28"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "answered",
+   "answer": "MEASURE subcategory 2.10 deals with an AI system's privacy risk [E3]. It requires that the privacy risk of the AI system – as identified in the MAP function – be examined and documented [E3].",
+   "citations": [
+    "nist_ai_rmf.pdf, pp. 35-36"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "MEASURE subcategory 2.10 deals with an AI system's privacy risk",
+     "evidence_quote": "MEASURE 2.10: Privacy risk of the AI system – as identified in the MAP function – is examined and documented.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    },
+    {
+     "claim": "It requires that the privacy risk of the AI system – as identified in the MAP function – be examined and documented",
+     "evidence_quote": "MEASURE 2.10: Privacy risk of the AI system – as identified in the MAP function – is examined and documented.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 3001,
+   "output_tokens": 77,
+   "timings_ms": {
+    "retrieval": 78.6,
+    "generation": 33932.6
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-nist-04",
+   "document": "nist_ai_rmf.pdf",
+   "type": "table",
+   "question": "According to the MANAGE function, who should be told about incidents and errors?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.4535508155822754,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 1536,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "According to the MANAGE function, who should be told about incidents and errors?"
+    ],
+    "part_top_scores": [
+     0.4536
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-33"
+     ],
+     [
+      "2-34"
+     ],
+     [
+      "2-26"
+     ]
+    ],
+    "evidence_tokens": 1536,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "answered",
+   "answer": "According to the MANAGE function, incidents and errors should be communicated to relevant AI actors, including affected communities [E2].",
+   "citations": [
+    "nist_ai_rmf.pdf, pp. 37-38"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 1.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "Incidents and errors should be communicated to relevant AI actors, including affected communities.",
+     "evidence_quote": "AI actors, including affected communities. Processes for tracking, responding to, and recovering from incidents and errors are followed and documented.",
+     "same_subject": true,
+     "supported": true,
+     "verified": true
+    }
+   ],
+   "input_tokens": 1890,
+   "output_tokens": 46,
+   "timings_ms": {
+    "retrieval": 41.4,
+    "generation": 21182.6
+   },
+   "error": null
+  },
+  {
+   "id": "tbl-ragas-01",
+   "document": "ragas.pdf",
+   "type": "table",
+   "question": "How often did the GPT Score baseline agree with human annotators on context relevance?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.513547420501709,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2048,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How often did the GPT Score baseline agree with human annotators on context relevance?"
+    ],
+    "part_top_scores": [
+     0.5135
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-6"
+     ],
+     [
+      "3-7"
+     ],
+     [
+      "3-8"
+     ],
+     [
+      "3-9"
+     ]
+    ],
+    "evidence_tokens": 2048,
+    "budget": 2560,
+    "table_prompt_applied": false
+   },
+   "status": "answered",
+   "answer": "The GPT Score baseline agreed with human annotators on context relevance 63% of the time [E3].",
+   "citations": [
+    "ragas.pdf, pp. 4-5"
+   ],
+   "citation_on_evidence": true,
+   "citation_precision": 1.0,
+   "faithfulness": 0.0,
+   "addresses_question": true,
+   "reference_verdict": "agrees",
+   "judged": true,
+   "judge_claims": [
+    {
+     "claim": "The GPT Score baseline agreed with human annotators on context relevance 63% of the time",
+     "evidence_quote": "GPT Score 0.72 0.52 0.63",
+     "same_subject": true,
+     "supported": true,
+     "verified": false
+    }
+   ],
+   "input_tokens": 2470,
+   "output_tokens": 45,
+   "timings_ms": {
+    "retrieval": 33.7,
+    "generation": 25977.7
+   },
+   "error": null
+  }
+ ]
+}

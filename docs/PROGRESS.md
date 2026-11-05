@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
-**Last updated:** 2026-11-04
-**Current state:** Stage 5 on branch `stage-5-adaptive-retrieval` (uncommitted). Adaptive retrieval is built and tested; the dev retrieval-only sweep is done. **At equal budget, S ≈ A on dev.** Waiting for the user's decision on next steps (hybrid keyword search, budget) before any answer run.
+**Last updated:** 2026-11-05
+**Current state:** Stage 5 on branch `stage-5-adaptive-retrieval`. Finalist S is reviewed (decisions 53–55). Held-out A vs S pre-registration in progress.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -13,7 +13,7 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 2 | Baseline backend | Complete and committed 2026-10-30 |
 | 3 | Evaluation harness | Complete; approved 2026-11-04 |
 | 4 | Chunking optimization | Complete; approved 2026-11-04 |
-| 5 | Adaptive retrieval | In progress: built, dev sweep done; waiting for the user's decision |
+| 5 | Adaptive retrieval | In progress: finalist S chosen on dev; waiting for the user's review |
 | 6 | BYOK | Not started |
 | 7 | Frontend | Not started |
 | 8 | GitHub polish | Not started |
@@ -71,6 +71,12 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 47 | Table-reading prompt is a Stage 5 switch, measured on dev table questions. Table extraction changes are their own later stage (Stage 5b), not Stage 5 | 2026-11-04 |
 | 48 | Held-out: A vs S (adaptive). A reuses Stage 4's `test_embeddinggemma_300m_C1_20261104T064322.json`, backed by a regression test that A's retrieval is unchanged. `fed-02`, `fed-04` and `bp-03` are reported separately as "seen", since they shaped the Stage 5 focus. Pre-registered and frozen by commit before the run | 2026-11-04 |
 | 49 | Stage 5 dev selection rule, fixed before the first sweep: score = mean recall over the evidence actually sent, on all 56 answerable dev questions (29 dev, 15 dev table, 12 dev multi-part), paired with A by bootstrap. Start from the best config; a feature stays on only if switching it off lowers dev recall sent or multi-part part coverage; ties go to the simpler setting. Script: `benchmarks/analysis/stage5_sweep.py` | 2026-11-04 |
+| 50 | Held-out S uses a 2,560-token budget, to match A. 4,000 is reported only as a trade-off | 2026-11-05 |
+| 51 | Audit of DESIGN.md section 6: build the missing items behind switches (gap cutoff, span merging, per-document cap and comparative type, neighbor reserve and block merging, table rule only when a table is in the evidence) | 2026-11-05 |
+| 52 | Hybrid keyword + vector search (SQLite FTS5) behind its own switch, time-boxed, tuned on dev only; off if it doesn't help | 2026-11-05 |
+| 53 | Hybrid keyword search **off** for S: recall within 0.002 of the hybrid version, simpler, and hybrid loses `tbl-fed-05`. It stays an opt-in switch (`adaptive_hybrid`) | 2026-11-05 |
+| 54 | Neighbor reserve **0** for S. This is a measured deviation from DESIGN.md's 30%: the 30% reserve was swept on dev and lowered recall at 2560 (0.854 → 0.834). The reserve stays a setting | 2026-11-05 |
+| 55 | `config.py`'s `adaptive_*` defaults and `evidence_target_tokens` (2560) are set to finalist S, so `--retrieval adaptive` runs exactly S without environment variables. `retrieval` stays `"baseline"` by default, so product behaviour is unchanged until the held-out result | 2026-11-05 |
 
 ## Smoke test results (2026-10-30)
 
@@ -777,27 +783,72 @@ C1, top-5, index `data/eval/dev_embeddinggemma_300m_C1/` (all 4 dev documents). 
 - **Why splitting doesn't help:** the parts that are missed are mostly not top-1 even for their own sub-query. 5 of 7 missed parts are **table rows** (Lathrop, Automotive sales, MAP 1.5, PCE and Unemployment projection rows), at rank 5–24 or beyond 30 under dense search. Part queries also lose context ("where do FOMC participants see *it*").
 - **Offline BM25 check** (in-memory FTS5, not built into the product): reaches 2 of 7 missed parts (Lathrop rank 1, oversight aside rank 2); the rest stay at rank 7–23 or beyond 30. Over all 72 dev gold facts, BM25 by part gets 52 into the top 5.
 
+### Audit fixes (2026-11-05)
+
+- Checkpoint commit `e4fd733` before any change (checked: no `data/`, `.env`, PDFs or DB files).
+- Built, each behind a switch in `AdaptiveParams` and `config.py`:
+  - largest-score-gap cutoff (`gap_cutoff`);
+  - merging overlapping or adjacent chunks of one document into one block (`merge_spans`);
+  - comparative query type and a soft per-document cap (`doc_cap`); the cap only bites while other documents still have candidates;
+  - 30% neighbor reserve (`neighbor_reserve`), merged blocks ordered by best direct score;
+  - table rule added only when `find_tables` detects a table in the evidence;
+  - hybrid FTS5 search (`hybrid`, `keyword_weight`), migration `005_chunks_fts.sql`. Floors stay on cosine.
+- Fixed: uncovered parts are now computed from the evidence actually sent.
+- New tests cover the audit items, including: a part whose best chunk is dropped for budget is uncovered; neighbors never cross documents through the real DB lookup; delta off and stop reason recorded. **287 tests pass, `ruff` clean.**
+
+### Dev sweep 2 (`stage5_sweep_20261105T114432.json`, rule = decision 49)
+
+3,072 configs: budget {2560, 4000} × split × delta {off, .05, .10, .15} × gap × dedupe × merge × doc cap × neighbors {off, on, on with 30% reserve} × hybrid {off, .05, .10, .20}. 56 answerable dev questions. A = 0.834 recall sent.
+
+| System | Recall sent | Tables (20) | Part coverage | All parts | Tokens | vs A (95% CI) |
+|---|---|---|---|---|---|---|
+| A (top-5) | 0.834 | 0.750 | 0.750 | 5/12 | 2545 | |
+| **S at 2560** (split, gap, neighbors, hybrid .05) | 0.854 | 0.750 | 0.778 | 6/12 | 2361 | +0.020 (−0.036 to +0.089) |
+| S at 2560 without hybrid | 0.852 | 0.800 | 0.750 | 5/12 | 2306 | +0.018 (0.000 to +0.054) |
+| S at 2560 with 30% reserve | 0.834 | 0.750 | 0.750 | 5/12 | 2215 | −0.001 |
+| S config at 4000 (trade-off) | 0.882 | 0.800 | 0.847 | 8/12 | 2966 | +0.048 (−0.018 to +0.123) |
+| Best at 4000 (adds merge) | 0.901 | 0.850 | 0.847 | 8/12 | 3426 | +0.066 (−0.007 to +0.146) |
+
+- Rule result at 2560: split, gap, neighbors (no reserve) and hybrid .05 stay on. Delta, dedupe, merge and doc cap have no effect on recall or coverage there, so they go off (ties go to the simpler setting). Merge saves about 93 tokens per question at equal recall.
+- **The 30% reserve lowers recall at 2560** (0.854 → 0.834): it leaves room for only 3 direct chunks. The rule sets it to 0, which changes the design's starting value; needs the user's approval.
+- **Hybrid is thin:** it changes 3 questions (+2, −1). Of the 7 multi-part parts A misses (5 are table rows), it recovers 1 (`mp-tesla-02`); the other 6 stay missed. It loses `tbl-fed-05`. Weights .10 and .20 are clearly worse (0.798, 0.773).
+- Dev selection is optimistic: best of 1,536 configs per budget on 56 questions. The held-out run is the evidence.
+- Query types on dev: 26 factual, 14 table, 12 multi-part, 4 comparative. Stop reasons for S: gap 39, max chunks 11, budget 6.
+
+### Table-prompt test on dev (S at 2560, 15 dev table questions, gold comparison)
+
+`dev_embeddinggemma_300m_C1_S_20261105T114552` (off) vs `..._S_tblprompt_20261105T120303` (on).
+
+| | Off | On |
+|---|---|---|
+| Gold comparison agrees | 10 / 15 | 11 / 15 |
+| Status answered / partial | 11 / 4 | 11 / 4 |
+| Rule applied (table detected) | n/a | 10 / 15 |
+| Generation p50 | 33.1 s | 38.6 s |
+
+- The only change is `tbl-fed-01`, where the gold row isn't in the evidence (recall 0). Both answers are `partial`. "On" adds "approximately 4 percent" read off a chart description, which the judge scored as agrees. **Not a real gain, so the table prompt stays off** (decision 47).
+
+### Finalist S (user's review, 2026-11-05)
+
+- **Settings:** C1 chunking, `embeddinggemma:300m`, budget 2560. Splitting on, delta off, gap cutoff on, neighbors on (threshold 0.5, **reserve 0**, decision 54). **Hybrid off** (decision 53). Dedupe, merge and doc cap off; table prompt off.
+- **Same as the dev run in every setting but hybrid:** these are now `config.py`'s defaults (decision 55). Checked: `AdaptiveParams.from_settings` matches the adaptive parameters recorded in `dev_embeddinggemma_300m_C1_S_20261105T114552` on every field except `hybrid`.
+- **Dev result for this S** (sweep 2, the "without hybrid" row): recall over sent evidence 0.852. S minus A is +0.018 (0.000 to +0.054). Tables 0.800, part coverage 0.750, all parts covered 5 of 12, 2,306 tokens. This is selected on dev, so it's optimistic.
+- **Multi-part spot-check (decision c): not recorded.** The user's message of 2026-11-05 still held the template placeholder (`[IDs, or "none"]`). Ask the user for the IDs. Until then, the dev multi-part questions count as written by a separate Claude session, spot-checked by the user (IDs unknown).
+
 ## Workspace state
 
-- **Branches:** `main` has Stages 2–4 (Stage 4 merged 2026-11-04, not pushed). `stage-4-chunking-optimization` is kept. Commit only when the user asks.
-- **Environment:** conda env `adaptive-rag` (Python 3.11.18), with the project installed in editable mode.
-- **Ollama 0.40.13.** Models installed: `embeddinggemma:300m` (`85462619ee72`), `qwen3.5:9b` (`6488c96fa5fa`), `gemma4:e4b` (`c6eb396dbd59`), `bge-m3:latest` (kept, but not used after decision 40), and `deepseek-r1:8b`. `qwen3.5:4b` is not installed.
-- **Data folders under `data/eval/`** (all gitignored):
-  - `dev_*` folders and `test_embeddinggemma_300m/` from Stage 3.
-  - `embcache/`, the Stage 4 embedding cache for dev.
-  - `test_embeddinggemma_300m_C1/`, `_C7/` and `_adaptive/` hold the Stage 4 held-out indexes, each with all 5 documents ready. `_adaptive/` also holds C's registry and `optimization_runs`.
-- **PDFs:** benchmark PDFs, including `dev/fed_mpr_feb2025.pdf`, are in the gitignored `benchmarks/documents/`.
-- **Test set:** `benchmarks/questions_test.yaml` is tracked. This assistant has not read the test questions' text or the test documents' content; only IDs, counts and hashes were used.
-- No evaluation process is running and no models are loaded. The held-out analysis is done.
+- **Branches:** `main` has Stages 2–4 (not pushed). `stage-5-adaptive-retrieval` has checkpoint `e4fd733`; the audit work, sweep 2 and table-prompt runs are uncommitted. Commit only when the user asks.
+- **Environment:** conda env `adaptive-rag` (Python 3.11.18), project installed in editable mode. Ollama 0.40.14; models unchanged.
+- **Data:** `data/eval/dev_embeddinggemma_300m_C1/` now has migration 005 (FTS5 index filled from existing chunks). The held-out indexes under `data/eval/test_*` are untouched. Everything under `data/` is gitignored.
+- **Config defaults:** `retrieval = "baseline"`, `table_prompt = False`. The `adaptive_*` settings and `evidence_target_tokens` (2560) are finalist S (decision 55), with `adaptive_hybrid = False`. Optional switches can be set to None from the environment with `null`.
+- **Test set:** not opened. Only IDs, counts and hashes used.
+- No process running.
 
 ## Next steps
 
-1. **User:** run the separate Claude session with `data/dev_multipart_prompt.txt`, spot-check a few of the 12 questions against the PDFs, and say when `benchmarks/questions_dev_multipart.yaml` is in.
-2. **Then:** validate the file, run the overlap check against test questions (IDs and scores only), and record a dev baseline (A, retrieval-only) on all dev sets, including part coverage.
-3. **Build** in `retrieval/`, each feature behind its own switch: query analysis and splitting, per-part retrieval, dynamic depth, dedupe, neighbors, part-aware evidence check, table-reading prompt. Plus the regression test for A, and metrics for recall over sent evidence, part coverage and duplicate tokens removed.
-4. **Tune on dev:** retrieval-only sweeps first; answer runs only for finalists (A, S with table prompt off, S with it on), about 30–35 min each.
-5. **Pre-register** the held-out A vs S comparison in this file and freeze it by commit (decision 48). Primary: S − A on Recall over sent evidence, all 24 answerable, paired bootstrap CI must exclude 0. Secondary: part coverage on the 4 multi-part (descriptive), gold-comparison correctness on the 6 table questions. Guardrails: 6 of 6 refusals, false refusals and p50 latency. Seen questions shown with and without.
-6. **Don't rerun the held-out test set** except for that one pre-registered run.
+1. **User:** name the dev multi-part questions spot-checked (decision c is still open).
+2. Pre-register held-out A vs S in this file and freeze it by commit.
+3. Run the held-out comparison once. Report 4000 as a trade-off only.
 
 ## Open questions
 

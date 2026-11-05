@@ -8,6 +8,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 from adaptive_rag.answering import GenerationFailed, answer_question
+from adaptive_rag.answering.prompts import has_table
 from adaptive_rag.config import Settings
 from adaptive_rag.context import AppContext
 from adaptive_rag.db import migrate
@@ -188,6 +189,9 @@ def evaluate_answer(
         return
     result.status = answer.status
     result.answer = answer.answer
+    # Same evidence the answer saw; records whether the table rule was actually in the prompt.
+    applied = ctx.settings.table_prompt and has_table(evidence.used)
+    result.retrieval_info = {**(result.retrieval_info or {}), "table_prompt_applied": applied}
     result.citations = [citation.label for citation in answer.citations]
     result.input_tokens = answer.input_tokens
     result.output_tokens = answer.output_tokens
