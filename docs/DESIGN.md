@@ -203,17 +203,27 @@ Stage 4 measures the regret of reuse: quality lost by reusing a config instead o
 | Step | Design | Evaluated by | Version |
 |---|---|---|---|
 | Baseline | Fixed top-5 by cosine similarity | Reference for everything else | v1 |
-| Query type | Rules only: factual, comparative, broad | Accuracy on labelled dev questions | v1 |
+| Query type | Rules only: factual, table lookup, multi-part, comparative, broad | Accuracy on labelled dev questions | v1 |
+| Per-part retrieval | Rule-based split of multi-part questions; each part embedded and searched separately; coverage-first selection (added 2026-11-04, decision 46) | Part coverage, Recall over sent evidence | v1 |
 | Dynamic depth | Fetch 30, then apply the cutoff rules below | Recall@budget, tokens used | v1 |
-| Evidence check | Score gate, LLM status, citation validation | False-answer and false-refusal rates | v1 |
+| Evidence check | Score gate, LLM status, citation validation; parts with no candidate above the floor are named as uncovered | False-answer and false-refusal rates | v1 |
+| Table-reading prompt | Switch: when evidence contains a table, state the row label and column header for every number reported (decision 47) | Gold-comparison correctness on dev table questions | v1, off unless dev shows a gain |
 | Neighbors | Algorithm below | Recall gain vs extra tokens | v1 |
 | Dedupe | Merge overlapping spans; drop near-identical chunks | Duplicate tokens removed | v1 |
 | Diversity | Per-document cap for comparative and broad questions only | Sources covered, recall | v1 |
 | Token budget | Greedy fill with hard limits | Never exceeded (tested) | v1 |
 | Keyword + vector search (SQLite FTS5) | Hybrid scoring | Comparison against vector-only | v1.1, top candidate |
 | Cross-encoder reranking | Heavy dependency on 16 GB | Compare later | Later |
-| Query rewriting, multi-hop | Extra LLM calls and latency | Compare later | Later |
+| LLM query rewriting, multi-hop | Extra LLM calls and latency. Rule-based splitting is v1 (above) | Compare later | Later |
 | Per-entity coverage check | Harder comparative logic | Compare later | Later |
+
+### Per-part retrieval (added 2026-11-04)
+
+1. Rules split a multi-part question into parts: at "and" between clauses, "while also", "both … and", a second question mark, or a list of items. No LLM call.
+2. Each part is embedded and searched separately (about 50 ms per part). Candidates are pooled per document, keeping each chunk's best score and the parts it matched.
+3. Coverage-first selection: the best chunk for each part goes in first, then the rest fill by score under the same depth rules and budget.
+4. A part with no candidate above the floor is recorded as uncovered in the trace and named in the prompt, so the answer should be `partial`.
+5. A single-part question behaves exactly as without this feature.
 
 ### Dynamic depth
 
@@ -450,6 +460,12 @@ Each stage ends with user approval and updates to this file and `PROGRESS.md`.
 - **Tests:** same-document expansion, no duplicates, budget never exceeded, direct/expansion marking, refusal behaviour.
 - **Acceptance:** A–F held-out report complete, with any feature that doesn't help disabled by default.
 - **Deliverable:** adaptive pipeline and report.
+
+### Stage 5b: Table extraction (added 2026-11-04, decision 47)
+
+- **Objective:** fix table reading errors at the source by keeping table structure (row labels and column headers) in the extracted text.
+- **Why separate:** it changes the loader and chunk text and needs a reindex, so it would confound the Stage 5 retrieval comparison.
+- **Acceptance:** dev table correctness measured before and after; one held-out check; extractor version bumped so stale indexes are detected.
 
 ### Stage 6: BYOK
 

@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
 **Last updated:** 2026-11-04
-**Current state:** Stage 4 approved and merged into `main` (2026-11-04, not pushed). Default chunking is C1; the optimizer and C7 are opt-in (decision 44). **Next: Stage 5 (adaptive retrieval)**, starting with the start-of-stage plan, focused on multi-part retrieval misses and table reading errors.
+**Current state:** Stage 5 on branch `stage-5-adaptive-retrieval` (uncommitted). Adaptive retrieval is built and tested; the dev retrieval-only sweep is done. **At equal budget, S ≈ A on dev.** Waiting for the user's decision on next steps (hybrid keyword search, budget) before any answer run.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -13,7 +13,7 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 2 | Baseline backend | Complete and committed 2026-10-30 |
 | 3 | Evaluation harness | Complete; approved 2026-11-04 |
 | 4 | Chunking optimization | Complete; approved 2026-11-04 |
-| 5 | Adaptive retrieval | Not started |
+| 5 | Adaptive retrieval | In progress: built, dev sweep done; waiting for the user's decision |
 | 6 | BYOK | Not started |
 | 7 | Frontend | Not started |
 | 8 | GitHub polish | Not started |
@@ -66,6 +66,11 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 42 | Held-out comparison pre-registered: A (C1) vs C7 as a fixed config vs C (optimizer), all on `embeddinggemma:300m`. Primary: C7 minus A on Recall@budget, on test table questions and overall, with the paired CI rule. Replaces B vs C, since on dev A = B = C = C1 | 2026-11-04 |
 | 43 | The optimizer's weaknesses are recorded as Stage 4 findings (about 10 min per document, 14–26 accepted questions, 0–1 table questions, saturated scores on small sampled pools). No further optimizer tuning in Stage 4 | 2026-11-04 |
 | 44 | User's decision: product default chunking is C1. The optimizer (`chunking = "adaptive"`) and C7 are opt-in settings; code and tests kept. Findings recorded as: C7 vs A inconclusive; the optimizer chose C1 for all 9 documents at about 10 min each; remaining errors are table reading and multi-part retrieval depth. Stage 4 approved | 2026-11-04 |
+| 45 | Stage 5 plan approved. Lean: retrieval-only sweeps first, answer runs only for finalists, features that don't help on dev stay off. Tune on dev only. Base chunking C1; evidence target 2,500 (equal to A's ~2,560), plus one dev check at 4,000 | 2026-11-04 |
+| 46 | Rule-based per-part retrieval is in v1 (DESIGN.md section 6). About 12 new dev multi-part questions with 2–3 required evidence parts each, written by Claude in a separate session from `data/dev_multipart_prompt.txt` and spot-checked by the user, into `benchmarks/questions_dev_multipart.yaml` | 2026-11-04 |
+| 47 | Table-reading prompt is a Stage 5 switch, measured on dev table questions. Table extraction changes are their own later stage (Stage 5b), not Stage 5 | 2026-11-04 |
+| 48 | Held-out: A vs S (adaptive). A reuses Stage 4's `test_embeddinggemma_300m_C1_20261104T064322.json`, backed by a regression test that A's retrieval is unchanged. `fed-02`, `fed-04` and `bp-03` are reported separately as "seen", since they shaped the Stage 5 focus. Pre-registered and frozen by commit before the run | 2026-11-04 |
+| 49 | Stage 5 dev selection rule, fixed before the first sweep: score = mean recall over the evidence actually sent, on all 56 answerable dev questions (29 dev, 15 dev table, 12 dev multi-part), paired with A by bootstrap. Start from the best config; a feature stays on only if switching it off lowers dev recall sent or multi-part part coverage; ties go to the simpler setting. Script: `benchmarks/analysis/stage5_sweep.py` | 2026-11-04 |
 
 ## Smoke test results (2026-10-30)
 
@@ -726,6 +731,52 @@ Report: `benchmarks/results/stage4_test_report_20261104T093653.json`, from `benc
 - Regret couldn't be measured.
 - C7's test answers have no human labels.
 
+## Stage 5 progress
+
+### Dev multi-part questions (2026-11-04)
+
+- `benchmarks/questions_dev_multipart.yaml`: 12 questions (3 per dev document; 8 with 2 parts, 4 with 3), written in a separate Claude session from `data/dev_multipart_prompt.txt`. **The user said they spot-checked some, but didn't name which IDs**; record them here when given.
+- Validation: 11 of 12 passed first time. `mp-ragas-01`'s URL quote wasn't found: the loader breaks the URL at `github.com/` and joins the footnote marker to "Ragas". Shortened to `explodinggradients/ragas.` under decision 38, with a note; question and answer unchanged.
+- Overlap with test (`question_overlap_20261104T112837.json`, Stage 4 thresholds): **0 of 12 flagged.** Closest: `mp-fed-01` vs test `fed-02`, cosine 0.817 (both about PCE in the projections table of two editions). `fed-02` is already "seen".
+
+### Dev baseline A, retrieval only (2026-11-04)
+
+C1, top-5, index `data/eval/dev_embeddinggemma_300m_C1/` (all 4 dev documents). Ollama is now 0.40.14 (was 0.40.13); digests unchanged.
+
+| Set | n | Recall@budget (2560) | Hit@5 | MRR | Part coverage | All parts covered |
+|---|---|---|---|---|---|---|
+| Dev (`questions_dev.yaml`) | 29 | 0.862 (0.724–0.966) | 0.862 | 0.661 | n/a | n/a |
+| Dev tables | 15 | 0.800 (0.600–1.000) | 0.800 | 0.478 | n/a | n/a |
+| Dev multi-part | 12 | 0.810 (0.706–0.914) | 1.000 | 0.785 | 0.750 (0.625–0.875) | 5 of 12 |
+
+- Dev matches Stage 3's 2026-11-03 run exactly on all 36 shared answerable and near-miss questions. Only the 3 out-of-scope top scores changed (max +0.054, still below 0.25), because this index also holds the Fed Feb 2025 report. So 0.40.14 gives the same embeddings.
+- **Regression check:** after the build, A on dev reproduces every rank metric on all 66 questions, and recall over sent evidence equals Recall@budget on every question. That backs reusing Stage 4's A file (decision 48).
+
+### Built (2026-11-04)
+
+- `retrieval/query.py`: rule-based type and part splitting (lead-ins merged forward). On dev: 12 of 12 multi-part split, 1 of 15 table and 2 of 39 other questions split.
+- `retrieval/adaptive.py`: per-part pools, coverage-first, dynamic depth (floor, delta, min/max), dedupe, neighbors, budget. `retrieval/evidence.py`: one entry point for answering and evaluation.
+- Prompt switches: table-reading rule (`table_prompt`), uncovered-part notice. Trace column `retrieval` (migration 004).
+- Metrics: part coverage, recall and part coverage over sent evidence, tokens sent. Runner flags `--retrieval adaptive` and `--table-prompt`.
+- Defaults unchanged: `retrieval = "baseline"`, `table_prompt = False`. 271 tests pass, `ruff` clean.
+
+### Dev sweep, retrieval only (`stage5_sweep_20261104T114134.json`, rule = decision 49)
+
+192 configs: budget {2500, 2560, 4000} × split × delta {off, .05, .10, .15} × multi-part max {5, 8} × dedupe × neighbors. A = 0.834 recall sent over 56 answerable dev questions, 2545 tokens.
+
+| System | Recall sent | Tables | Part coverage | All parts | Tokens | vs A (95% CI) |
+|---|---|---|---|---|---|---|
+| Best at 2500 | 0.808 | | 0.722 | 5/12 | 1905 | −0.026 (−0.089 to +0.036) |
+| Best at 2560 (split, δ .05, neighbors) | 0.838 | 0.800 | 0.750 | 5/12 | 2233 | +0.003 (−0.050 to +0.057) |
+| Best at 4000 (split, δ .10, neighbors) | 0.873 | 0.850 | 0.750 | 5/12 | 3019 | +0.039 (0.000 to +0.092) |
+| Plain top-7 at 4000 (control) | 0.859 | 0.800 | 0.792 | 6/12 | 3569 | +0.025 (0.000 to +0.068) |
+
+- **At equal budget S ≈ A.** At 4000, most of the gain is from more tokens: S minus plain top-7 is +0.014 (−0.018 to +0.057).
+- **2500 fits only 4 C1 chunks** (373 of 377 dev chunks are 512 tokens), so S at 2500 has one chunk less than A. The plan's "2500 equals A's ~2560" was wrong.
+- Ablation: dedupe removes 0 tokens on dev (no near-duplicates selected); multi-part max has no effect; splitting adds +0.003–0.004; **neighbors are the only feature with a clear effect** (+0.035 at 4000).
+- **Why splitting doesn't help:** the parts that are missed are mostly not top-1 even for their own sub-query. 5 of 7 missed parts are **table rows** (Lathrop, Automotive sales, MAP 1.5, PCE and Unemployment projection rows), at rank 5–24 or beyond 30 under dense search. Part queries also lose context ("where do FOMC participants see *it*").
+- **Offline BM25 check** (in-memory FTS5, not built into the product): reaches 2 of 7 missed parts (Lathrop rank 1, oversight aside rank 2); the rest stay at rank 7–23 or beyond 30. Over all 72 dev gold facts, BM25 by part gets 52 into the top 5.
+
 ## Workspace state
 
 - **Branches:** `main` has Stages 2–4 (Stage 4 merged 2026-11-04, not pushed). `stage-4-chunking-optimization` is kept. Commit only when the user asks.
@@ -741,12 +792,12 @@ Report: `benchmarks/results/stage4_test_report_20261104T093653.json`, from `benc
 
 ## Next steps
 
-1. **Stage 5 (adaptive retrieval):** begin with the start-of-stage plan and wait for approval. Focus on the two remaining error types from Stage 4:
-   - **Multi-part retrieval misses** (e.g. `fed-04`, one of two evidence parts not retrieved): retrieval depth, neighbors, per-part coverage.
-   - **Table reading errors** (`bp-03`, `fed-02` under C7): the right table is retrieved but misread; flattened headers (decision 39).
-   Tune on dev only. Base chunking is C1.
-2. **Don't rerun the held-out test set** until the next release.
-3. **Later (not Stage 5 unless asked):** the optimizer fixes listed under decision 43.
+1. **User:** run the separate Claude session with `data/dev_multipart_prompt.txt`, spot-check a few of the 12 questions against the PDFs, and say when `benchmarks/questions_dev_multipart.yaml` is in.
+2. **Then:** validate the file, run the overlap check against test questions (IDs and scores only), and record a dev baseline (A, retrieval-only) on all dev sets, including part coverage.
+3. **Build** in `retrieval/`, each feature behind its own switch: query analysis and splitting, per-part retrieval, dynamic depth, dedupe, neighbors, part-aware evidence check, table-reading prompt. Plus the regression test for A, and metrics for recall over sent evidence, part coverage and duplicate tokens removed.
+4. **Tune on dev:** retrieval-only sweeps first; answer runs only for finalists (A, S with table prompt off, S with it on), about 30–35 min each.
+5. **Pre-register** the held-out A vs S comparison in this file and freeze it by commit (decision 48). Primary: S − A on Recall over sent evidence, all 24 answerable, paired bootstrap CI must exclude 0. Secondary: part coverage on the 4 multi-part (descriptive), gold-comparison correctness on the 6 table questions. Guardrails: 6 of 6 refusals, false refusals and p50 latency. Seen questions shown with and without.
+6. **Don't rerun the held-out test set** except for that one pre-registered run.
 
 ## Open questions
 

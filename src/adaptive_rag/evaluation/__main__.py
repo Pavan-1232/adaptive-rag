@@ -15,6 +15,7 @@ import yaml
 from adaptive_rag.config import Settings
 from adaptive_rag.loaders import LOADERS
 from adaptive_rag.providers import OllamaEmbeddings, OllamaLLM
+from adaptive_rag.retrieval import AdaptiveParams
 
 from .benchmark import BENCHMARK_DIR, file_sha256, load_manifest, load_questions
 from .calibration import choose_floor, sweep
@@ -136,9 +137,28 @@ def cmd_generate(args: argparse.Namespace) -> int:
     return 0
 
 
+def _system_label(args) -> str:
+    chunking = getattr(args, "chunking", "fixed")
+    label = SYSTEMS.get(chunking, chunking)
+    if getattr(args, "retrieval", "baseline") == "adaptive":
+        label = f"S (adaptive retrieval on {chunking})"
+    if getattr(args, "table_prompt", False):
+        label += " + table prompt"
+    return label
+
+
+def _adaptive_params(settings) -> dict | None:
+    if settings.retrieval != "adaptive":
+        return None
+    return asdict(AdaptiveParams.from_settings(settings, settings.embedding_model))
+
+
 def _metadata(args, settings, embedder, split, question_source, judge_model) -> dict:
     return {
-        "system": SYSTEMS.get(getattr(args, "chunking", "fixed"), getattr(args, "chunking", "")),
+        "system": _system_label(args),
+        "retrieval": settings.retrieval,
+        "table_prompt": settings.table_prompt,
+        "adaptive_params": _adaptive_params(settings),
         "chunking": getattr(args, "chunking", "fixed"),
         "set": split,
         "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
@@ -165,6 +185,8 @@ def cmd_run(args: argparse.Namespace) -> int:
         print("The test set is held out. Pass --final to run it, once per release.")
         return 2
     settings = _settings(args.set, args.embedding_model, args.chunking)
+    settings.retrieval = args.retrieval
+    settings.table_prompt = args.table_prompt
     embedder, llm = _providers(settings)
     documents = load_manifest(split=args.set)
     ctx, kb, indexed = build_index(
@@ -193,6 +215,8 @@ def cmd_run(args: argparse.Namespace) -> int:
     else:
         stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S")
         suffix = "" if args.chunking == "fixed" else f"_{args.chunking}"
+        suffix += "_S" if args.retrieval == "adaptive" else ""
+        suffix += "_tblprompt" if args.table_prompt else ""
         model = args.embedding_model.replace(":", "_")
         path = RESULTS / f"{args.set}_{model}{suffix}_{stamp}.json"
         print(f"Saving progress to {path}. To resume after a stop, add: --resume {path}")
@@ -294,6 +318,13 @@ def main() -> int:
         choices=sorted(SYSTEMS) + ["C2", "C3", "C4", "C5", "C6"],
         help="fixed (Stage 3 A), C1-C7 (one config for every document), or adaptive (C)",
     )
+    run.add_argument(
+        "--retrieval",
+        default="baseline",
+        choices=["baseline", "adaptive"],
+        help="baseline: fixed top-5 (A); adaptive: Stage 5 retrieval with config.py settings (S)",
+    )
+    run.add_argument("--table-prompt", action="store_true", help="Stage 5 table-reading rule")
     run.add_argument("--judge", nargs="?", const=JUDGE_MODEL, default=None)
     run.add_argument("--final", action="store_true", help="required for the held-out test set")
     run.add_argument("--question-source", default="unspecified")

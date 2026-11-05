@@ -6,6 +6,7 @@ from adaptive_rag.evaluation.metrics import (
     Span,
     evidence_recall,
     hit_at_k,
+    part_coverage,
     recall_at_budget,
     recall_at_k,
     reciprocal_rank,
@@ -85,6 +86,24 @@ def test_recall_at_budget_charges_for_tokens():
 def test_recall_at_budget_stops_at_first_chunk_that_does_not_fit():
     chunks = [chunk(0, 10, tokens=150), chunk(0, 10, tokens=100), chunk(100, 200, tokens=10)]
     assert recall_at_budget(chunks, EVIDENCE, 200) == 0.0
+
+
+def test_part_coverage_shows_a_missed_short_part():
+    # A long part covered and a short part missed: recall stays high, coverage is 1 of 2.
+    long_part, short_part = Span("a", 0, 900), Span("a", 5000, 5100)
+    chunks = [chunk(0, 1000, tokens=100), chunk(2000, 3000, tokens=100)]
+    evidence = [long_part, short_part]
+    assert evidence_recall(chunks, evidence) == 0.9
+    assert part_coverage(chunks, evidence, 200) == 0.5
+
+
+def test_part_coverage_counts_alternatives_and_respects_budget():
+    part = Span("a", 0, 100, alternatives=(Span("a", 500, 600),))
+    other = Span("a", 900, 1000)
+    chunks = [chunk(500, 600, tokens=100), chunk(900, 1000, tokens=100)]
+    assert part_coverage(chunks, [part, other], 200) == 1.0
+    assert part_coverage(chunks, [part, other], 150) == 0.5
+    assert part_coverage(chunks, [], 200) == 0.0
 
 
 def test_quote_location_ignores_case_and_whitespace():

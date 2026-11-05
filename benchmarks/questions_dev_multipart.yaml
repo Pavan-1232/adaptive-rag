@@ -1,0 +1,199 @@
+# Multi-part dev benchmark questions (dev documents only).
+# Written in a separate session from the PDFs in benchmarks/documents/dev/ and the template format.
+# Each evidence item is one required fact. Pages are physical PDF pages.
+
+# ---------------------------------------------------------------- tesla_10k.pdf
+
+- id: mp-tesla-01
+  document: tesla_10k.pdf
+  type: multi_part
+  question: What does Tesla mainly make at its Buffalo factory, and how long does it have to meet its $5 billion New York spending commitment?
+  answerable: true
+  evidence:
+    - page: 22
+      quote: "These agreements provide for the construction and use of our Gigafactory New York, which we have primarily used for the development and production of our Solar Roof and other solar products and components, energy storage components and Supercharger components, and for other lessor-approved functions."
+    - page: 88
+      quote: "In 2021, an amendment was executed to extend our overall agreement to spend or incur $5.00 billion in combined capital, operational expenses, costs of goods sold and other costs in the State of New York through December 31, 2029."
+  expected_answer: Gigafactory New York is mainly used for Solar Roof and other solar products, energy storage components and Supercharger components; a 2021 amendment extended the $5.00 billion New York spending commitment through December 31, 2029.
+  notes: The deadline is the easy-to-miss part. It appears only in Note 14 (page 88); the risk factor on page 22 gives only the original 10-year period starting April 30, 2018, which is not the current deadline.
+  source: "claude-separate-session, user spot-checked"
+
+- id: mp-tesla-02
+  document: tesla_10k.pdf
+  type: multi_part
+  question: How much energy storage did Tesla deploy in 2024, what drove the jump in energy revenue, and does Tesla own or lease its Lathrop, California Megafactory?
+  answerable: true
+  evidence:
+    - page: 35
+      quote: "In 2024, we deployed 31.4 GWh of energy storage products."
+    - page: 41
+      quote: "Energy generation and storage revenue increased $4.05 billion, or 67%, in the year ended December 31, 2024 as compared to the year ended December 31, 2023, primarily due to a 16.7 GWh increase in Megapack and Powerwall deployments compared to the prior year."
+    - page: 32
+      quote: "Megafactory Lathrop Lathrop, California Leased"
+  expected_answer: 31.4 GWh deployed; energy revenue rose $4.05 billion (67%), mainly because Megapack and Powerwall deployments grew by 16.7 GWh; Megafactory Lathrop is leased.
+  notes: Mixes a table row (Properties table) with two prose facts from different parts of the MD&A.
+  source: "claude-separate-session, user spot-checked"
+
+- id: mp-tesla-03
+  document: tesla_10k.pdf
+  type: multi_part
+  question: Roughly how many vehicles did Tesla deliver in 2024? Did its automotive sales revenue grow or shrink that year, and by how much?
+  answerable: true
+  evidence:
+    - page: 35
+      quote: "In 2024, we produced approximately 1,773,000 consumer vehicles and delivered approximately 1,789,000 consumer vehicles."
+    - page: 40
+      quote: "Automotive sales $ 72,480 $ 78,509 $ 67,210 $ (6,029) (8)% $ 11,299 17 %"
+  expected_answer: About 1,789,000 consumer vehicles delivered; automotive sales revenue fell from $78,509 million to $72,480 million, a decrease of $6,029 million (8%).
+  notes: Table row (Results of Operations revenue table) plus a prose fact from the MD&A overview.
+  source: "claude-separate-session, user spot-checked"
+
+# ---------------------------------------------------------------- nist_ai_rmf.pdf
+
+- id: mp-nist-01
+  document: nist_ai_rmf.pdf
+  type: multi_part
+  question: Does the AI RMF tell organizations how much risk they should accept? If not, where in the Core is setting risk tolerance covered?
+  answerable: true
+  evidence:
+    - page: 12
+      quote: "While the AI RMF can be used to prioritize risk, it does not prescribe risk tolerance."
+    - page: 31
+      quote: "MAP 1.5: Organizational risk tolerances are determined and documented."
+  expected_answer: No, the framework does not prescribe risk tolerance; under MAP 1.5, organizations determine and document their own risk tolerances.
+  notes: Prose (section 1.2.2) plus a row from the MAP categories table (Table 2).
+  source: "claude-separate-session, user spot-checked"
+
+- id: mp-nist-02
+  document: nist_ai_rmf.pdf
+  type: multi_part
+  question: How does the framework deal with AI's environmental footprint? I'd like its definition of sustainability, the subcategory that assesses environmental impact, and the environmental cost it lists among AI-specific risks.
+  answerable: true
+  evidence:
+    - page: 7
+      quote: "Sustainability refers to the “state of the global system, including environmental, social, and economic aspects, in which the needs of the present are met without compromising the ability of future generations to meet their own needs”"
+    - page: 35
+      quote: "MEASURE 2.12: Environmental impact and sustainability of AI model training and management activities – as identified in the MAP function – are assessed and documented."
+    - page: 44
+      quote: "Computational costs for developing AI systems and their impact on the environment and planet."
+  expected_answer: Sustainability is the state of the global system (environmental, social and economic aspects) in which present needs are met without compromising future generations' ability to meet theirs (ISO/IEC TR 24368:2022); MEASURE 2.12 assesses and documents the environmental impact and sustainability of model training and management; Appendix B lists the computational costs of developing AI systems and their impact on the environment and planet as a new or increased risk.
+  notes: The page 44 part is easy to miss. It is the second-to-last bullet of the Appendix B list, which spills over from page 43. Table row (MEASURE, Table 3) plus prose.
+  source: "claude-separate-session, user spot-checked"
+
+- id: mp-nist-03
+  document: nist_ai_rmf.pdf
+  type: multi_part
+  question: What are the three kinds of AI bias NIST says to manage? And does every AI system need human oversight? Give the framework's example.
+  answerable: true
+  evidence:
+    - page: 23
+      quote: "NIST has identified three major categories of AI bias to be considered and managed: systemic, computational and statistical, and human-cognitive."
+    - page: 45
+      quote: "Some AI systems may not require human oversight, such as models used to improve video compression."
+  expected_answer: Systemic, computational and statistical, and human-cognitive bias. No, not every system needs it; models used to improve video compression may not require human oversight, while other systems specifically do.
+  notes: The video-compression example is easy to miss. It is a one-line aside in Appendix C (human-AI interaction), far from the main trustworthiness sections.
+  source: "claude-separate-session, user spot-checked"
+
+# ---------------------------------------------------------------- ragas.pdf
+
+- id: mp-ragas-01
+  document: ragas.pdf
+  type: multi_part
+  question: Where can I get the Ragas code, which OpenAI model runs its evaluation prompts, and how often did Ragas agree with human annotators on faithfulness?
+  answerable: true
+  evidence:
+    - page: 1
+      quote: "explodinggradients/ragas."
+    - page: 3
+      quote: "In our implementation and experiments, all prompts are evaluated using the gpt-3.5-turbo-16k model"
+    - page: 5
+      quote: "Ragas 0.95 0.78 0.70"
+  expected_answer: The code is at https://github.com/explodinggradients/ragas; prompts are run with gpt-3.5-turbo-16k; Ragas agreed with human annotators on faithfulness with 0.95 accuracy (Table 1).
+  notes: The code location is the easy-to-miss part. It is footnote 1 on page 1, and the URL breaks across two lines. Table 1 row plus prose. Known extraction failure (decision 38) - the loader splits the URL at "github.com/" and joins the footnote marker to "Ragas", so the quote is shortened to the part that survives intact; question and answer unchanged.
+  source: "claude-separate-session, user spot-checked"
+
+- id: mp-ragas-02
+  document: ragas.pdf
+  type: multi_part
+  question: Compare how GPTScore works in the original prior work with how the authors set up their GPTScore baseline.
+  answerable: true
+  evidence:
+    - page: 2
+      quote: "then scores passages based on the average probability of the generated tokens, according to a given autoregressive LM."
+    - page: 5
+      quote: "we ask ChatGPT to assign a score between 0 and 10 for the three quality dimensions."
+  expected_answer: The original GPTScore uses a prompt that names the aspect and scores passages by the average probability of the generated tokens under an autoregressive LM; the authors' baseline instead asks ChatGPT directly for a score from 0 to 10 for each of the three quality dimensions.
+  notes: Related Work (section 2) against the Experiments section (section 5).
+  source: "claude-separate-session, user spot-checked"
+
+- id: mp-ragas-03
+  document: ragas.pdf
+  type: multi_part
+  question: How did the authors build the low context relevance examples for WikiEval, and in the Chimnabai Clock Tower example, what extra detail about the tower's design appears only in the low-relevance context?
+  answerable: true
+  evidence:
+    - page: 4
+      quote: "we first added additional sentences to the context by scraping back-links to the corresponding Wikipedia page."
+    - page: 8
+      quote: "It was built in Indo-Saracenic architecture style."
+  expected_answer: They added sentences to the context by scraping back-links to the related Wikipedia page; the low-relevance Chimnabai context adds that the tower was built in Indo-Saracenic architecture style.
+  notes: The page 8 detail is easy to miss. It sits inside the appendix example table (Table 4), not in the body text.
+  source: "claude-separate-session, user spot-checked"
+
+# ---------------------------------------------------------------- fed_mpr_feb2025.pdf
+
+- id: mp-fed-01
+  document: fed_mpr_feb2025.pdf
+  type: multi_part
+  question: Compare PCE inflation in 2024 with the median FOMC projection for PCE inflation in 2025.
+  answerable: true
+  evidence:
+    - page: 15
+      quote: "The price index for personal consumption expenditures (PCE) rose 2.6 percent over the 12 months ending in December, down slightly from its 2.7 percent pace the previous year and well below its peak of 7.2 percent in mid-2022."
+      alternatives:
+        - page: 11
+          quote: "The price index for personal consumption expenditures (PCE) rose 2.6 percent over the 12 months ending in December, down from a peak of 7.2 percent in 2022."
+    - page: 59
+      quote: "PCE inflation 2.4 2.5 2.1 2.0 2.0 2.4–2.5 2.3–2.6 2.0–2.2 2.0 2.0 2.4–2.7 2.1–2.9 2.0–2.6 2.0–2.4 2.0"
+  expected_answer: PCE inflation was 2.6 percent over the 12 months ending December 2024; the December 2024 median projection for 2025 is 2.5 percent, only slightly lower.
+  notes: Prose plus a Summary of Economic Projections Table 1 row. The table's 2024 median (2.4) was projected in December, before full-year data were in, and is not the measured 2.6.
+  source: "claude-separate-session, user spot-checked"
+
+- id: mp-fed-02
+  document: fed_mpr_feb2025.pdf
+  type: multi_part
+  question: How quickly was the Fed letting securities run off its balance sheet in the second half of 2024, and how large were its total assets at the end of January 2025?
+  answerable: true
+  evidence:
+    - page: 49
+      quote: "Over the second half of last year, the FOMC reduced the size of the Federal Reserve’s balance sheet with redemption caps of $25 billion per month on Treasury securities and $35 billion per month on agency debt and agency mortgage-backed securities (MBS)."
+    - page: 53
+      quote: "Total assets 6,818 7,231 −413 −2,097"
+      alternatives:
+        - page: 52
+          quote: "total Federal Reserve assets have decreased $413 billion, leaving the total size of the balance sheet at $6.8 trillion"
+  expected_answer: Redemption caps of $25 billion per month for Treasuries and $35 billion per month for agency debt and agency MBS; total assets were $6,818 billion (about $6.8 trillion) on January 29, 2025, down $413 billion since June 2024.
+  notes: Prose plus a row from Table A (box 4). The table uses Unicode minus signs.
+  source: "claude-separate-session, user spot-checked"
+
+- id: mp-fed-03
+  document: fed_mpr_feb2025.pdf
+  type: multi_part
+  question: "The labor picture: where did unemployment end 2024, where do FOMC participants see it at the end of 2025, and what's been happening with immigration?"
+  answerable: true
+  evidence:
+    - page: 11
+      quote: "ending the year at 4.1 percent—still low by historical standards"
+      alternatives:
+        - page: 20
+          quote: "ending the year at 4.1 percent"
+    - page: 59
+      quote: "Unemployment rate 4.2 4.3 4.3 4.3 4.2 4.2 4.2–4.5 4.1–4.4 4.0–4.4 3.9–4.3 4.2 4.2–4.5 3.9–4.6 3.8–4.5 3.5–4.5"
+    - page: 26
+      quote: "more recent indicators point to a sharp slowdown in immigration and population growth"
+      alternatives:
+        - page: 12
+          quote: "Labor supply likely increased less robustly than in previous years, with immigration appearing to have slowed over the second half of last year."
+  expected_answer: Unemployment ended 2024 at 4.1 percent; the median projection for the end of 2025 is 4.3 percent; immigration rose strongly from 2022 through mid-2024, but recent indicators point to a sharp slowdown since the middle of 2024.
+  notes: Quotes are clauses because the full sentences wrap at a hyphen (page 11) or end on a footnote marker (page 26). On page 20 the text runs into the figure's axis labels, so its alternative is kept short. Unemployment row from SEP Table 1.
+  source: "claude-separate-session, user spot-checked"

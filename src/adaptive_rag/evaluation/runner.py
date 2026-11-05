@@ -14,7 +14,7 @@ from adaptive_rag.db import migrate
 from adaptive_rag.ingest import register_upload, run_ingest_job
 from adaptive_rag.knowledge_bases import create_knowledge_base
 from adaptive_rag.providers import EmbeddingProvider, LLMProvider
-from adaptive_rag.retrieval import RetrievedChunk, fit_to_budget, retrieve_baseline
+from adaptive_rag.retrieval import Evidence, RetrievedChunk, retrieve_baseline, retrieve_evidence
 from adaptive_rag.vectorstore import VectorStore
 
 from .benchmark import BenchmarkQuestion, ManifestDocument
@@ -22,7 +22,9 @@ from .judge import compare_to_reference, judge_answer
 from .metrics import (
     RankedChunk,
     Span,
+    evidence_recall,
     hit_at_k,
+    part_coverage,
     recall_at_budget,
     recall_at_k,
     reciprocal_rank,
@@ -48,6 +50,15 @@ class QuestionResult:
     recall_at_5: float | None = None
     hit_at_5: float | None = None
     reciprocal_rank: float | None = None
+    # Required facts (evidence items), and the share of them hit within the budget.
+    parts: int | None = None
+    part_coverage: float | None = None
+    all_parts_covered: float | None = None
+    # Stage 5: measured on the evidence actually sent to the model, whatever the system.
+    recall_sent: float | None = None
+    part_coverage_sent: float | None = None
+    tokens_sent: int | None = None
+    retrieval_info: dict = field(default_factory=dict)
     status: str | None = None
     answer: str | None = None
     citations: list[str] = field(default_factory=list)
@@ -130,8 +141,11 @@ def _touches_evidence(filename: str, start: int, end: int, spans: list[Span]) ->
 
 def evaluate_retrieval(
     ctx: AppContext, kb, question: BenchmarkQuestion, spans: list[Span]
-) -> tuple[QuestionResult, list[RetrievedChunk]]:
+) -> tuple[QuestionResult, Evidence]:
+    """Rank metrics use the full question's top-30 pool, as in Stages 3-4, so they stay
+    comparable. The *_sent metrics use the evidence the configured system actually sends."""
     pool = retrieve_baseline(ctx, kb, question.question, POOL_SIZE)
+    evidence = retrieve_evidence(ctx, kb, question.question)
     result = QuestionResult(
         id=question.id,
         document=question.document,
@@ -147,7 +161,15 @@ def evaluate_retrieval(
         result.recall_at_5 = recall_at_k(ranked, spans, METRIC_K)
         result.hit_at_5 = hit_at_k(ranked, spans, METRIC_K)
         result.reciprocal_rank = reciprocal_rank(ranked, spans)
-    return result, pool
+        result.parts = len(spans)
+        result.part_coverage = part_coverage(ranked, spans, RECALL_BUDGET_TOKENS)
+        result.all_parts_covered = float(result.part_coverage == 1.0)
+        sent = _ranked(evidence.used)
+        result.recall_sent = evidence_recall(sent, spans)
+        result.part_coverage_sent = part_coverage(sent, spans, 10**9)
+    result.tokens_sent = sum(chunk.evidence_tokens for chunk in evidence.used)
+    result.retrieval_info = evidence.info
+    return result, evidence
 
 
 def evaluate_answer(
@@ -156,7 +178,7 @@ def evaluate_answer(
     question: BenchmarkQuestion,
     spans: list[Span],
     result: QuestionResult,
-    pool: list[RetrievedChunk],
+    evidence: Evidence,
 ) -> None:
     """Generate with the score gate off, so calibration can replay any floor afterwards."""
     try:
@@ -184,7 +206,7 @@ def evaluate_judgment(
     settings: Settings,
     question: BenchmarkQuestion,
     result: QuestionResult,
-    pool: list[RetrievedChunk],
+    evidence: Evidence,
 ) -> None:
     if result.status not in ("answered", "partial") or not result.answer:
         return
@@ -193,7 +215,7 @@ def evaluate_judgment(
         result.reference_verdict = compare_to_reference(
             judge, question.question, result.answer, reference
         )
-    used = fit_to_budget(pool[: settings.top_k], settings.evidence_max_tokens)
+    used = evidence.used  # the same evidence the answer saw, for baseline and adaptive
     judgment = judge_answer(judge, question.question, result.answer, [chunk.text for chunk in used])
     if judgment is None:
         return
@@ -219,7 +241,7 @@ def run_benchmark(
     run can resume. on_save receives all results so far after every question and judge call.
     """
     done = done or {}
-    results: list[tuple[BenchmarkQuestion, QuestionResult, list[RetrievedChunk] | None]] = []
+    results: list[tuple[BenchmarkQuestion, QuestionResult, Evidence | None]] = []
 
     def save() -> None:
         if on_save:
@@ -233,10 +255,10 @@ def run_benchmark(
                 results.append((question, done[question.id], None))
                 continue
             spans = evidence_spans(question, indexed) if question.answerable else []
-            result, pool = evaluate_retrieval(ctx, kb, question, spans)
+            result, evidence = evaluate_retrieval(ctx, kb, question, spans)
             if answers:
-                evaluate_answer(ctx, kb, question, spans, result, pool)
-            results.append((question, result, pool))
+                evaluate_answer(ctx, kb, question, spans, result, evidence)
+            results.append((question, result, evidence))
             save()
             if on_progress:
                 on_progress(result)
@@ -246,11 +268,11 @@ def run_benchmark(
     pending = [item for item in results if not item[1].judged]
     if judge is not None and answers and pending:
         ctx.llm.unload()
-        for question, result, pool in pending:
-            if pool is None:
+        for question, result, evidence in pending:
+            if evidence is None:
                 # Resumed: rebuild the evidence the answer saw. Retrieval is deterministic.
-                pool = retrieve_baseline(ctx, kb, question.question, POOL_SIZE)
-            evaluate_judgment(judge, ctx.settings, question, result, pool)
+                evidence = retrieve_evidence(ctx, kb, question.question)
+            evaluate_judgment(judge, ctx.settings, question, result, evidence)
             result.judged = True
             save()
             if on_progress:
@@ -287,6 +309,9 @@ RESUME_KEYS = (
     "recall_budget_tokens",
     "questions_sha256",
     "retrieval_only",
+    "retrieval",
+    "table_prompt",
+    "adaptive_params",
 )
 
 

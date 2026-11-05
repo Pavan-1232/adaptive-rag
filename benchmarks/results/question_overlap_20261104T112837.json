@@ -1,0 +1,108 @@
+{
+  "dev_file": "benchmarks/questions_dev_multipart.yaml",
+  "test_file": "benchmarks/questions_test.yaml",
+  "embedding_model": "embeddinggemma:300m",
+  "thresholds": {
+    "jaccard": 0.5,
+    "cosine": 0.85
+  },
+  "flagged": 0,
+  "rows": [
+    {
+      "dev_id": "mp-tesla-01",
+      "nearest_test_id": "apple-02",
+      "cosine": 0.339,
+      "max_jaccard": 0.091,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "mp-tesla-02",
+      "nearest_test_id": "apple-un",
+      "cosine": 0.394,
+      "max_jaccard": 0.148,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "mp-tesla-03",
+      "nearest_test_id": "apple-un",
+      "cosine": 0.526,
+      "max_jaccard": 0.238,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "mp-nist-01",
+      "nearest_test_id": "csf-03",
+      "cosine": 0.351,
+      "max_jaccard": 0.045,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "mp-nist-02",
+      "nearest_test_id": "csf-04",
+      "cosine": 0.316,
+      "max_jaccard": 0.08,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "mp-nist-03",
+      "nearest_test_id": "csf-01",
+      "cosine": 0.395,
+      "max_jaccard": 0.095,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "mp-ragas-01",
+      "nearest_test_id": "raptor-03",
+      "cosine": 0.381,
+      "max_jaccard": 0.087,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "mp-ragas-02",
+      "nearest_test_id": "raptor-03",
+      "cosine": 0.409,
+      "max_jaccard": 0.111,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "mp-ragas-03",
+      "nearest_test_id": "raptor-02",
+      "cosine": 0.237,
+      "max_jaccard": 0.077,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "mp-fed-01",
+      "nearest_test_id": "fed-02",
+      "cosine": 0.817,
+      "max_jaccard": 0.4,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "mp-fed-02",
+      "nearest_test_id": "fed-05",
+      "cosine": 0.593,
+      "max_jaccard": 0.115,
+      "identical_quotes": 0,
+      "flagged": false
+    },
+    {
+      "dev_id": "mp-fed-03",
+      "nearest_test_id": "fed-04",
+      "cosine": 0.543,
+      "max_jaccard": 0.1,
+      "identical_quotes": 0,
+      "flagged": false
+    }
+  ]
+}
