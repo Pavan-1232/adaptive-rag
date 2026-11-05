@@ -464,8 +464,9 @@ Each stage ends with user approval and updates to this file and `PROGRESS.md`.
 - **Tests:** same-document expansion, no duplicates, budget never exceeded, direct/expansion marking, refusal behaviour.
 - **Acceptance:** A–F held-out report complete, with any feature that doesn't help disabled by default.
 - **Deliverable:** adaptive pipeline and report.
+- **Outcome (2026-11-05):** on held-out data, S vs A was inconclusive on recall over sent evidence (−0.019, CI −0.144 to +0.106), with 11% fewer tokens and all guardrails passed. `retrieval = "baseline"` stays the default; adaptive retrieval is opt-in with all its switches (`PROGRESS.md` decision 57).
 
-### Stage 5b: Table extraction (added 2026-11-04, decision 47)
+### Stage 5b: Table extraction (added 2026-11-04, decision 47; deferred 2026-11-05 as the top future-work item, decision 58)
 
 - **Objective:** fix table reading errors at the source by keeping table structure (row labels and column headers) in the extracted text.
 - **Why separate:** it changes the loader and chunk text and needs a reindex, so it would confound the Stage 5 retrieval comparison.
