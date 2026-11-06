@@ -325,6 +325,8 @@ class LLMProvider(Protocol):
 - Stage 2 implements Ollama only. Stage 6 adds OpenAI, Gemini, and Anthropic, with model IDs checked against their docs at that point.
 - Changing the LLM is a per-request config change. Embeddings are locked per knowledge base, and changing them triggers a re-index.
 - Keys come from environment variables or a gitignored `.env`, are loaded as Pydantic `SecretStr`, and are never written to SQLite, logs, or traces.
+- **One key-loading seam (Stage 6, 2026-11-06):** a single function returns the key for a provider, and adapters receive the key through their constructor; they never read the environment themselves. Stage 6's only source is settings (environment or `.env`). Stage 7 adds an OS-keychain source inside that function, without changing the adapters.
+- **Cloud answer models (Stage 6):** OpenAI, Gemini and Anthropic answer questions only. Embeddings, optimizer question generation and the evaluation judge stay local. Defaults are cost-sensitive and set in `config.py` (`openai_model`, `gemini_model`, `anthropic_model`), checked against each provider's docs on 2026-11-06.
 - The API binds to `127.0.0.1`.
 - Cloud providers require explicit opt-in per knowledge base, because document text leaves the machine.
 - Document text goes inside delimited evidence blocks and is labelled as untrusted. The LLM has no tools. A prompt-injection test document stays in the test suite.
@@ -480,11 +482,13 @@ Each stage ends with user approval and updates to this file and `PROGRESS.md`.
 - **Tests:** mocked provider tests, secret-leak checks on logs and traces, re-index switchover; real API calls optional using the user's own keys.
 - **Acceptance:** Ollama still works with no keys set, and no secrets appear anywhere.
 - **Deliverable:** provider support and setup docs.
+- **Outcome (2026-11-06):** OpenAI, Gemini and Anthropic answer adapters over `httpx`, a per-knowledge-base `allow_cloud` opt-in checked before any call, and keys from the environment through one key-loading function. Canary-key leak tests cover logs, traces, the database, files, errors and API responses. Real calls are off by default (`PROGRESS.md`, Stage 6 results).
 
 ### Stage 7: Frontend
 
 - **Objective:** a usable interface; framework decided at the start of this stage.
 - **Features:** knowledge bases, upload progress, chat with citations, evidence view, evaluation results.
+- **API keys in the UI (required, user's BYOK goal, 2026-11-06):** users enter their own OpenAI, Gemini and Anthropic keys in the UI. Keys are stored securely on the local machine, for example in the OS keychain. They are never stored as plain text in the database or written to logs. This plugs into Stage 6's key-loading seam.
 - **Tasks:** connect to the existing API with minimal backend changes.
 - **Tests:** end-to-end flow and error states.
 - **Acceptance:** a new user can complete the full flow.

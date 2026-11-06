@@ -2,13 +2,18 @@
 
 from pathlib import Path
 
+from pydantic import AliasChoices, Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     # "null" in the environment sets an optional switch (e.g. ADAPTIVE_RAG_ADAPTIVE_DELTA) to None.
     model_config = SettingsConfigDict(
-        env_prefix="ADAPTIVE_RAG_", env_file=".env", extra="ignore", env_parse_none_str="null"
+        env_prefix="ADAPTIVE_RAG_",
+        env_file=".env",
+        extra="ignore",
+        env_parse_none_str="null",
+        populate_by_name=True,
     )
 
     data_dir: Path = Path("data")
@@ -16,6 +21,24 @@ class Settings(BaseSettings):
 
     ollama_host: str = "http://localhost:11434"
     llm_model: str = "qwen3.5:9b"
+    # Stage 6 cloud answer models: cost-sensitive defaults checked against each provider's docs
+    # on 2026-11-06. Used only with the user's own key and the knowledge base's cloud opt-in.
+    openai_model: str = "gpt-6-luna"
+    gemini_model: str = "gemini-3.5-flash-lite"
+    anthropic_model: str = "claude-haiku-5-5"
+    # The user's own keys (BYOK). SecretStr masks them in repr, str and JSON dumps. Read them only
+    # through providers.keys.api_key, never directly, so Stage 7 can add the OS keychain there.
+    openai_api_key: SecretStr | None = Field(
+        default=None, validation_alias=AliasChoices("ADAPTIVE_RAG_OPENAI_API_KEY", "OPENAI_API_KEY")
+    )
+    gemini_api_key: SecretStr | None = Field(
+        default=None, validation_alias=AliasChoices("ADAPTIVE_RAG_GEMINI_API_KEY", "GEMINI_API_KEY")
+    )
+    anthropic_api_key: SecretStr | None = Field(
+        default=None,
+        validation_alias=AliasChoices("ADAPTIVE_RAG_ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY"),
+    )
+    cloud_timeout_s: float = 60.0
     embedding_model: str = "embeddinggemma:300m"
     num_ctx: int = 8192
     max_answer_tokens: int = 1024
