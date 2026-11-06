@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
 **Last updated:** 2026-11-06
-**Current state:** Stage 8 (GitHub polish) plan approved 2026-11-06 (decisions 73–78) on branch `stage-8-polish`. In progress: step 1, the key-leak fix. Nothing pushed.
+**Current state:** Stage 8 on `stage-8-polish`: leak fix, README, licence, CI and clean-machine test done and committed. Waiting on the user for the 10 human-written questions, the screenshots, branch-deletion confirmation, and the private GitHub repo. Nothing pushed.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -1118,6 +1118,7 @@ For UI development: run the backend as above and `cd frontend && npm run dev`, t
 - **Step 1, leak fix:** done (see "Security finding" above).
 - **Steps 2–4, README, licence, attribution:** `README.md` (what and why, held-out verdicts in plain words with links to the two report files, quick start, Mermaid diagram, data sources and licences, link to `localdoc-rag` as v1). Screenshot paths `docs/screenshots/chat.png` and `docs/screenshots/evaluation.png` wait for the user's images. `LICENSE` (MIT, Pavan Rao K.); `license = "MIT"` in `pyproject.toml`, which needs setuptools 77 or newer. Licence check of the runtime dependency tree from installed metadata: 99 packages, all permissive except certifi, orjson and tqdm (MPL-2.0, file-level copyleft; fine to use unmodified under MIT). `fpdf2` (LGPL) is dev-only.
 - **Step 5, CI:** `.github/workflows/ci.yml`: backend (Python 3.11, ruff, pytest) and frontend (Node 24, `npm ci`, test, build). Action versions checked 2026-11-06 (`checkout`, `setup-python`, `setup-node`, all v7). Not run on GitHub yet: there's no remote.
+- **Step 6, clean-machine test:** fresh `git clone` of `stage-8-polish` into a scratch folder, new conda env `ar-clean`, README steps only: `pip install -e .`, `npm install && npm run build`, `python -m adaptive_rag`. The UI was served, a knowledge base created, a TXT indexed, and a cited answer returned; the store process stopped on shutdown. In the clone: `pytest` 357 passed, ruff clean, `npm test` 11 passed. No README fixes were needed. **Not fully clean:** the same Mac, so Ollama and its models, pip and npm caches, and conda were already present. The env and clone were deleted afterwards.
 - **Step 7, secret scan (part 1):** all 21 commits on all branches. No `.env`, data, database, PDF or vector files ever committed (only `.env.example`). No key patterns (OpenAI, Anthropic, Google, GitHub, Slack, AWS, private keys). The user's Gemini key: 0 matches in history, checked by exact match without printing it. Branch deletion waits for the user.
 - **Step 8, human subset:** template in `benchmarks/questions_test_human_template.yaml`; waiting for the user's file.
 
