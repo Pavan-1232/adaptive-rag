@@ -487,6 +487,7 @@ Each stage ends with user approval and updates to this file and `PROGRESS.md`.
 ### Stage 7: Frontend
 
 - **Objective:** a usable interface; framework decided at the start of this stage.
+- **Approach (approved 2026-11-06):** React, TypeScript, Vite and Tailwind, built directly. Served by FastAPI from the same origin, with no CORS and with `Host` and origin checks. Knowledge-base deletion with a confirm step. Keys stored in the OS keychain via `keyring`, checked before `.env`; the UI shows only each key's source. Evaluation verdicts in plain words. Details in `PROGRESS.md`, Stage 7 plan.
 - **Features:** knowledge bases, upload progress, chat with citations, evidence view, evaluation results.
 - **API keys in the UI (required, user's BYOK goal, 2026-11-06):** users enter their own OpenAI, Gemini and Anthropic keys in the UI. Keys are stored securely on the local machine, for example in the OS keychain. They are never stored as plain text in the database or written to logs. This plugs into Stage 6's key-loading seam.
 - **Tasks:** connect to the existing API with minimal backend changes.

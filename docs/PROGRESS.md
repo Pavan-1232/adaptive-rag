@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
 **Last updated:** 2026-11-05
-**Current state:** Stage 6 approved and merged into `main` (2026-11-06, not pushed). Next is Stage 7 (frontend): start the next session with the start-of-stage plan and wait for the user's approval.
+**Current state:** Stage 7 (frontend) plan approved (decisions 66–69) on branch `stage-7-frontend`. **Build not started.** The next session builds it from "Stage 7 plan".
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -16,7 +16,7 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 5 | Adaptive retrieval | Complete; approved 2026-11-05. Adaptive retrieval is opt-in (decision 57) |
 | 5b | Table extraction | Deferred; top future-work item (decision 58) |
 | 6 | BYOK | Complete; approved 2026-11-06. Gemini verified with a real key; OpenAI and Anthropic by mocked tests only (decision 65) |
-| 7 | Frontend | Not started |
+| 7 | Frontend | Plan approved 2026-11-06; build not started |
 | 8 | GitHub polish | Not started |
 
 ## Decisions taken
@@ -88,6 +88,10 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 63 | Stage 6 build choices, from the 2026-11-06 docs check: Gemini uses `generateContent` (the current reference), with the key in `x-goog-api-key`, not `?key=`. Anthropic sends `anthropic-version: 2026-10-21` and `output_config.effort = "low"`. No cloud adapter sends `temperature` | 2026-11-06 |
 | 64 | Keys are also read from the standard variables `OPENAI_API_KEY`, `GEMINI_API_KEY` and `ANTHROPIC_API_KEY`, as well as the `ADAPTIVE_RAG_` names. Cloud use still needs the request's `provider` plus the knowledge base's `allow_cloud` | 2026-11-06 |
 | 65 | Stage 6 approved. Verification level: **Gemini verified end to end with a real key** (2 calls on `gemini-3.5-flash-lite`); **OpenAI and Anthropic verified by mocked contract tests only**, with no real calls | 2026-11-06 |
+| 66 | Stage 7 plan approved: (1) build the frontend directly, no Lovable code (Lovable screenshots may guide layout only); (2) same-origin serving, no CORS, with `Host` and origin checks; (3) `keyring` (OS keychain) for keys, checked before `.env` in `api_key()` | 2026-11-06 |
+| 67 | Stage 7 adds deleting a knowledge base: a backend endpoint plus UI with a confirm step | 2026-11-06 |
+| 68 | The key settings screen shows where each key comes from (keychain, `.env`, or not set), never the key itself. Keychain keys can be removed in the UI | 2026-11-06 |
+| 69 | The evaluation view states each comparison's verdict in plain words (for example "inconclusive" or "not better than baseline") next to the numbers | 2026-11-06 |
 
 ## Smoke test results (2026-10-30)
 
@@ -1023,9 +1027,40 @@ Running `pytest -m cloud` with your own keys checks the first three.
 - Keys come only from the environment or `.env`; the UI and keychain come in Stage 7.
 - Evaluation runs and the optimizer always use Ollama.
 
+## Stage 7 plan (approved 2026-11-06, decisions 66–69)
+
+**What:** a local web UI covering knowledge bases (with the cloud opt-in and deletion), uploads, questions with a provider choice and citations, API keys stored in the OS keychain, and the evaluation results. Built directly (decision 66).
+
+**Decisions:**
+1. **Stack:** React, TypeScript, Vite and Tailwind, in `frontend/`. One page with tabs; no router and no state library. Data comes from `fetch`. `node_modules/` and `frontend/dist/` are gitignored.
+2. **Connection:**
+   - **No CORS.** In development, Vite proxies `/api` to `127.0.0.1:8000`. For normal use, FastAPI serves the built UI from the same origin.
+   - **Defence against other websites:** requests are accepted only when `Host` is `127.0.0.1` or `localhost` (blocks DNS rebinding). Changing requests (POST, PATCH, PUT, DELETE) must come from our own origin (blocks cross-site requests to localhost). Both get tests.
+3. **API keys (CLAUDE.md security rule applies):**
+   - **Endpoints:** write-only `PUT /keys/{provider}` and `DELETE /keys/{provider}`. `GET /keys` returns each provider's **source** (`keychain`, `env` or `not set`), never the key or any part of it (decision 68).
+   - **Storage:** `keyring`, which uses the macOS Keychain. `providers/keys.api_key()` checks the keychain first, then settings; adapters don't change.
+   - **Browser:** a password field, cleared after sending. Never `localStorage`, `sessionStorage`, cookies or app state after submit.
+   - **Validation errors:** FastAPI's default 422 error repeats the submitted input, so the keys endpoint gets its own error handling that never echoes the key.
+   - **UI:** keychain keys can be removed. A key that comes from `.env` is shown as such and edited in `.env`.
+   - **Tests:** the canary leak test extends to the key endpoints, using an in-memory keyring backend: logs, responses including validation errors, DB, files. Frontend tests check that the key is absent from storage and the page after saving.
+4. **Knowledge bases:** create, list and delete. Deleting gets a new backend endpoint and a confirm step in the UI (decision 67); it removes the documents, chunks, vectors and stored files. The per-knowledge-base cloud opt-in toggle. Deleting individual documents.
+5. **Uploads:**
+   - **Progress:** an upload progress bar via `XMLHttpRequest`, then polling `/jobs/{id}` while the document indexes.
+   - **Errors:** the API's own messages appear as-is: scanned PDF ("needs OCR"), duplicate, wrong type, too large.
+6. **Questions:**
+   - **Provider picker:** Ollama by default. Cloud providers are offered only if a key is set, and are disabled, with an explanation, when the knowledge base hasn't opted in.
+   - **Citations:** clickable, showing document, page and the cited passage. Add the passage text to the query response if it isn't there.
+   - **"Insufficient evidence":** its own clear state.
+7. **Evaluation view:** a read-only `GET /evaluation` serving a fixed summary built from the committed Stage 3–5 result files: A baseline, C7 vs A, C = A, and S vs A. Each comparison shows its numbers, its interval and **its verdict in plain words** (decision 69).
+8. **Testing:**
+   - **Frontend:** Vitest and React Testing Library, with the API mocked.
+   - **Backend:** pytest for the new endpoints (keys, knowledge-base deletion, evaluation summary) and the `Host` and origin checks.
+   - **End to end:** one manual check in a real browser. No browser-automation suite.
+9. **Out of scope:** user accounts, streaming answers, and mobile layout polish.
+
 ## Workspace state
 
-- **Branches:** `main` has Stages 2–6 (Stage 6 merged 2026-11-06, not pushed). Commit only when the user asks.
+- **Branches:** `main` has Stages 2–6 (Stage 6 merged 2026-11-06, not pushed). Stage 7 work is on `stage-7-frontend`. Commit only when the user asks.
 - **Keys:** the user's Gemini key is in the gitignored `.env`. Never print, log or commit it.
 - **Environment:** conda env `adaptive-rag` (Python 3.11.18), project installed in editable mode. Ollama 0.40.14; models unchanged.
 - **Data:** `data/eval/dev_embeddinggemma_300m_C1/` now has migration 005 (FTS5 index filled from existing chunks). The held-out indexes under `data/eval/test_*` are untouched. Everything under `data/` is gitignored.
@@ -1035,7 +1070,7 @@ Running `pytest -m cloud` with your own keys checks the first three.
 
 ## Next steps
 
-1. **Stage 7 (frontend):** start the next session with the start-of-stage plan (what, why, approach, trade-offs; framework chosen at the start, per DESIGN.md) and wait for the user's approval. **The plan must include entering API keys in the UI, with secure storage in the OS keychain** (decision 60): never plain text in the database or logs, plugged into `providers/keys.py`'s `api_key()`. The CLAUDE.md security rule applies.
+1. **Stage 7 build:** follow "Stage 7 plan" above, on `stage-7-frontend`. The CLAUDE.md security rule applies; flag any `shortcut:` in security code first. End with the stage summary and ask before committing.
 2. **Optional, any time:** run `pytest -m cloud -k openai` or `-k anthropic` with the user's own keys, to verify those two adapters for real.
 3. **Future work, top item: Stage 5b (table extraction)** (decision 58).
 4. **Don't rerun the held-out test set** until the next release.
