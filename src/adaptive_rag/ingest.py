@@ -308,6 +308,18 @@ def delete_document(ctx: AppContext, document_id: int) -> None:
         _stored_path(ctx, doc["sha256"], doc["format"]).unlink(missing_ok=True)
 
 
+def delete_knowledge_base(ctx: AppContext, kb: sqlite3.Row) -> None:
+    """Remove every document (vectors, chunks, stored files), then the collection and the row.
+    If this stops midway, the startup check finishes the documents and the row stays for a retry."""
+    with ctx.db() as conn:
+        rows = conn.execute("SELECT id FROM documents WHERE kb_id = ?", (kb["id"],)).fetchall()
+    for row in rows:
+        delete_document(ctx, row["id"])
+    ctx.store.delete_collection(kb["collection_name"])
+    with ctx.db() as conn:
+        conn.execute("DELETE FROM knowledge_bases WHERE id = ?", (kb["id"],))
+
+
 def repair_on_startup(ctx: AppContext) -> list[int]:
     """Make SQLite and Chroma agree after a crash. Return the job IDs to re-run."""
     job_ids: list[int] = []

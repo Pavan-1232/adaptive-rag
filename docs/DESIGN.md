@@ -324,10 +324,10 @@ class LLMProvider(Protocol):
 
 - Stage 2 implements Ollama only. Stage 6 adds OpenAI, Gemini, and Anthropic, with model IDs checked against their docs at that point.
 - Changing the LLM is a per-request config change. Embeddings are locked per knowledge base, and changing them triggers a re-index.
-- Keys come from environment variables or a gitignored `.env`, are loaded as Pydantic `SecretStr`, and are never written to SQLite, logs, or traces.
+- Keys come from the OS keychain (Stage 7, via `keyring`), then environment variables or a gitignored `.env`. They are handled as Pydantic `SecretStr` and are never written to SQLite, logs, or traces. The API is write-only for keys: `GET /keys` returns only each key's source.
 - **One key-loading seam (Stage 6, 2026-11-06):** a single function returns the key for a provider, and adapters receive the key through their constructor; they never read the environment themselves. Stage 6's only source is settings (environment or `.env`). Stage 7 adds an OS-keychain source inside that function, without changing the adapters.
 - **Cloud answer models (Stage 6):** OpenAI, Gemini and Anthropic answer questions only. Embeddings, optimizer question generation and the evaluation judge stay local. Defaults are cost-sensitive and set in `config.py` (`openai_model`, `gemini_model`, `anthropic_model`), checked against each provider's docs on 2026-11-06.
-- The API binds to `127.0.0.1`.
+- The API binds to `127.0.0.1`. It accepts only `Host` values of `127.0.0.1` or `localhost`, and refuses changing requests whose `Origin` or `Sec-Fetch-Site` shows another site (Stage 7). The UI is served from the same origin and calls `/api/...`; the prefix is stripped, so routes keep their paths.
 - Cloud providers require explicit opt-in per knowledge base, because document text leaves the machine.
 - Document text goes inside delimited evidence blocks and is labelled as untrusted. The LLM has no tools. A prompt-injection test document stays in the test suite.
 
@@ -493,6 +493,7 @@ Each stage ends with user approval and updates to this file and `PROGRESS.md`.
 - **Tasks:** connect to the existing API with minimal backend changes.
 - **Tests:** end-to-end flow and error states.
 - **Acceptance:** a new user can complete the full flow.
+- **Outcome (2026-11-06):** built as planned in `frontend/`, served by FastAPI from `frontend/dist`. New endpoints: `DELETE /kbs/{id}`, `GET/PUT/DELETE /keys`, `GET /evaluation`. Citations carry the full passage. Details in `PROGRESS.md`, Stage 7 results.
 - **Deliverable:** working UI.
 
 ### Stage 8: GitHub polish

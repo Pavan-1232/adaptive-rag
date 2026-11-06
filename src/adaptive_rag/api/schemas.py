@@ -101,6 +101,7 @@ class CitationOut(BaseModel):
     section_heading: str | None
     label: str
     snippet: str
+    passage: str
     score: float
     source: str
 

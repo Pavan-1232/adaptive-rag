@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
-**Last updated:** 2026-11-05
-**Current state:** Stage 7 (frontend) plan approved (decisions 66–69) on branch `stage-7-frontend`. **Build not started.** The next session builds it from "Stage 7 plan".
+**Last updated:** 2026-11-06
+**Current state:** Stage 7 (frontend) complete, committed on `stage-7-frontend` and merged into `main` (not pushed), 2026-11-06. Next: Stage 8 (GitHub polish), after the user approves starting it.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -16,7 +16,7 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 5 | Adaptive retrieval | Complete; approved 2026-11-05. Adaptive retrieval is opt-in (decision 57) |
 | 5b | Table extraction | Deferred; top future-work item (decision 58) |
 | 6 | BYOK | Complete; approved 2026-11-06. Gemini verified with a real key; OpenAI and Anthropic by mocked tests only (decision 65) |
-| 7 | Frontend | Plan approved 2026-11-06; build not started |
+| 7 | Frontend | Complete; merged into `main` 2026-11-06 at the user's request |
 | 8 | GitHub polish | Not started |
 
 ## Decisions taken
@@ -92,6 +92,9 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 67 | Stage 7 adds deleting a knowledge base: a backend endpoint plus UI with a confirm step | 2026-11-06 |
 | 68 | The key settings screen shows where each key comes from (keychain, `.env`, or not set), never the key itself. Keychain keys can be removed in the UI | 2026-11-06 |
 | 69 | The evaluation view states each comparison's verdict in plain words (for example "inconclusive" or "not better than baseline") next to the numbers | 2026-11-06 |
+| 70 | Stage 7 build: a changing request with **no** `Origin` and no `Sec-Fetch-Site` is accepted, since browsers always send `Origin` on POST, PATCH, PUT and DELETE, so such a request comes from a non-browser client (curl, tests) that no website can drive. Approved by the user | 2026-11-06 |
+| 71 | Stage 7 build: if the keychain can't be read (locked or missing), `api_key()` falls back to `.env` and logs only the error type. Keychain write and delete failures return a fixed 503 message | 2026-11-06 |
+| 72 | Stage 7 build: the UI calls `/api/...` and a middleware strips the prefix, so existing routes and tests keep their paths. `GET /evaluation` reads the two committed held-out reports at request time; verdicts come from the CI (low > 0 better, high < 0 worse, all zero identical, otherwise inconclusive) | 2026-11-06 |
 
 ## Smoke test results (2026-10-30)
 
@@ -1058,9 +1061,35 @@ Running `pytest -m cloud` with your own keys checks the first three.
    - **End to end:** one manual check in a real browser. No browser-automation suite.
 9. **Out of scope:** user accounts, streaming answers, and mobile layout polish.
 
-## Workspace state
+## Stage 7 results (2026-11-06)
 
-- **Branches:** `main` has Stages 2–6 (Stage 6 merged 2026-11-06, not pushed). Stage 7 work is on `stage-7-frontend`. Commit only when the user asks.
+**Built:**
+- **Frontend** (`frontend/`): React 19, TypeScript, Vite 8, Tailwind 4. A sidebar of knowledge bases (create, select), API keys and Evaluation; a main chat area. Answers show `[E1]` markers as numbered chips plus a source list; clicking either opens the cited passage with document, page or line, section, and "neighboring passage" for expansion chunks. "Not enough evidence" and "partial" have their own states. Per knowledge base: cloud opt-in toggle, documents panel (upload progress bar via XHR, then job polling; delete), and delete with a confirm step. API error messages are shown as-is.
+- **Backend:** `LocalOnly` middleware (`Host` and origin checks, `/api` prefix); `DELETE /kbs/{id}` (documents, chunks, vectors, stored files, collection; 409 while indexing); `GET /keys`, write-only `PUT /keys/{provider}` and `DELETE /keys/{provider}` with hand-parsed bodies and fixed error messages; `api_key()` reads the keychain first; `GET /evaluation`; `passage` on citations; FastAPI serves `frontend/dist` when built. New settings: `ui_dir`, `results_dir`, `allowed_hosts`. New dependency: `keyring`.
+
+**Tests (2026-11-06):**
+- Backend: 355 passed (33 new in `tests/test_stage7_api.py`), 10 deselected. Real Ollama: 6 passed, 1 expected failure. Cloud tests not run (they cost money). `ruff check` and `ruff format --check` clean.
+- Frontend: 11 passed (`npm test`): knowledge-base create and confirmed delete, citations open the passage, insufficient state, error as-is, provider picker rules, key sent once and absent from the page, storage and cookies afterwards, key removal, evaluation verdicts, upload progress and polling, upload rejection message. `npm run build` clean, `npm audit` 0 vulnerabilities.
+- Canary leak test for the key endpoints (in-memory keyring): responses (including every error), headers, logs at debug, stdout, stderr, the database dump, data files and settings. All tests use the in-memory keyring and never touch the real Keychain.
+- Live smoke test with curl against the real server and Ollama: UI served at `/`, foreign Host 400, cross-site POST 403, create, upload, index, cited answer in about 9 s, `GET /keys` and `GET /evaluation` correct, no key in the server log.
+- Manual browser check: done by the user on 2026-11-06. Their message left the result field as the unfilled template ("all worked / list any problems"), so no specific result or problems are recorded.
+
+**How to run:**
+1. Once: `cd frontend && npm install && npm run build`.
+2. `conda activate adaptive-rag && python -m adaptive_rag` from the repo root (Ollama running).
+3. Open http://127.0.0.1:8000.
+For UI development: run the backend as above and `cd frontend && npm run dev`, then open http://localhost:5173.
+
+**Known limitations:**
+- Chat history lives in the page only; reloading clears it. No streaming (out of scope), so a local answer shows a waiting line for 20–40 s.
+- No dark mode, and the layout targets desktop widths (mobile polish out of scope).
+- Saving a key in the UI is offered only when the provider has no key; a `.env` key must be removed from `.env` first.
+- The first keychain write may make macOS ask for permission.
+- Deleting a knowledge base is not atomic: if interrupted, the startup check finishes deleting the documents and the row stays for a retry.
+
+
+- **Branches:** `main` has Stages 2–7 (Stage 7 merged 2026-11-06, not pushed). Commit only when the user asks.
+- **Frontend:** `frontend/node_modules/` and `frontend/dist/` are gitignored; `package-lock.json` is committed with the rest.
 - **Keys:** the user's Gemini key is in the gitignored `.env`. Never print, log or commit it.
 - **Environment:** conda env `adaptive-rag` (Python 3.11.18), project installed in editable mode. Ollama 0.40.14; models unchanged.
 - **Data:** `data/eval/dev_embeddinggemma_300m_C1/` now has migration 005 (FTS5 index filled from existing chunks). The held-out indexes under `data/eval/test_*` are untouched. Everything under `data/` is gitignored.
@@ -1070,7 +1099,7 @@ Running `pytest -m cloud` with your own keys checks the first three.
 
 ## Next steps
 
-1. **Stage 7 build:** follow "Stage 7 plan" above, on `stage-7-frontend`. The CLAUDE.md security rule applies; flag any `shortcut:` in security code first. End with the stage summary and ask before committing.
+1. **Stage 8 (GitHub polish):** plan it at the start of the next session and wait for approval. If the browser check found problems, fix them first.
 2. **Optional, any time:** run `pytest -m cloud -k openai` or `-k anthropic` with the user's own keys, to verify those two adapters for real.
 3. **Future work, top item: Stage 5b (table extraction)** (decision 58).
 4. **Don't rerun the held-out test set** until the next release.

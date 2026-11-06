@@ -5,7 +5,40 @@ import json
 import math
 import re
 
+from keyring.backend import KeyringBackend
+from keyring.errors import PasswordDeleteError
+
 from adaptive_rag.providers import EmbeddingInputTooLong, LLMResult
+
+
+class MemoryKeyring(KeyringBackend):
+    """An in-memory OS keychain stand-in. `fail` makes every call raise, like a locked keychain."""
+
+    priority = 1
+
+    def __init__(self):
+        super().__init__()
+        self.items: dict[tuple[str, str], str] = {}
+        self.fail = False
+
+    def _check(self):
+        if self.fail:
+            from keyring.errors import KeyringLocked
+
+            raise KeyringLocked("keychain is locked")
+
+    def get_password(self, service, username):
+        self._check()
+        return self.items.get((service, username))
+
+    def set_password(self, service, username, password):
+        self._check()
+        self.items[(service, username)] = password
+
+    def delete_password(self, service, username):
+        self._check()
+        if self.items.pop((service, username), None) is None:
+            raise PasswordDeleteError("not found")
 
 
 class FakeEmbeddings:
