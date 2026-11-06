@@ -7,6 +7,7 @@ from pathlib import Path
 import chromadb
 import numpy as np
 from chromadb.config import Settings as ChromaSettings
+from chromadb.errors import NotFoundError
 
 
 @dataclass(frozen=True)
@@ -86,6 +87,12 @@ class VectorStore:
 
     def delete_document(self, collection: str, document_id: int) -> None:
         self._collection(collection).delete(where={"document_id": document_id})
+
+    def delete_collection(self, collection: str) -> None:
+        try:
+            self._client.delete_collection(collection)
+        except NotFoundError:
+            pass  # nothing was ever indexed into it
 
     def document_counts(self, collection: str) -> dict[int, int]:
         """Vectors per document, for the startup consistency check."""

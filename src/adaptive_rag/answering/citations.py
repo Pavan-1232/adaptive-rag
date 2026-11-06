@@ -25,6 +25,7 @@ class Citation:
     source: str
     start_char: int = 0
     end_char: int = 0
+    passage: str = ""  # the full evidence text, shown when a citation is opened in the UI
 
 
 def _range(start: int, end: int) -> str:
@@ -58,6 +59,7 @@ def build_citation(evidence_id: str, chunk: RetrievedChunk) -> Citation:
         source=chunk.source,
         start_char=chunk.start_char,
         end_char=chunk.end_char,
+        passage=chunk.text,
     )
 
 

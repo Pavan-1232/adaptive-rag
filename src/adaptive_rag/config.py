@@ -17,6 +17,12 @@ class Settings(BaseSettings):
     )
 
     data_dir: Path = Path("data")
+    # The built frontend, served from the same origin as the API (no CORS).
+    ui_dir: Path = Path("frontend/dist")
+    # Committed held-out reports, read by GET /evaluation.
+    results_dir: Path = Path("benchmarks/results")
+    # Requests must be addressed to one of these (blocks DNS rebinding). Ports are ignored.
+    allowed_hosts: list[str] = ["127.0.0.1", "localhost"]
     max_upload_bytes: int = 50 * 1024 * 1024
 
     ollama_host: str = "http://localhost:11434"

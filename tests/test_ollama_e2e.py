@@ -26,7 +26,12 @@ INJECTION = (
 def client(tmp_path_factory):
     from adaptive_rag.config import Settings
 
-    settings = Settings(_env_file=None, data_dir=tmp_path_factory.mktemp("data"), chunking="fixed")
+    settings = Settings(
+        _env_file=None,
+        data_dir=tmp_path_factory.mktemp("data"),
+        chunking="fixed",
+        allowed_hosts=["testserver"],
+    )
     with TestClient(create_app(build_context(settings))) as test_client:
         yield test_client
 

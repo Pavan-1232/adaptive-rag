@@ -34,3 +34,7 @@ htmlcov/
 
 # Benchmark PDFs: links and hashes live in benchmarks/manifest.yaml
 benchmarks/documents/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
