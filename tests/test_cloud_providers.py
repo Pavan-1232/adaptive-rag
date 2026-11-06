@@ -355,9 +355,13 @@ def local_provider():
 
 
 @pytest.mark.parametrize("provider", PROVIDERS)
-def test_canary_key_never_leaks_anywhere(ctx, provider, local_provider, caplog, capsys):
+def test_canary_key_never_leaks_anywhere(
+    ctx, provider, local_provider, caplog, capsys, monkeypatch
+):
     caplog.set_level(logging.DEBUG)  # every logger, including httpx and httpcore at debug
     with_keys(ctx.settings)
+    monkeypatch.setenv("OPENAI_API_KEY", CANARY)  # the store process must not inherit it
+    ctx.store = None  # the app starts its own vector-store process, as in normal use
     ctx.cloud_transport = _ToLocal(local_provider, provider)
     texts: list[str] = []
     with TestClient(create_app(ctx)) as client:
