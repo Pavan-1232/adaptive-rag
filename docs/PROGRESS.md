@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
 **Last updated:** 2026-11-05
-**Current state:** Stage 5 approved and merged into `main` (2026-11-05, not pushed). Next is Stage 6 (BYOK): start the next session with the start-of-stage plan and wait for the user's go-ahead.
+**Current state:** Stage 6 (BYOK) on branch `stage-6-byok`. The plan is approved (decisions 59–62), and default cloud models are set in `config.py`. **Build not started.** Next: re-check the provider docs notes in the Stage 6 plan, then build.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -15,7 +15,7 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 4 | Chunking optimization | Complete; approved 2026-11-04 |
 | 5 | Adaptive retrieval | Complete; approved 2026-11-05. Adaptive retrieval is opt-in (decision 57) |
 | 5b | Table extraction | Deferred; top future-work item (decision 58) |
-| 6 | BYOK | Not started |
+| 6 | BYOK | Plan approved 2026-11-06; build not started |
 | 7 | Frontend | Not started |
 | 8 | GitHub polish | Not started |
 
@@ -81,6 +81,10 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 56 | Stage 5 held-out comparison pre-registered: A (Stage 4's C1 file) vs S at 2,560 tokens. Primary: S minus A on recall over sent evidence, all 24 answerable, paired 95% CI must exclude 0. Details under "Held-out comparison, pre-registered 2026-11-05" | 2026-11-05 |
 | 57 | `retrieval = "baseline"` stays the product default. Adaptive retrieval stays opt-in, with all its switches. Finding: S vs A is inconclusive (−0.019, CI −0.144 to +0.106); S sends 11% fewer tokens and passes every guardrail. Its losses come from the gap cutoff (`csf-03`) and part splitting (`csf-04`). The `bp-03` gain isn't attributable to retrieval (same recall, different prompt) | 2026-11-05 |
 | 58 | Stage 5 approved. Stage 5b (table extraction) is deferred and is the **top future-work item**: `fed-02` still fails on the flattened Fed table header even when the table is retrieved | 2026-11-05 |
+| 59 | Stage 6 plan approved: (1) direct `httpx` adapters, no SDKs; (2) cloud for answering only, with embeddings, optimizer and judge staying local; (3) keys from `.env` or the environment only in this stage | 2026-11-06 |
+| 60 | Stage 7 must let users enter their own API keys in the UI, stored securely on the local machine (for example the OS keychain), never as plain text in the database or logs. Stage 6 loads keys through one function, so a keychain source can be added without changing the adapters | 2026-11-06 |
+| 61 | Cost-sensitive default cloud models, checked against each provider's docs on 2026-11-06 and set in `config.py`: OpenAI `gpt-6-luna` ($0.10 / $0.50 per 1M tokens), Gemini `gemini-3.5-flash-lite` (stable; price not shown in the docs fetched), Anthropic `claude-haiku-5-5` ($0.10 / $0.50) | 2026-11-06 |
+| 62 | CLAUDE.md rule added: no shortcuts in security code (key handling, logging, traces, error messages, storage). Any `shortcut:` there is flagged to the user first | 2026-11-06 |
 
 ## Smoke test results (2026-10-30)
 
@@ -928,9 +932,46 @@ S run: `benchmarks/results/test_embeddinggemma_300m_C1_S_20261105T145919.json`. 
 - It sends about 11% fewer tokens, keeps every guardrail, and is level on answer quality.
 - Its two losses come from two of the features that held up on dev: the gap cutoff (`csf-03`) and part splitting (`csf-04`).
 
+## Stage 6 plan (approved 2026-11-06, decisions 59–62)
+
+**What:** OpenAI, Gemini and Anthropic as answer models, behind the existing `LLMProvider` interface, using keys the user supplies. Ollama stays the default, and the app works with no keys set.
+
+**Why:** users can pick a stronger answer model without changing anything else. Cloud use is opt-in per knowledge base and never silent.
+
+**Decisions:**
+1. **Direct `httpx` adapters, not SDKs.** `httpx` is already installed (the Ollama client depends on it); declare it as a direct dependency. Each adapter is one small file with one request shape. Error messages are fully controlled, and mocking is easy. *Trade-off:* we maintain three request formats, so each provider's docs are checked before coding, and optional real-call tests are kept.
+2. **Cloud for answering only.** Optimizer question generation and the evaluation judge stay local, so ingestion never sends a document to the cloud as a side effect and evaluation stays reproducible. **Embeddings stay local:** cloud embeddings would send every chunk off the machine and force a re-index.
+3. **Choosing the model:** an optional `provider` field on the query request (`ollama`, `openai`, `gemini` or `anthropic`), defaulting to `ollama`. Model names come from settings (decision 61).
+4. **Opt-in per knowledge base:** a new column, `knowledge_bases.allow_cloud`, off by default. It can be set at creation or with a new `PATCH /kbs/{id}`. A cloud query without opt-in is refused before any network call (403, clear message).
+5. **Keys:**
+   - Keys come only from the environment or `.env`, loaded as `SecretStr`, through **one key-loading function** that adapters get their key from (decision 60).
+   - No endpoint for entering keys in this stage. `/health` reports only whether each key is configured.
+   - A missing key gives a clear 400 and makes no call. Gemini's key goes in the `x-goog-api-key` header, never the URL.
+6. **Structured output:** each provider's JSON-schema mode, with the same answer schema. Invalid JSON goes through the existing "generation failed" path, and citations are still built server-side.
+7. **Errors:** HTTP failures become `ProviderUnavailable`, with only the provider name, status code and error type. Never headers, the request body or the key.
+
+**Tests:**
+- **Mocked contract tests** shared by the three adapters: request shape, schema, token counts, timeout, error mapping.
+- **Leak tests** with a canary key. The key must never appear in logs (including `httpx` debug logging), `query_traces`, a full database text dump, exception messages, API error responses, or the printed settings.
+- **Behaviour tests:** cloud refused without opt-in; the existing suite passes with no keys set; the prompt-injection test also runs through a cloud adapter.
+- **Real API calls:** a `cloud` test marker, off by default, skipped without a key.
+
+**Out of scope:** cloud embeddings, cloud judging and question generation, entering keys through the API or UI (that's Stage 7, decision 60), cost tracking, streaming, and retries beyond one timeout.
+
+**Notes from the docs check, to re-verify before coding:**
+- **OpenAI:** the Responses API (`/v1/responses`) with `text.format = {type: "json_schema", name, schema, strict: true}`. The `gpt-6-luna` model page lists structured outputs; the guide doesn't name it, so the real-call test confirms it.
+- **Gemini:**
+  - The structured-output guide now shows the Interactions API (`POST /v1beta/interactions`, header `Api-Revision: 2026-05-20`) with `response_format = {type: "text", mime_type: "application/json", schema}`.
+  - The key goes in `x-goog-api-key`.
+  - The `gemini-3.5-flash-lite` page marks structured outputs as supported. Whether `generateContent` or Interactions is the right endpoint still needs checking.
+- **Anthropic:**
+  - Messages API with `output_config.format`.
+  - On API version `2026-10-21`, `temperature` returns a 400, so drop it for Anthropic or choose the `anthropic-version` header deliberately.
+  - Haiku 5.5 thinks by default, with effort defaulting to `medium`; `low` may suit answering.
+
 ## Workspace state
 
-- **Branches:** `main` has Stages 2–5 (Stage 5 merged 2026-11-05, not pushed). Commit only when the user asks.
+- **Branches:** `main` has Stages 2–5 (Stage 5 merged 2026-11-05, not pushed). Stage 6 work is on `stage-6-byok`. Commit only when the user asks.
 - **Environment:** conda env `adaptive-rag` (Python 3.11.18), project installed in editable mode. Ollama 0.40.14; models unchanged.
 - **Data:** `data/eval/dev_embeddinggemma_300m_C1/` now has migration 005 (FTS5 index filled from existing chunks). The held-out indexes under `data/eval/test_*` are untouched. Everything under `data/` is gitignored.
 - **Config defaults:** `retrieval = "baseline"`, `table_prompt = False`. The `adaptive_*` settings and `evidence_target_tokens` (2560) are finalist S (decision 55), with `adaptive_hybrid = False`. Optional switches can be set to None from the environment with `null`.
@@ -939,12 +980,10 @@ S run: `benchmarks/results/test_embeddinggemma_300m_C1_S_20261105T145919.json`. 
 
 ## Next steps
 
-1. **Stage 6 (BYOK):** start the next session with the start-of-stage plan (what, why, approach, trade-offs) and wait for the user's go-ahead. Keep it lean:
-   - Ollama stays the default.
-   - Add OpenAI, Gemini and Anthropic through keys the user supplies, with model IDs checked against each provider's current documentation.
-   - Tests must show that keys never reach logs, traces or the database.
-2. **Future work, top item: Stage 5b (table extraction).** Keep row labels and column headers in the extracted text, so values like `fed-02`'s can be read. This needs an extractor version bump and a reindex.
-3. **Don't rerun the held-out test set** until the next release.
+1. **Stage 6 build:** follow "Stage 6 plan" above, re-checking the provider-docs notes first. Mark any `shortcut:` in security code and ask the user (decision 62).
+2. **Stage 7:** UI key entry with OS-keychain storage is required (decision 60).
+3. **Future work, top item: Stage 5b (table extraction)** (decision 58).
+4. **Don't rerun the held-out test set** until the next release.
 
 ## Open questions
 

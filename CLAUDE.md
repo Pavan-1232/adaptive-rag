@@ -73,3 +73,4 @@ Knowledge bases: users create several (e.g. "MBA Materials", "Research Papers"),
 ## Approved design is protected
 - `docs/DESIGN.md` is approved. Do not simplify, remove, or replace any part of it (for example adaptive chunking or adaptive k) without asking me first.
 - This applies even when a simpler option looks better or a "minimal change" style is active: propose it, explain the trade-off, and wait for my decision.
+- No shortcuts in security code: API key handling, logging, traces, error messages and storage must be complete and tested. Flag any "shortcut:" in these areas and ask me first.

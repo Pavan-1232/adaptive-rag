@@ -16,6 +16,11 @@ class Settings(BaseSettings):
 
     ollama_host: str = "http://localhost:11434"
     llm_model: str = "qwen3.5:9b"
+    # Stage 6 cloud answer models: cost-sensitive defaults checked against each provider's docs
+    # on 2026-11-06. Used only with the user's own key and the knowledge base's cloud opt-in.
+    openai_model: str = "gpt-6-luna"
+    gemini_model: str = "gemini-3.5-flash-lite"
+    anthropic_model: str = "claude-haiku-5-5"
     embedding_model: str = "embeddinggemma:300m"
     num_ctx: int = 8192
     max_answer_tokens: int = 1024
