@@ -1,0 +1,124 @@
+# Human-written test subset (PROGRESS.md decision 75): 10 questions, 2 per held-out document.
+# Written by the user from the PDFs, without looking at questions_test.yaml or any test results.
+#
+# Copy this file to benchmarks/questions_test_human.yaml and fill in every TODO.
+# Field rules are in questions_template.yaml. For this subset:
+#   - All 10 are answerable (retrieval-only runs measure recall over gold evidence).
+#   - Per document, make one a plain fact in running text (type: factual) and one a number from
+#     a table or a two-fact question (type: table or multi_part).
+#   - page: the physical PDF page (the viewer's page counter, not the printed page label).
+#   - quote: copy the exact text from the PDF; one sentence or one table row is enough.
+#   - expected_answer: a short answer in your own words.
+#   - Keep source: human.
+
+- id: human-apple-01
+  document: apple_10k.pdf
+  type: factual
+  question: TODO
+  answerable: true
+  evidence:
+    - page: TODO
+      quote: TODO
+  expected_answer: TODO
+  source: human
+
+- id: human-apple-02
+  document: apple_10k.pdf
+  type: table
+  question: TODO
+  answerable: true
+  evidence:
+    - page: TODO
+      quote: TODO
+  expected_answer: TODO
+  source: human
+
+- id: human-fed-01
+  document: fed_mpr.pdf
+  type: factual
+  question: TODO
+  answerable: true
+  evidence:
+    - page: TODO
+      quote: TODO
+  expected_answer: TODO
+  source: human
+
+- id: human-fed-02
+  document: fed_mpr.pdf
+  type: table
+  question: TODO
+  answerable: true
+  evidence:
+    - page: TODO
+      quote: TODO
+  expected_answer: TODO
+  source: human
+
+- id: human-csf-01
+  document: nist_csf.pdf
+  type: factual
+  question: TODO
+  answerable: true
+  evidence:
+    - page: TODO
+      quote: TODO
+  expected_answer: TODO
+  source: human
+
+- id: human-csf-02
+  document: nist_csf.pdf
+  type: multi_part
+  question: TODO
+  answerable: true
+  evidence:
+    - page: TODO
+      quote: TODO
+    - page: TODO
+      quote: TODO
+  expected_answer: TODO
+  source: human
+
+- id: human-raptor-01
+  document: raptor.pdf
+  type: factual
+  question: TODO
+  answerable: true
+  evidence:
+    - page: TODO
+      quote: TODO
+  expected_answer: TODO
+  source: human
+
+- id: human-raptor-02
+  document: raptor.pdf
+  type: table
+  question: TODO
+  answerable: true
+  evidence:
+    - page: TODO
+      quote: TODO
+  expected_answer: TODO
+  source: human
+
+- id: human-bp-01
+  document: best_practices.pdf
+  type: factual
+  question: TODO
+  answerable: true
+  evidence:
+    - page: TODO
+      quote: TODO
+  expected_answer: TODO
+  source: human
+
+- id: human-bp-02
+  document: best_practices.pdf
+  type: table
+  question: TODO
+  answerable: true
+  evidence:
+    - page: TODO
+      quote: TODO
+  expected_answer: TODO
+  source: human
