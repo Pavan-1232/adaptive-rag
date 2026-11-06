@@ -9,7 +9,15 @@ from fakes import FakeEmbeddings, FakeLLM
 
 @pytest.fixture
 def settings(tmp_path):
-    return Settings(_env_file=None, data_dir=tmp_path / "data", chunking="fixed")
+    # Keys are pinned to None, so a real key in the developer's shell never reaches a test.
+    return Settings(
+        _env_file=None,
+        data_dir=tmp_path / "data",
+        chunking="fixed",
+        openai_api_key=None,
+        gemini_api_key=None,
+        anthropic_api_key=None,
+    )
 
 
 @pytest.fixture

@@ -7,6 +7,7 @@ dependencies = [
     "chromadb>=1.5.9,<2",
     "numpy>=2",
     "fastapi>=0.115",
+    "httpx>=0.27",
     "ollama>=0.6",
     "pdfplumber>=0.11",
     "pydantic>=2.9",
@@ -38,8 +39,11 @@ adaptive_rag = ["db/migrations/*.sql"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["ollama: needs a running Ollama server with the configured models"]
-addopts = "-m 'not ollama'"
+markers = [
+    "ollama: needs a running Ollama server with the configured models",
+    "cloud: real calls to a cloud provider with the user's own key (costs money; off by default)",
+]
+addopts = "-m 'not ollama and not cloud'"
 
 [tool.ruff]
 line-length = 100

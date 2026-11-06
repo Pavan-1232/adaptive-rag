@@ -9,6 +9,7 @@ from typing import Literal
 from pydantic import BaseModel, ValidationError
 
 from adaptive_rag.context import AppContext
+from adaptive_rag.providers.cloud import cloud_llm
 from adaptive_rag.retrieval import Evidence, RetrievedChunk, retrieve_evidence
 
 from .citations import Citation, build_citation, ids_in_text, strip_unknown_ids
@@ -19,6 +20,22 @@ INSUFFICIENT_MESSAGE = "I couldn't find enough evidence in this knowledge base t
 
 class GenerationFailed(Exception):
     """The LLM's output was cut off or unusable. The message is user-facing."""
+
+
+class CloudNotAllowed(Exception):
+    """A cloud model was requested for a knowledge base that hasn't opted in. User-facing."""
+
+
+def _choose_llm(ctx: AppContext, kb: sqlite3.Row, provider: str):
+    """Ollama, or a cloud adapter. Checked before retrieval, so a refusal makes no call at all."""
+    if provider == "ollama":
+        return ctx.llm
+    if not kb["allow_cloud"]:
+        raise CloudNotAllowed(
+            f"Knowledge base '{kb['name']}' doesn't allow cloud models, because they send document"
+            " text off this machine. Turn on allow_cloud for it first."
+        )
+    return cloud_llm(ctx.settings, provider, ctx.cloud_transport)
 
 
 class _ModelOutput(BaseModel):
@@ -102,9 +119,12 @@ def _write_trace(
         ).lastrowid
 
 
-def answer_question(ctx: AppContext, kb: sqlite3.Row, question: str) -> AnswerResult:
+def answer_question(
+    ctx: AppContext, kb: sqlite3.Row, question: str, provider: str = "ollama"
+) -> AnswerResult:
     settings = ctx.settings
     timings: dict[str, float] = {}
+    llm = _choose_llm(ctx, kb, provider)
 
     started = time.perf_counter()
     retrieved = retrieve_evidence(ctx, kb, question)
@@ -125,9 +145,10 @@ def answer_question(ctx: AppContext, kb: sqlite3.Row, question: str) -> AnswerRe
     uncovered = retrieved.uncovered_parts if settings.adaptive_part_notice else []
     table_rule = settings.table_prompt and has_table(used)
     retrieved.info["table_prompt_applied"] = table_rule
+    retrieved.info["llm"] = {"provider": provider, "model": llm.model}  # never the key
 
     # Gate 2 is the model's own status. Gate 3 is citation validation in _resolve.
-    result = ctx.llm.generate(
+    result = llm.generate(
         build_messages(question, used, uncovered, table_rule),
         schema=ANSWER_SCHEMA,
         max_tokens=settings.max_answer_tokens,

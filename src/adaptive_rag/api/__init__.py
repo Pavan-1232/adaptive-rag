@@ -10,7 +10,7 @@ from pathlib import Path
 from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Request, UploadFile
 from fastapi.responses import JSONResponse
 
-from adaptive_rag.answering import GenerationFailed, answer_question
+from adaptive_rag.answering import CloudNotAllowed, GenerationFailed, answer_question
 from adaptive_rag.config import Settings
 from adaptive_rag.context import AppContext
 from adaptive_rag.db import migrate
@@ -28,6 +28,8 @@ from adaptive_rag.knowledge_bases import (
 )
 from adaptive_rag.loaders import UploadRejected
 from adaptive_rag.providers import OllamaEmbeddings, OllamaLLM, ProviderUnavailable
+from adaptive_rag.providers.cloud import MissingKey
+from adaptive_rag.providers.keys import CLOUD_PROVIDERS, api_key
 from adaptive_rag.vectorstore import VectorStore
 
 from .schemas import (
@@ -37,6 +39,7 @@ from .schemas import (
     JobOut,
     KnowledgeBaseCreate,
     KnowledgeBaseOut,
+    KnowledgeBaseUpdate,
     QueryRequest,
     QueryResponse,
     UploadOut,
@@ -86,6 +89,8 @@ def _add_error_handlers(app: FastAPI) -> None:
         VersionInProgress: 409,
         UploadRejected: 400,
         GenerationFailed: 502,
+        CloudNotAllowed: 403,
+        MissingKey: 400,
     }
     messages = {
         KnowledgeBaseExists: "A knowledge base with this name already exists.",
@@ -149,11 +154,24 @@ def _add_routes(app: FastAPI) -> None:
             database=database,
             embedding_model=embedding,
             llm_model=llm,
+            cloud_keys={p: api_key(ctx.settings, p) is not None for p in CLOUD_PROVIDERS},
         )
 
     @app.post("/kbs", response_model=KnowledgeBaseOut, status_code=201)
     def create_kb(body: KnowledgeBaseCreate, ctx: AppContext = context) -> KnowledgeBaseOut:
-        return KnowledgeBaseOut.from_row(create_knowledge_base(ctx, body.name))
+        return KnowledgeBaseOut.from_row(create_knowledge_base(ctx, body.name, body.allow_cloud))
+
+    @app.patch("/kbs/{kb_id}", response_model=KnowledgeBaseOut)
+    def update_kb(
+        body: KnowledgeBaseUpdate, kb=knowledge_base, ctx: AppContext = context
+    ) -> KnowledgeBaseOut:
+        with ctx.db() as conn:
+            conn.execute(
+                "UPDATE knowledge_bases SET allow_cloud = ? WHERE id = ?",
+                (int(body.allow_cloud), kb["id"]),
+            )
+            row = conn.execute("SELECT * FROM knowledge_bases WHERE id = ?", (kb["id"],)).fetchone()
+        return KnowledgeBaseOut.from_row(row)
 
     @app.get("/kbs", response_model=list[KnowledgeBaseOut])
     def list_kbs(ctx: AppContext = context) -> list[KnowledgeBaseOut]:
@@ -211,7 +229,7 @@ def _add_routes(app: FastAPI) -> None:
 
     @app.post("/kbs/{kb_id}/query", response_model=QueryResponse)
     def query(body: QueryRequest, kb=knowledge_base, ctx: AppContext = context) -> QueryResponse:
-        result = answer_question(ctx, kb, body.question)
+        result = answer_question(ctx, kb, body.question, body.provider)
         return QueryResponse(
             status=result.status,
             answer=result.answer,
@@ -221,4 +239,5 @@ def _add_routes(app: FastAPI) -> None:
             output_tokens=result.output_tokens,
             timings_ms=result.timings_ms,
             trace_id=result.trace_id,
+            provider=body.provider,
         )

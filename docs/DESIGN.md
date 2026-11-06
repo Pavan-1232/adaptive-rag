@@ -482,6 +482,7 @@ Each stage ends with user approval and updates to this file and `PROGRESS.md`.
 - **Tests:** mocked provider tests, secret-leak checks on logs and traces, re-index switchover; real API calls optional using the user's own keys.
 - **Acceptance:** Ollama still works with no keys set, and no secrets appear anywhere.
 - **Deliverable:** provider support and setup docs.
+- **Outcome (2026-11-06):** OpenAI, Gemini and Anthropic answer adapters over `httpx`, a per-knowledge-base `allow_cloud` opt-in checked before any call, and keys from the environment through one key-loading function. Canary-key leak tests cover logs, traces, the database, files, errors and API responses. Real calls are off by default (`PROGRESS.md`, Stage 6 results).
 
 ### Stage 7: Frontend
 

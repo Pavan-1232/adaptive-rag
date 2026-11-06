@@ -9,6 +9,8 @@ from pydantic import BaseModel, Field, field_validator
 
 class KnowledgeBaseCreate(BaseModel):
     name: str = Field(min_length=1, max_length=100)
+    # Cloud answer models send document text off this machine, so they are opt-in per KB.
+    allow_cloud: bool = False
 
     @field_validator("name")
     @classmethod
@@ -26,11 +28,16 @@ class KnowledgeBaseOut(BaseModel):
     embedding_model: str
     embedding_version: str
     embedding_dimensions: int
+    allow_cloud: bool
     created_at: str
 
     @classmethod
     def from_row(cls, row: sqlite3.Row) -> "KnowledgeBaseOut":
         return cls(**{name: row[name] for name in cls.model_fields})
+
+
+class KnowledgeBaseUpdate(BaseModel):
+    allow_cloud: bool
 
 
 class DocumentOut(BaseModel):
@@ -72,6 +79,8 @@ class JobOut(BaseModel):
 
 class QueryRequest(BaseModel):
     question: str = Field(min_length=1, max_length=2000)
+    # Ollama is local and the default. Cloud providers need a key and the KB's allow_cloud.
+    provider: Literal["ollama", "openai", "gemini", "anthropic"] = "ollama"
 
     @field_validator("question")
     @classmethod
@@ -105,6 +114,7 @@ class QueryResponse(BaseModel):
     output_tokens: int | None
     timings_ms: dict[str, float]
     trace_id: int
+    provider: str
 
 
 class HealthOut(BaseModel):
@@ -112,3 +122,5 @@ class HealthOut(BaseModel):
     database: bool
     embedding_model: bool
     llm_model: bool
+    # Whether a key is configured per cloud provider. Never the key, or any part of it.
+    cloud_keys: dict[str, bool]

@@ -14,7 +14,7 @@ class EmbeddingModelMismatch(Exception):
     """The configured embedding model differs from the one this knowledge base was built with."""
 
 
-def create_knowledge_base(ctx: AppContext, name: str) -> sqlite3.Row:
+def create_knowledge_base(ctx: AppContext, name: str, allow_cloud: bool = False) -> sqlite3.Row:
     version = ctx.embedder.version()
     dimensions = ctx.embedder.dimensions()
     with ctx.db() as conn:
@@ -22,7 +22,7 @@ def create_knowledge_base(ctx: AppContext, name: str) -> sqlite3.Row:
             kb_id = conn.execute(
                 "INSERT INTO knowledge_bases (name, embedding_provider, embedding_model,"
                 " embedding_version, embedding_dimensions, embedding_prompt_version,"
-                " collection_name) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                " collection_name, allow_cloud) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 (
                     name,
                     ctx.embedder.id,
@@ -31,6 +31,7 @@ def create_knowledge_base(ctx: AppContext, name: str) -> sqlite3.Row:
                     dimensions,
                     ctx.embedder.prompt_version,
                     f"pending-{name}",
+                    int(allow_cloud),
                 ),
             ).lastrowid
         except sqlite3.IntegrityError as exc:

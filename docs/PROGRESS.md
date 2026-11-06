@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
 **Last updated:** 2026-11-05
-**Current state:** Stage 6 (BYOK) on branch `stage-6-byok`. The plan is approved (decisions 59–62), and default cloud models are set in `config.py`. **Build not started.** Next: re-check the provider docs notes in the Stage 6 plan, then build.
+**Current state:** Stage 6 approved and merged into `main` (2026-11-06, not pushed). Next is Stage 7 (frontend): start the next session with the start-of-stage plan and wait for the user's approval.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -15,7 +15,7 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 4 | Chunking optimization | Complete; approved 2026-11-04 |
 | 5 | Adaptive retrieval | Complete; approved 2026-11-05. Adaptive retrieval is opt-in (decision 57) |
 | 5b | Table extraction | Deferred; top future-work item (decision 58) |
-| 6 | BYOK | Plan approved 2026-11-06; build not started |
+| 6 | BYOK | Complete; approved 2026-11-06. Gemini verified with a real key; OpenAI and Anthropic by mocked tests only (decision 65) |
 | 7 | Frontend | Not started |
 | 8 | GitHub polish | Not started |
 
@@ -85,6 +85,9 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 60 | Stage 7 must let users enter their own API keys in the UI, stored securely on the local machine (for example the OS keychain), never as plain text in the database or logs. Stage 6 loads keys through one function, so a keychain source can be added without changing the adapters | 2026-11-06 |
 | 61 | Cost-sensitive default cloud models, checked against each provider's docs on 2026-11-06 and set in `config.py`: OpenAI `gpt-6-luna` ($0.10 / $0.50 per 1M tokens), Gemini `gemini-3.5-flash-lite` (stable; price not shown in the docs fetched), Anthropic `claude-haiku-5-5` ($0.10 / $0.50) | 2026-11-06 |
 | 62 | CLAUDE.md rule added: no shortcuts in security code (key handling, logging, traces, error messages, storage). Any `shortcut:` there is flagged to the user first | 2026-11-06 |
+| 63 | Stage 6 build choices, from the 2026-11-06 docs check: Gemini uses `generateContent` (the current reference), with the key in `x-goog-api-key`, not `?key=`. Anthropic sends `anthropic-version: 2026-10-21` and `output_config.effort = "low"`. No cloud adapter sends `temperature` | 2026-11-06 |
+| 64 | Keys are also read from the standard variables `OPENAI_API_KEY`, `GEMINI_API_KEY` and `ANTHROPIC_API_KEY`, as well as the `ADAPTIVE_RAG_` names. Cloud use still needs the request's `provider` plus the knowledge base's `allow_cloud` | 2026-11-06 |
+| 65 | Stage 6 approved. Verification level: **Gemini verified end to end with a real key** (2 calls on `gemini-3.5-flash-lite`); **OpenAI and Anthropic verified by mocked contract tests only**, with no real calls | 2026-11-06 |
 
 ## Smoke test results (2026-10-30)
 
@@ -969,9 +972,61 @@ S run: `benchmarks/results/test_embeddinggemma_300m_C1_S_20261105T145919.json`. 
   - On API version `2026-10-21`, `temperature` returns a 400, so drop it for Anthropic or choose the `anthropic-version` header deliberately.
   - Haiku 5.5 thinks by default, with effort defaulting to `medium`; `low` may suit answering.
 
+## Stage 6 results (2026-11-06)
+
+**Built:**
+- **Adapters:** `providers/cloud.py` holds one shared HTTP base and three adapters (`OpenAILLM`, `GeminiLLM`, `AnthropicLLM`) behind `LLMProvider`. `cloud_llm()` builds an adapter with the user's key or raises `MissingKey`.
+- **Key loading:** `providers/keys.py` has `api_key()`, the one place keys are read. Stage 7 adds the keychain there (decision 60).
+- **Settings:** three `SecretStr` key fields (decision 64) and `cloud_timeout_s` (60 s). `httpx` is now a declared dependency.
+- **Opt-in:** migration `006_kb_cloud_optin.sql` adds `knowledge_bases.allow_cloud`, off by default. It can be set on `POST /kbs` or with the new `PATCH /kbs/{id}`.
+- **Answering:** `answer_question(..., provider)` checks the opt-in and the key **before retrieval**, so a refused cloud request makes no call at all.
+  - Refusals map to 403 (no opt-in) and 400 (no key).
+  - The trace records the provider and model, never the key.
+  - `QueryRequest.provider` defaults to `ollama`, and `QueryResponse` now returns `provider`.
+  - `/health` reports `cloud_keys` (configured or not, per provider).
+- **Schema:** `ANSWER_SCHEMA` gains `additionalProperties: false`, which OpenAI's strict mode needs.
+- **Setup docs:** `.env.example` documents the keys, the model overrides and the opt-in.
+
+**Security (CLAUDE.md rule):**
+- Keys travel only in request headers.
+- Error messages carry only the provider name, HTTP status and the provider's error type, never its error text (some providers echo the key).
+- Exceptions are raised `from None`, so no httpx exception carrying the request headers is chained on.
+- `repr()` of an adapter shows only the model.
+- Test settings pin all keys to None, so a developer's real shell key can't reach a test.
+- No `shortcut:` markers in security code.
+
+**Tests:**
+- **34 new, in `tests/test_cloud_providers.py`:**
+  - Contract tests per provider: request shape, key only in a header, no `temperature`, schema placement, response parsing, truncation, refusals.
+  - Error tests: 401 with the key echoed, 500 HTML, unreadable JSON, timeout, connection error. None may carry the key, in the message or the traceback.
+  - Missing or blank key makes no call.
+  - Opt-in refused before any call; opted-in answer with server-built citations and the trace's provider and model.
+  - The injection document stays fenced in the cloud request; the API flow.
+  - **The canary leak test** runs real HTTP to a local stand-in provider through httpx's network stack, with debug logging on for every logger. The canary must not appear in logs or log records, stdout or stderr, API responses, a database dump, the raw bytes of every file under `data/`, or the printed settings. It also checks that the canary really was sent.
+- **Mutation check:** a planted leak (the provider's error text passed into the message) made the leak test fail, and the captured logs included `httpx` and `httpcore` debug output. The scratch check was removed.
+- **Real calls:** `tests/test_cloud_e2e.py`, marker `cloud`, off by default, skipped without a key. Not run.
+- **Full suite:** 321 passed, 10 deselected (7 `ollama`, 3 `cloud`). `ruff` is clean.
+
+**Not verified (no real calls were made):**
+- That `gpt-6-luna` accepts strict JSON-schema output.
+- ~~That Gemini's `generateContent` accepts the key in `x-goog-api-key`.~~ **Verified 2026-11-06 with the user's key, 2 real calls on `gemini-3.5-flash-lite`, no quota error:**
+  - `pytest -m cloud -k gemini` passed: a structured JSON answer, key in the header.
+  - One question on a temporary knowledge base with `allow_cloud` gave `answered`, with a server-built citation (`note.txt, line 1`). 301 input and 61 output tokens, generation 1.2 s. The trace recorded the provider and model.
+  - The key wasn't in the output or in any file the run wrote.
+- That `claude-haiku-5-5` accepts `effort: "low"` together with `format`.
+- Cloud answer quality and latency on the benchmark.
+Running `pytest -m cloud` with your own keys checks the first three.
+
+**Known limitations:**
+- No retries; one timeout of 60 s.
+- No cost tracking.
+- Keys come only from the environment or `.env`; the UI and keychain come in Stage 7.
+- Evaluation runs and the optimizer always use Ollama.
+
 ## Workspace state
 
-- **Branches:** `main` has Stages 2–5 (Stage 5 merged 2026-11-05, not pushed). Stage 6 work is on `stage-6-byok`. Commit only when the user asks.
+- **Branches:** `main` has Stages 2–6 (Stage 6 merged 2026-11-06, not pushed). Commit only when the user asks.
+- **Keys:** the user's Gemini key is in the gitignored `.env`. Never print, log or commit it.
 - **Environment:** conda env `adaptive-rag` (Python 3.11.18), project installed in editable mode. Ollama 0.40.14; models unchanged.
 - **Data:** `data/eval/dev_embeddinggemma_300m_C1/` now has migration 005 (FTS5 index filled from existing chunks). The held-out indexes under `data/eval/test_*` are untouched. Everything under `data/` is gitignored.
 - **Config defaults:** `retrieval = "baseline"`, `table_prompt = False`. The `adaptive_*` settings and `evidence_target_tokens` (2560) are finalist S (decision 55), with `adaptive_hybrid = False`. Optional switches can be set to None from the environment with `null`.
@@ -980,8 +1035,8 @@ S run: `benchmarks/results/test_embeddinggemma_300m_C1_S_20261105T145919.json`. 
 
 ## Next steps
 
-1. **Stage 6 build:** follow "Stage 6 plan" above, re-checking the provider-docs notes first. Mark any `shortcut:` in security code and ask the user (decision 62).
-2. **Stage 7:** UI key entry with OS-keychain storage is required (decision 60).
+1. **Stage 7 (frontend):** start the next session with the start-of-stage plan (what, why, approach, trade-offs; framework chosen at the start, per DESIGN.md) and wait for the user's approval. **The plan must include entering API keys in the UI, with secure storage in the OS keychain** (decision 60): never plain text in the database or logs, plugged into `providers/keys.py`'s `api_key()`. The CLAUDE.md security rule applies.
+2. **Optional, any time:** run `pytest -m cloud -k openai` or `-k anthropic` with the user's own keys, to verify those two adapters for real.
 3. **Future work, top item: Stage 5b (table extraction)** (decision 58).
 4. **Don't rerun the held-out test set** until the next release.
 

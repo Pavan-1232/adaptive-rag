@@ -43,6 +43,7 @@ ANSWER_SCHEMA = {
         "cited_ids": {"type": "array", "items": {"type": "string"}},
     },
     "required": ["status", "answer", "cited_ids"],
+    "additionalProperties": False,  # required by OpenAI's strict structured outputs
 }
 
 _EVIDENCE_TAG = re.compile(r"<\s*/?\s*evidence", re.IGNORECASE)
