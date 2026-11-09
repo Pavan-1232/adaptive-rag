@@ -35,6 +35,10 @@ export type Answer = {
   trace_id: number;
   // What retrieval searched; differs from the question for a follow-up.
   searched_question?: string;
+  // Opt-in tutor explanation: general knowledge, separate from the grounded answer.
+  explanation?: string | null;
+  explanation_label?: string | null;
+  explanation_error?: string | null;
 };
 
 export type Provider = "ollama" | "openai" | "gemini" | "anthropic";
@@ -108,10 +112,15 @@ export const api = {
   deleteDoc: (id: number) => request<void>(`/documents/${id}`, json("DELETE")),
   job: (id: number) => request<Job>(`/jobs/${id}`),
   // previousTraceId: the chat's previous turn in this knowledge base, for follow-ups.
-  ask: (kbId: number, question: string, provider: Provider, previousTraceId?: number) =>
+  ask: (kbId: number, question: string, provider: Provider, previousTraceId?: number, explain = false) =>
     request<Answer>(
       `/kbs/${kbId}/query`,
-      json("POST", previousTraceId ? { question, provider, previous_trace_id: previousTraceId } : { question, provider }),
+      json("POST", {
+        question,
+        provider,
+        ...(previousTraceId ? { previous_trace_id: previousTraceId } : {}),
+        ...(explain ? { explain: true } : {}),
+      }),
     ),
   keySources: () => request<KeySources>("/keys"),
   // The key goes straight into the request body; callers must not keep it anywhere.

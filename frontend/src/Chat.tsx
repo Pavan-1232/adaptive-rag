@@ -44,6 +44,25 @@ function readLastProvider(): string | null {
   }
 }
 
+// The "Add a general explanation" toggle, remembered in this browser. Off unless turned on.
+const EXPLAIN = "explain";
+
+function readExplain(): boolean {
+  try {
+    return localStorage.getItem(EXPLAIN) === "on";
+  } catch {
+    return false;
+  }
+}
+
+function saveExplain(on: boolean) {
+  try {
+    localStorage.setItem(EXPLAIN, on ? "on" : "off");
+  } catch {
+    // storage blocked: the toggle just isn't remembered
+  }
+}
+
 function saveLastProvider(provider: Provider) {
   try {
     localStorage.setItem(LAST_PROVIDER, provider);
@@ -59,6 +78,7 @@ export default function Chat({ kb, turns, setTurns, onKbChange, onKbDeleted }: P
   const [busy, setBusy] = useState(false);
   // "New topic": the next question isn't linked to the previous turn.
   const [newTopic, setNewTopic] = useState(false);
+  const [explain, setExplain] = useState(readExplain);
   const [showDocs, setShowDocs] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [error, setError] = useState("");
@@ -102,7 +122,7 @@ export default function Chat({ kb, turns, setTurns, onKbChange, onKbDeleted }: P
     setNewTopic(false);
     let result: Partial<Turn>;
     try {
-      result = { answer: await api.ask(kb.id, text, provider, previousTraceId) };
+      result = { answer: await api.ask(kb.id, text, provider, previousTraceId, explain) };
     } catch (e) {
       result = { error: (e as Error).message };
     }
@@ -234,6 +254,18 @@ export default function Chat({ kb, turns, setTurns, onKbChange, onKbDeleted }: P
                   Ask
                 </button>
               </div>
+              <label className="mt-2 flex w-fit cursor-pointer items-center gap-2 text-xs text-zinc-500" title="A second model call explains the topic from general knowledge. It never changes the cited answer.">
+                <input
+                  type="checkbox"
+                  checked={explain}
+                  onChange={(e) => {
+                    setExplain(e.target.checked);
+                    saveExplain(e.target.checked);
+                  }}
+                  className="accent-zinc-900"
+                />
+                Add a general explanation (not from your documents)
+              </label>
               {turns.length > 0 && (
                 <div className="mt-2 flex items-center gap-2 text-xs text-zinc-500">
                   <button
@@ -262,6 +294,20 @@ export default function Chat({ kb, turns, setTurns, onKbChange, onKbDeleted }: P
 }
 
 const MARKER = /\[([^[\]]*\bE\d+\b[^[\]]*)\]/g;
+
+/** The opt-in general explanation: its own box, plain text, never citation chips. */
+function ExplanationBox({ answer }: { answer: Answer }) {
+  if (answer.explanation_error) {
+    return <p className="mt-2 text-xs text-zinc-500">{answer.explanation_error}</p>;
+  }
+  if (!answer.explanation) return null;
+  return (
+    <section aria-label="General explanation" className="mt-3 rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-sm">
+      <h3 className="mb-1 text-xs font-semibold text-sky-900">{answer.explanation_label}</h3>
+      <p className="whitespace-pre-wrap text-sky-950">{answer.explanation}</p>
+    </section>
+  );
+}
 
 export function AnswerView({ answer }: { answer: Answer }) {
   const [open, setOpen] = useState<Citation | null>(null);
@@ -303,6 +349,7 @@ export function AnswerView({ answer }: { answer: Answer }) {
         {answer.warnings.map((w) => (
           <p key={w} className="mt-1 text-xs text-amber-700">{w}</p>
         ))}
+        <ExplanationBox answer={answer} />
       </div>
     );
   }
@@ -342,6 +389,7 @@ export function AnswerView({ answer }: { answer: Answer }) {
           <blockquote className="max-h-72 overflow-y-auto whitespace-pre-wrap text-zinc-700">{open.passage}</blockquote>
         </figure>
       )}
+      <ExplanationBox answer={answer} />
       <p className="text-xs text-zinc-400">Answered by {PROVIDER_NAMES[answer.provider as Provider] ?? answer.provider}</p>
     </div>
   );

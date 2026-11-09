@@ -241,6 +241,15 @@ A short follow-up in the same chat ("what is the answer", "explain it simply") i
 5. When an answer gives only the keyed letter of an MCQ whose question is certain ("1. (a)"), the code adds that option's text from the evidence ("1. (a) Nil"); the prompt also asks for letter and text. The response returns `searched_question`; the UI shows "Searched: …" when it differs from what was typed. Traces store `searched_question`, `base_question` and `follows_trace_id` (migration 007).
 6. Not used: the previous answer (traces don't store answer text). Open option if "explain it simply" proves weak in real use.
 
+### Tutor explanation (approved 2026-11-09)
+
+Opt-in: a toggle "Add a general explanation (not from your documents)", saved per browser, off by default. When on, after the grounded answer is final (all gates applied), a **second, separate model call** (`answering/explain.py`) explains the topic from general knowledge:
+
+1. Its prompt has no evidence passages: only the question (and the earlier question for a follow-up) and the final grounded answer, with citation markers removed, fenced as untrusted context. It is told it has no documents, must not cite or say what documents say, and should say when unsure.
+2. Its text goes to its own response fields (`explanation`, `explanation_label`, `explanation_error`), is never parsed for citations (any `[E1]` markers are removed), and can't change the grounded status, answer, citations or warnings. If it fails, the grounded answer is returned unchanged and the error goes to `explanation_error`. If the grounded answer fails, no explanation call is made.
+3. It runs for every grounded status, including partial and not-enough-evidence (user decision). Label: "Explanation (general knowledge, not from your documents)" when the grounded status is `answered`; otherwise "Explanation (general knowledge, not from your documents — may differ from ICAI's answer, verify before relying on it)". Gate 4 still withholds an option pick in the grounded part.
+4. The UI shows it in a separate box below the cited answer, plain text, no citation chips. Same provider as the answer; cloud still needs the knowledge base's opt-in. Traces record that it was requested, tokens, time and success, never its text. Evaluation runs never request it.
+
 ### Per-part retrieval (added 2026-11-04)
 
 1. Rules split a multi-part question into parts: at "and" between clauses, "while also", "both … and", a second question mark, or a list of items. No LLM call.

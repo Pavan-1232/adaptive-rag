@@ -84,6 +84,8 @@ class QueryRequest(BaseModel):
     # The chat's previous turn in this knowledge base. Used only if that trace belongs to the
     # same knowledge base and the question is a follow-up (answering/followup.py).
     previous_trace_id: int | None = Field(default=None, ge=1)
+    # Opt-in tutor explanation after the grounded answer (answering/explain.py).
+    explain: bool = False
 
     @field_validator("question")
     @classmethod
@@ -120,6 +122,10 @@ class QueryResponse(BaseModel):
     trace_id: int
     provider: str
     searched_question: str
+    # Only when explain was asked; separate from the grounded answer and its citations.
+    explanation: str | None = None
+    explanation_label: str | None = None
+    explanation_error: str | None = None
 
 
 class HealthOut(BaseModel):

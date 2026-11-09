@@ -23,6 +23,7 @@ from adaptive_rag.providers.cloud import cloud_llm
 from adaptive_rag.retrieval import Evidence, RetrievedChunk, retrieve_evidence
 
 from .citations import Citation, build_citation, ids_in_text, strip_unknown_ids
+from .explain import explain as explain_answer
 from .followup import Resolved, resolve
 from .prompts import ANSWER_SCHEMA, build_messages, evidence_id, has_table
 
@@ -66,6 +67,10 @@ class AnswerResult:
     timings_ms: dict[str, float]
     trace_id: int
     searched_question: str  # what retrieval searched (differs for a follow-up)
+    # Opt-in tutor explanation: its own fields, never part of the grounded answer above.
+    explanation: str | None = None
+    explanation_label: str | None = None
+    explanation_error: str | None = None
 
 
 def _resolve(
@@ -141,6 +146,7 @@ def answer_question(
     question: str,
     provider: str = "ollama",
     previous_trace_id: int | None = None,
+    explain: bool = False,
 ) -> AnswerResult:
     settings = ctx.settings
     timings: dict[str, float] = {}
@@ -156,6 +162,11 @@ def answer_question(
     # Gate 1: clearly weak evidence gets no LLM call.
     top = retrieved.top_score
     if top is None or not retrieved.used or top < settings.floor_for(kb["embedding_model"]):
+        tutor = _explain_if_asked(
+            explain, llm, question, resolved, "insufficient", INSUFFICIENT_MESSAGE, settings
+        )
+        if tutor:
+            retrieved.info["explanation"] = tutor.info
         trace_id = _write_trace(
             ctx, kb, resolved, "insufficient", retrieved, [], None, None, timings
         )
@@ -169,6 +180,7 @@ def answer_question(
             timings,
             trace_id,
             resolved.searched,
+            *_tutor_fields(tutor),
         )
 
     used = retrieved.used
@@ -222,6 +234,10 @@ def answer_question(
                 text = option_text(texts, link["question"], link["keyed"])
                 if text:
                     answer = restate_option(answer, link["keyed"], text)
+    # The grounded answer is final here. The explanation only reads it.
+    tutor = _explain_if_asked(explain, llm, question, resolved, status, answer, settings)
+    if tutor:
+        retrieved.info["explanation"] = tutor.info
     trace_id = _write_trace(
         ctx,
         kb,
@@ -243,4 +259,17 @@ def answer_question(
         timings,
         trace_id,
         resolved.searched,
+        *_tutor_fields(tutor),
     )
+
+
+def _explain_if_asked(explain, llm, question, resolved, status, answer, settings):
+    if not explain:
+        return None
+    return explain_answer(
+        llm, question, resolved.earlier, status, answer, settings.max_answer_tokens
+    )
+
+
+def _tutor_fields(tutor) -> tuple[str | None, str | None, str | None]:
+    return (tutor.text, tutor.label, tutor.error) if tutor else (None, None, None)

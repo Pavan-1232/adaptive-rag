@@ -313,7 +313,9 @@ def _add_routes(app: FastAPI) -> None:
 
     @app.post("/kbs/{kb_id}/query", response_model=QueryResponse)
     def query(body: QueryRequest, kb=knowledge_base, ctx: AppContext = context) -> QueryResponse:
-        result = answer_question(ctx, kb, body.question, body.provider, body.previous_trace_id)
+        result = answer_question(
+            ctx, kb, body.question, body.provider, body.previous_trace_id, body.explain
+        )
         return QueryResponse(
             status=result.status,
             answer=result.answer,
@@ -325,6 +327,9 @@ def _add_routes(app: FastAPI) -> None:
             trace_id=result.trace_id,
             provider=body.provider,
             searched_question=result.searched_question,
+            explanation=result.explanation,
+            explanation_label=result.explanation_label,
+            explanation_error=result.explanation_error,
         )
 
     @app.get("/keys")

@@ -262,6 +262,59 @@ describe("follow-up questions", () => {
   });
 });
 
+describe("general explanation", () => {
+  const LABEL = "Explanation (general knowledge, not from your documents)";
+  const STRONG = "Explanation (general knowledge, not from your documents — may differ from ICAI's answer, verify before relying on it)";
+
+  it("is off by default, remembered when turned on, and shown apart from the cited answer", async () => {
+    routes["POST /api/kbs/1/query"] = (body) => {
+      const { explain } = body as { explain?: boolean };
+      return [200, answer(explain ? { explanation: "Gains are investing, not operating.", explanation_label: LABEL } : {})];
+    };
+    const queries = () => calls.filter((c) => c.key === "POST /api/kbs/1/query").map((c) => c.body);
+    const { unmount } = render(<App />);
+    const toggle = (await screen.findByLabelText(/Add a general explanation/)) as HTMLInputElement;
+    expect(toggle.checked).toBe(false);
+    await ask("Revenue?");
+    await waitFor(() => expect(queries()).toHaveLength(1));
+    expect(queries()[0]).toEqual({ question: "Revenue?", provider: "ollama" }); // no explain
+    expect(screen.queryByRole("region", { name: "General explanation" })).toBeNull();
+
+    const user = userEvent.setup();
+    await user.click(toggle);
+    expect(localStorage.getItem("explain")).toBe("on");
+    await ask("Why?");
+    const box = await screen.findByRole("region", { name: "General explanation" });
+    expect(within(box).getByText(LABEL)).toBeInTheDocument();
+    expect(within(box).getByText("Gains are investing, not operating.")).toBeInTheDocument();
+    expect(within(box).queryAllByRole("button")).toHaveLength(0); // no citation chips inside
+    expect(queries()[1]).toMatchObject({ question: "Why?", explain: true });
+    unmount();
+
+    render(<App />); // remembered in this browser
+    expect(((await screen.findByLabelText(/Add a general explanation/)) as HTMLInputElement).checked).toBe(true);
+  });
+
+  it("shows the stronger label on a not-enough-evidence answer, and an explanation error quietly", async () => {
+    localStorage.setItem("explain", "on");
+    let n = 0;
+    routes["POST /api/kbs/1/query"] = () => {
+      n += 1;
+      return n === 1
+        ? [200, answer({ status: "insufficient", answer: "Not enough.", citations: [], explanation: "In general, ...", explanation_label: STRONG })]
+        : [200, answer({ explanation: null, explanation_error: "The general explanation couldn't be generated: HTTP 503." })];
+    };
+    render(<App />);
+    await ask("Which option is right?");
+    const box = await screen.findByRole("region", { name: "General explanation" });
+    expect(within(box).getByText(STRONG)).toBeInTheDocument();
+    expect(screen.getByText("Not enough evidence")).toBeInTheDocument(); // grounded part unchanged
+    await ask("And this one?");
+    expect(await screen.findByText(/couldn't be generated: HTTP 503/)).toBeInTheDocument();
+    expect(screen.getAllByText("Revenue grew 8%", { exact: false }).length).toBeGreaterThan(0); // answer still shown
+  });
+});
+
 describe("linkableTraceId", () => {
   const ok = (trace_id: number) => ({ question: "q", answer: answer({ trace_id }) });
   it("skips failed turns and stops at a New topic boundary", () => {
