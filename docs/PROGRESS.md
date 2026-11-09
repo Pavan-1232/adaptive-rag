@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
-**Last updated:** 2026-11-06
-**Current state:** Stage 7 (frontend) complete, committed on `stage-7-frontend` and merged into `main` (not pushed), 2026-11-06. Next: Stage 8 (GitHub polish), after the user approves starting it.
+**Last updated:** 2026-11-09
+**Current state:** Stage 8 on `stage-8-polish`: leak fix, README, licence, CI and clean-machine test done and committed. Merged stage branches deleted 2026-11-08. Waiting on the user for the 10 human-written questions, the screenshots, and the private GitHub repo. Nothing pushed.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -17,7 +17,7 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 5b | Table extraction | Deferred; top future-work item (decision 58) |
 | 6 | BYOK | Complete; approved 2026-11-06. Gemini verified with a real key; OpenAI and Anthropic by mocked tests only (decision 65) |
 | 7 | Frontend | Complete; merged into `main` 2026-11-06 at the user's request |
-| 8 | GitHub polish | Not started |
+| 8 | GitHub polish | Plan approved 2026-11-06; in progress |
 
 ## Decisions taken
 
@@ -95,6 +95,12 @@ The approved architecture is in [DESIGN.md](DESIGN.md).
 | 70 | Stage 7 build: a changing request with **no** `Origin` and no `Sec-Fetch-Site` is accepted, since browsers always send `Origin` on POST, PATCH, PUT and DELETE, so such a request comes from a non-browser client (curl, tests) that no website can drive. Approved by the user | 2026-11-06 |
 | 71 | Stage 7 build: if the keychain can't be read (locked or missing), `api_key()` falls back to `.env` and logs only the error type. Keychain write and delete failures return a fixed 503 message | 2026-11-06 |
 | 72 | Stage 7 build: the UI calls `/api/...` and a middleware strips the prefix, so existing routes and tests keep their paths. `GET /evaluation` reads the two committed held-out reports at request time; verdicts come from the CI (low > 0 better, high < 0 worse, all zero identical, otherwise inconclusive) | 2026-11-06 |
+| 73 | Security finding fix: Chroma runs in a separate vector-store process that never holds a key. The API starts and stops it itself (still one command). Acceptance: `test_canary_key_never_leaks_anywhere` passes at least 100 consecutive runs | 2026-11-06 |
+| 74 | Benchmark content (short 10-K quotes in questions and results) stays, with clear attribution and links; no history rewrite, so the pre-registration commit hashes stay valid | 2026-11-06 |
+| 75 | A 10-question human-written test subset (2 per held-out document), written by the user; retrieval-only run of A and S, reported separately as a sanity check, not run until the user's file arrives | 2026-11-06 |
+| 76 | The user takes the README screenshots; the assistant specifies the screens | 2026-11-06 |
+| 77 | New **private** GitHub repo for this project; the user creates it, approves the push, and makes it public later. Never push to `localdoc-rag` (public, separate Streamlit single-PDF app), which the README links as the v1 prototype | 2026-11-06 |
+| 78 | MIT licence confirmed. Direct dependencies are permissive; `fpdf2` (LGPL) is test-only and not distributed | 2026-11-06 |
 
 ## Smoke test results (2026-10-30)
 
@@ -1072,7 +1078,7 @@ Running `pytest -m cloud` with your own keys checks the first three.
 - Frontend: 11 passed (`npm test`): knowledge-base create and confirmed delete, citations open the passage, insufficient state, error as-is, provider picker rules, key sent once and absent from the page, storage and cookies afterwards, key removal, evaluation verdicts, upload progress and polling, upload rejection message. `npm run build` clean, `npm audit` 0 vulnerabilities.
 - Canary leak test for the key endpoints (in-memory keyring): responses (including every error), headers, logs at debug, stdout, stderr, the database dump, data files and settings. All tests use the in-memory keyring and never touch the real Keychain.
 - Live smoke test with curl against the real server and Ollama: UI served at `/`, foreign Host 400, cross-site POST 403, create, upload, index, cited answer in about 9 s, `GET /keys` and `GET /evaluation` correct, no key in the server log.
-- Manual browser check: done by the user on 2026-11-06. Their message left the result field as the unfilled template ("all worked / list any problems"), so no specific result or problems are recorded.
+- Manual browser check (user, 2026-11-06). **Worked:** creating a knowledge base, uploading a PDF with the progress bar, asking a question, and the evaluation view. **Not reported:** whether citations were clicked, whether Gemini was tried in the app, and whether there were any problems. The user's message left these as unfilled placeholders, so they are not recorded as checked.
 
 **How to run:**
 1. Once: `cd frontend && npm install && npm run build`.
@@ -1087,8 +1093,39 @@ For UI development: run the backend as above and `cd frontend && npm run dev`, t
 - The first keychain write may make macOS ask for permission.
 - Deleting a knowledge base is not atomic: if interrupted, the startup check finishes deleting the documents and the row stays for a retry.
 
+## Security finding: API key in Chroma index files (found and fixed 2026-11-06)
 
-- **Branches:** `main` has Stages 2–7 (Stage 7 merged 2026-11-06, not pushed). Commit only when the user asks.
+- **Found:** the test thought to be flaky, `test_canary_key_never_leaks_anywhere`, failed about 1 run in 20–60. Each time, the canary key was inside Chroma's HNSW file `data/chroma/<collection>/data_level0.bin`. Likely cause: the index file is written from a buffer that still holds old process memory, and in the API process that memory can contain a key. So a real key could, rarely, be written to `data/chroma/`. `data/` is gitignored, so git history is unaffected. The leak test was right; the code was wrong.
+- **Fix (decision 73):** Chroma runs in a separate process (`vectorstore/process.py`, a standard-library `multiprocessing` manager), started fresh with "spawn", with every `*API_KEY*` environment variable removed while it starts. Only paths, ids, vectors and metadata are sent to it. The API starts it in its lifespan and shuts it down on exit; it also exits if the API process dies. The evaluation runner uses it too, one per Chroma directory, because `Settings` holds any `.env` keys. Still one command: `python -m adaptive_rag`.
+- **Verified:** `test_canary_key_never_leaks_anywhere` now runs against the separate store process (as in normal use) with the canary also set as an environment variable; **100 of 100 consecutive runs passed** (2026-11-06, 3 providers per run). Before the fix it failed after 20 and 28 runs in two loops. The Stage 7 key-endpoint canary test also uses it and now indexes a document. New tests: the store process starts without API-key variables; the app works end to end through it and the process stops afterwards. Live check: Ctrl+C and `kill -9` of the API both stop the store process. Backend 357 passed; real Ollama 6 passed, 1 expected failure.
+- **Cost:** about 1–2 s extra at startup; the full test suite went from about 9 s to about 16 s.
+- **Existing data checked:** `scripts/check_key_in_data.py` (prints only provider names and file paths) found the Gemini key in **0** files under `data/` (2026-11-06). No rotation needed. Rerun it if other keys were ever used.
+
+## Stage 8 plan (approved 2026-11-06, decisions 73–78)
+
+1. **Key-leak fix (security finding, under Open questions):** a separate vector-store process, started and stopped by the API; no key ever enters it. 100 consecutive passes of the canary test.
+2. **README:** what the app does and why it's different; quick start; Mermaid architecture diagram; held-out verdicts in plain words, each linked to its result file, questions labelled LLM-written and spot-checked; data sources and licences; the user's screenshots; link to `localdoc-rag` as the v1 prototype.
+3. **Licence:** MIT `LICENSE`; check transitive dependency licences from installed metadata; note Ollama model terms.
+4. **Benchmark attribution:** a "Data sources" section; no history rewrite (decision 74).
+5. **CI:** GitHub Actions, Python (ruff, pytest with fakes) and Node (`npm ci`, test, build). No Ollama or keys.
+6. **Clean-machine test:** fresh clone and conda env, README steps only.
+7. **Secret scan** of the full history of all branches; delete the merged `stage-*` branches after the user confirms.
+8. **Human-written subset** (decision 75): template and steps to the user; run only after the file arrives.
+9. **GitHub:** steps for the user to create the private repo, approve the push, and later make it public.
+
+## Stage 8 progress (2026-11-06)
+
+- **Step 1, leak fix:** done (see "Security finding" above).
+- **Steps 2–4, README, licence, attribution:** `README.md` (what and why, held-out verdicts in plain words with links to the two report files, quick start, Mermaid diagram, data sources and licences, link to `localdoc-rag` as v1). Screenshot paths `docs/screenshots/chat.png` and `docs/screenshots/evaluation.png` wait for the user's images. `LICENSE` (MIT, Pavan Rao K.); `license = "MIT"` in `pyproject.toml`, which needs setuptools 77 or newer. Licence check of the runtime dependency tree from installed metadata: 99 packages, all permissive except certifi, orjson and tqdm (MPL-2.0, file-level copyleft; fine to use unmodified under MIT). `fpdf2` (LGPL) is dev-only.
+- **Step 5, CI:** `.github/workflows/ci.yml`: backend (Python 3.11, ruff, pytest) and frontend (Node 24, `npm ci`, test, build). Action versions checked 2026-11-06 (`checkout`, `setup-python`, `setup-node`, all v7). Not run on GitHub yet: there's no remote.
+- **Step 6, clean-machine test:** fresh `git clone` of `stage-8-polish` into a scratch folder, new conda env `ar-clean`, README steps only: `pip install -e .`, `npm install && npm run build`, `python -m adaptive_rag`. The UI was served, a knowledge base created, a TXT indexed, and a cited answer returned; the store process stopped on shutdown. In the clone: `pytest` 357 passed, ruff clean, `npm test` 11 passed. No README fixes were needed. **Not fully clean:** the same Mac, so Ollama and its models, pip and npm caches, and conda were already present. The env and clone were deleted afterwards.
+- **Step 7, secret scan (part 1):** all 21 commits on all branches. No `.env`, data, database, PDF or vector files ever committed (only `.env.example`). No key patterns (OpenAI, Anthropic, Google, GitHub, Slack, AWS, private keys). The user's Gemini key: 0 matches in history, checked by exact match without printing it. Branch deletion waits for the user.
+- **Step 7, part 2 (2026-11-08):** user approved; `stage-3` to `stage-7` branches deleted with `git branch -d` (all were fully merged into `main`).
+- **Step 8, human subset:** template in `benchmarks/questions_test_human_template.yaml`; waiting for the user's file.
+
+## Workspace state
+
+- **Branches:** only `main` and `stage-8-polish` remain. `main` has Stages 2–7 (Stage 7 merged 2026-11-06, not pushed). Commit only when the user asks.
 - **Frontend:** `frontend/node_modules/` and `frontend/dist/` are gitignored; `package-lock.json` is committed with the rest.
 - **Keys:** the user's Gemini key is in the gitignored `.env`. Never print, log or commit it.
 - **Environment:** conda env `adaptive-rag` (Python 3.11.18), project installed in editable mode. Ollama 0.40.14; models unchanged.
@@ -1099,12 +1136,11 @@ For UI development: run the backend as above and `cd frontend && npm run dev`, t
 
 ## Next steps
 
-1. **Stage 8 (GitHub polish):** plan it at the start of the next session and wait for approval. If the browser check found problems, fix them first.
+1. **Stage 8:** continue the approved plan from step 2 (README). Waiting on the user for: the 10 human-written questions (decision 75), the screenshots (decision 76), and the private GitHub repo (decision 77).
 2. **Optional, any time:** run `pytest -m cloud -k openai` or `-k anthropic` with the user's own keys, to verify those two adapters for real.
 3. **Future work, top item: Stage 5b (table extraction)** (decision 58).
 4. **Don't rerun the held-out test set** until the next release.
 
 ## Open questions
 
-- Stage 8: build a human-written test subset before quoting final numbers publicly? Deferred by the user on 2026-11-04.
 - Registry matching: should "has tables" mean any detected table, or table share above about 2%? Deferred: no optimizer tuning in Stage 4.

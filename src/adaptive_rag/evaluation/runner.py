@@ -16,7 +16,7 @@ from adaptive_rag.ingest import register_upload, run_ingest_job
 from adaptive_rag.knowledge_bases import create_knowledge_base
 from adaptive_rag.providers import EmbeddingProvider, LLMProvider
 from adaptive_rag.retrieval import Evidence, RetrievedChunk, retrieve_baseline, retrieve_evidence
-from adaptive_rag.vectorstore import VectorStore
+from adaptive_rag.vectorstore.process import start_store_process
 
 from .benchmark import BenchmarkQuestion, ManifestDocument
 from .judge import compare_to_reference, judge_answer
@@ -76,6 +76,19 @@ class QuestionResult:
     error: str | None = None
 
 
+# Settings hold any .env keys, so Chroma runs in its own process here too (decision 73). One per
+# Chroma directory, reused across calls, so two processes never open the same index. They stop at
+# interpreter exit.
+_store_processes: dict[Path, tuple] = {}
+
+
+def _store_process(path: Path) -> tuple:
+    key = path.resolve()
+    if key not in _store_processes:
+        _store_processes[key] = start_store_process(path)
+    return _store_processes[key]
+
+
 def build_index(
     settings: Settings,
     embedder: EmbeddingProvider,
@@ -85,7 +98,8 @@ def build_index(
     kb_name: str,
 ) -> tuple[AppContext, object, dict[str, dict]]:
     """Index documents into a knowledge base, reusing it if already built."""
-    ctx = AppContext(settings, embedder, llm, VectorStore(settings.chroma_dir))
+    process, store = _store_process(settings.chroma_dir)
+    ctx = AppContext(settings, embedder, llm, store, store_process=process)
     with ctx.db() as conn:
         migrate(conn)
         kb = conn.execute("SELECT * FROM knowledge_bases WHERE name = ?", (kb_name,)).fetchone()

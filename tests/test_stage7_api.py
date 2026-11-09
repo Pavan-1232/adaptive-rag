@@ -3,6 +3,7 @@
 
 import json
 import logging
+import os
 from pathlib import Path
 
 import pytest
@@ -190,9 +191,18 @@ def test_locked_keychain_falls_back_to_env_and_reports_safely(client, ctx, memor
     assert client.delete("/keys/openai").status_code == 503
 
 
-def test_canary_key_never_leaks_from_key_endpoints(client, ctx, memory_keyring, caplog, capsys):
+def test_canary_key_never_leaks_from_key_endpoints(ctx, memory_keyring, caplog, capsys):
     caplog.set_level(logging.DEBUG)
+    ctx.store = None  # the app starts its own vector-store process, as in normal use
+    with TestClient(create_app(ctx)) as client:
+        texts, responses = _key_requests(client, memory_keyring)
+    _assert_no_canary(ctx, texts, caplog, capsys)
+
+
+def _key_requests(client, memory_keyring):
     texts = []
+    kb = make_kb(client)
+    client.post(f"/kbs/{kb['id']}/documents", files={"file": ("a.txt", b"Revenue text " * 50)})
     responses = [
         client.put("/keys/anthropic", json={"key": CANARY}),
         client.get("/keys"),
@@ -212,6 +222,10 @@ def test_canary_key_never_leaks_from_key_endpoints(client, ctx, memory_keyring, 
     assert memory_keyring.items[(KEYCHAIN_SERVICE, "anthropic")] == CANARY
 
     texts += [r.text for r in responses] + [str(dict(r.headers)) for r in responses]
+    return texts, responses
+
+
+def _assert_no_canary(ctx, texts, caplog, capsys):
     captured = capsys.readouterr()
     texts += [caplog.text, captured.out, captured.err]
     texts += [str(record.__dict__) for record in caplog.records]
@@ -287,3 +301,46 @@ def test_citations_carry_the_full_passage(client, ctx):
     ][0]
     assert len(citation["passage"]) > len(citation["snippet"])
     assert citation["passage"].startswith("The revenue figure")
+
+
+# ---------------------------------------------------------------- separate vector-store process
+
+
+def _report_environ(queue):
+    import os
+
+    queue.put(sorted(os.environ))
+
+
+def test_store_process_starts_without_api_key_variables(monkeypatch):
+    import multiprocessing
+
+    from adaptive_rag.vectorstore.process import _api_keys_removed_from_environ
+
+    monkeypatch.setenv("GEMINI_API_KEY", CANARY)
+    monkeypatch.setenv("ADAPTIVE_RAG_OPENAI_API_KEY", CANARY)
+    spawn = multiprocessing.get_context("spawn")
+    queue = spawn.Queue()
+    with _api_keys_removed_from_environ():
+        child = spawn.Process(target=_report_environ, args=(queue,))
+        child.start()
+    names = queue.get(timeout=30)
+    child.join()
+    assert "GEMINI_API_KEY" not in names and "ADAPTIVE_RAG_OPENAI_API_KEY" not in names
+    assert "PATH" in names
+    assert os.environ["GEMINI_API_KEY"] == CANARY  # restored in this process
+
+
+def test_store_process_serves_the_app_and_stops(ctx):
+    ctx.store = None
+    app = create_app(ctx)
+    with TestClient(app) as client:
+        process = ctx.store_process._process
+        kb = make_kb(client)
+        client.post(f"/kbs/{kb['id']}/documents", files={"file": ("a.txt", b"Revenue rose.")})
+        ctx.llm.queue(answer="It rose [E1].")
+        body = client.post(f"/kbs/{kb['id']}/query", json={"question": "revenue"}).json()
+        assert body["status"] == "answered"
+        assert client.delete(f"/kbs/{kb['id']}").status_code == 204
+    process.join(timeout=10)
+    assert not process.is_alive() and ctx.store is None

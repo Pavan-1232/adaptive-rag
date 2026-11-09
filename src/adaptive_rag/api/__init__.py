@@ -44,7 +44,7 @@ from adaptive_rag.providers.keys import (
     remove_key,
     store_key,
 )
-from adaptive_rag.vectorstore import VectorStore
+from adaptive_rag.vectorstore.process import start_store_process
 
 from .schemas import (
     CitationOut,
@@ -67,7 +67,7 @@ def build_context(settings: Settings) -> AppContext:
             settings.embedding_model, settings.ollama_host, settings.embedding_batch_size
         ),
         llm=OllamaLLM(settings.llm_model, settings.ollama_host, settings.num_ctx),
-        store=VectorStore(settings.chroma_dir),
+        store=None,  # started in its own process by the app's lifespan
     )
 
 
@@ -81,12 +81,20 @@ def create_app(ctx: AppContext | None = None) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> Iterator[None]:
-        with context.db() as conn:
-            migrate(conn)
-        job_ids = repair_on_startup(context)
-        if job_ids:
-            threading.Thread(target=_run_jobs, args=(context, job_ids), daemon=True).start()
-        yield
+        owns_store = context.store is None
+        if owns_store:
+            context.store_process, context.store = start_store_process(context.settings.chroma_dir)
+        try:
+            with context.db() as conn:
+                migrate(conn)
+            job_ids = repair_on_startup(context)
+            if job_ids:
+                threading.Thread(target=_run_jobs, args=(context, job_ids), daemon=True).start()
+            yield
+        finally:
+            if owns_store:
+                context.store_process.shutdown()
+                context.store_process = context.store = None
 
     app = FastAPI(title="Adaptive RAG", version="0.1.0", lifespan=lifespan)
     app.state.context = context
