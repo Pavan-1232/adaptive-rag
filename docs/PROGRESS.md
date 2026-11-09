@@ -1,7 +1,8 @@
 # Adaptive RAG: Progress
 
 **Last updated:** 2026-11-09
-**Current state:** Stage 5b exact lookups on by default (2026-11-09). Stage 8 on `main`, pushed to the new **private** repo https://github.com/Pavan-1232/adaptive-rag on 2026-11-09: CI green, README images and links checked. History rewritten (noreply author, copied document text removed), old repo deleted, local history cleaned. Before going public: enable private vulnerability reporting. Human-written test subset deferred (2026-11-09).
+**Current state:** Stage 5b exact lookups on by default (2026-11-09). Stage 8 on `main`, pushed to the **public** repo https://github.com/Pavan-1232/adaptive-rag (pushed while private on 2026-11-09, since made public): CI green, README images and links checked. History rewritten (noreply author, copied document text removed), old repo deleted, local history cleaned. Before going public: enable private vulnerability reporting. Human-written test subset deferred (2026-11-09).
+**v1.1 held-out run not done; v1.1 features are measured on dev and the private real-use set only.**
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -1221,7 +1222,7 @@ The user ran the app on their own documents in one knowledge base: a CA question
 
 ## Workspace state
 
-- **Branches:** `main` (Stages 2–8, history rewritten 2026-11-09, pushed to the new private `origin`) and `stage-8-polish` (merged, local only). `user.email` for this repo is the GitHub noreply address. Commit only when the user asks.
+- **Branches:** `main` (Stages 2–8, history rewritten 2026-11-09, pushed to `origin`, now public) and `stage-8-polish` (merged, local only). `user.email` for this repo is the GitHub noreply address. Commit only when the user asks.
 - **Frontend:** `frontend/node_modules/` and `frontend/dist/` are gitignored; `package-lock.json` is committed with the rest.
 - **Keys:** the user's Gemini key is in the gitignored `.env`. Never print, log or commit it.
 - **Environment:** conda env `adaptive-rag` (Python 3.11.18), project installed in editable mode. Ollama 0.40.14. As of 2026-11-09, `qwen3.5:9b` (the default `llm_model`) is not installed; pull it before using the app or running `pytest -m ollama`.
@@ -1232,7 +1233,7 @@ The user ran the app on their own documents in one knowledge base: a CA question
 
 ## Next steps
 
-1. **Stage 8:** before going public, enable private vulnerability reporting in the repo's Settings → Security (SECURITY.md relies on it) and "Keep my email addresses private" in GitHub's email settings. The human-written subset (decision 75) is deferred. Making the repo public is the user's call (decision 77).
+1. **Stage 8:** the repo is public. Check that private vulnerability reporting is enabled in the repo's Settings → Security (SECURITY.md relies on it) and "Keep my email addresses private" in GitHub's email settings. The human-written subset (decision 75) is deferred.
 2. **Real-use follow-ups:** run `pytest -m ollama` once `qwen3.5:9b` is back, to check the MCQ rule with the real model. Decide whether to check, counts only, if the 3 held-out option sets were ever sent as evidence (see "Held-out count"). Investigate the index-table and exact-reference failures.
 3. **Optional, any time:** run `pytest -m cloud -k openai` or `-k anthropic` with the user's own keys, to verify those two adapters for real.
 4. **Future work, top item: Stage 5b (table extraction)** (decision 58).
