@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
 **Last updated:** 2026-11-09
-**Current state:** Stage 8 on `stage-8-polish`: leak fix, README, licence, CI and clean-machine test done and committed. Stage 8 merged into `main` and pushed to the private repo https://github.com/Pavan-1232/adaptive-rag on 2026-11-09; CI passed. Waiting on the user for the 10 human-written questions and the screenshots.
+**Current state:** Stage 8 on `main`: everything through the security pass is committed locally. History rewritten (noreply author, copied document text removed), screenshots added. The GitHub repo was deleted to drop the old commits; the first re-creation came up **public**, so nothing was pushed. The user is recreating it as private; push `main` only after that. Waiting on the user for the 10 human-written questions.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -1123,6 +1123,10 @@ For UI development: run the backend as above and `cd frontend && npm run dev`, t
 - **Step 7, part 2 (2026-11-08):** user approved; `stage-3` to `stage-7` branches deleted with `git branch -d` (all were fully merged into `main`).
 - **Step 9, GitHub (2026-11-09):** full-history secret scan clean (only the test `sk-CANARY-…` strings; the Gemini key 0 matches). `stage-8-polish` merged into `main` (`588142d`), remote `origin` added, `main` pushed (26 commits). CI run 42560709410 passed (backend 1m2s, frontend 18s). Repo is still private.
 - **Step 8, human subset:** template in `benchmarks/questions_test_human_template.yaml`; waiting for the user's file.
+- **Screenshots (2026-11-09):** `docs/screenshots/chat.png` (Demo knowledge base with the public RAGAS paper, a cited Gemini answer) and `evaluation.png` (the evaluation view). Checked for keys and personal content: none. macOS metadata stripped (comment, XMP, content-credentials chunk); pixels verified identical.
+- **History rewrite and repo re-creation (2026-11-09):** see "Public-release cleanup" under Real-use findings. After the rewrite, `main` was force-pushed (`b1a0ed2`, CI passed, README images served identical to local). Because GitHub keeps force-pushed commits reachable by ID and the old CI runs link to them, the user deleted the repo. The re-created repo came up public (`private=false`), so the push was stopped; the user is recreating it as private.
+- **Step 10, security pass (2026-11-09):** the user's pip-audit listed pillow 12.3.0, filelock 4.1.0 and chromadb 1.5.9. In the `adaptive-rag` env pillow was already 13.0.0 and filelock 4.2.4 (the user's audit must have been of another env or before an upgrade). pip-audit 2.10.1, run from a separate throwaway venv against the env's site-packages (118 packages), also found **oauthlib 4.0.0** (CVE-2026-49272, fixed in 4.0.1; it comes in via chromadb → kubernetes → requests-oauthlib). `pyproject.toml` now sets security floors for these transitive dependencies: `pillow>=13.0.0` (decodes images in untrusted uploaded PDFs via pdfplumber), `filelock>=4.2.1`, `oauthlib>=4.0.1`; oauthlib upgraded to 4.0.1, `pip check` clean. Tests: 388 backend, 13 frontend, build OK; one real upload through the API with Ollama embeddings: the public RAGAS PDF (18 chunks) and a generated PDF with an embedded PNG (1 chunk), both `ready`. **After:** pip-audit finds only chromadb (below); `npm audit` 0 vulnerabilities (all and `--omit=dev`). Added `SECURITY.md` (private reporting through GitHub's "Report a vulnerability"; needs private vulnerability reporting enabled in the repo's settings) and `.github/dependabot.yml` (pip, npm in `/frontend`, github-actions; weekly).
+- **chromadb 1.5.9 advisories (no fixed version exists; 1.5.9 is the latest on PyPI, 2026-11-09):** CVE-2026-45829 (pre-auth code injection: a malicious model repository with `trust_remote_code` sent to the HTTP API's collections endpoint), CVE-2026-45833 (the same with UPDATE_COLLECTION permission), CVE-2026-45831 (`SimpleRBACAuthorizationProvider` ignores the tenant, database and collection a permission applies to), CVE-2026-45830 (authenticated users can read and write any tenant's collections). **Relevance: none of these paths is used.** The app embeds Chroma as `chromadb.PersistentClient` in a child process: no Chroma HTTP server, no auth or RBAC provider, no tenants, and no Chroma embedding function (vectors come from Ollama; collections are created with only an HNSW `space` setting, so nothing loads a model repository or remote code). The app talks to that process through a `multiprocessing` manager on a Unix socket in the user's temp folder, protected by a 32-byte random authkey (checked 2026-11-09), not a network port. **Would become relevant** if the project ever ran `chroma run` or used `chromadb.HttpClient`, or configured a Hugging Face or sentence-transformers embedding function. Recheck when a fixed chromadb is released (Dependabot will propose it).
 
 ## Real-use findings (2026-11-09, reported by the user)
 
@@ -1154,7 +1158,7 @@ The user ran the app on their own documents in one knowledge base: a CA question
 
 ## Workspace state
 
-- **Branches:** `main` (Stages 2–8, pushed to `origin` 2026-11-09) and `stage-8-polish` (merged, local only). Commit only when the user asks.
+- **Branches:** `main` (Stages 2–8, history rewritten 2026-11-09; local only until the private repo exists) and `stage-8-polish` (merged, local only). `user.email` for this repo is the GitHub noreply address. Commit only when the user asks.
 - **Frontend:** `frontend/node_modules/` and `frontend/dist/` are gitignored; `package-lock.json` is committed with the rest.
 - **Keys:** the user's Gemini key is in the gitignored `.env`. Never print, log or commit it.
 - **Environment:** conda env `adaptive-rag` (Python 3.11.18), project installed in editable mode. Ollama 0.40.14. As of 2026-11-09, `qwen3.5:9b` (the default `llm_model`) is not installed; pull it before using the app or running `pytest -m ollama`.
@@ -1165,7 +1169,7 @@ The user ran the app on their own documents in one knowledge base: a CA question
 
 ## Next steps
 
-1. **Stage 8:** waiting on the user for the 10 human-written questions (decision 75) and the screenshots (decision 76). The repo is pushed and private (decision 77); making it public is the user's call.
+1. **Stage 8:** push `main` to the re-created **private** repo, wait for CI, check the README images. Before going public: enable private vulnerability reporting (for SECURITY.md); in local git, `git reflog expire --expire=now --all && git gc --prune=now` (blocked for the assistant) and delete the scratch backup bundle of the old history. Waiting on the user for the 10 human-written questions (decision 75). Making the repo public is the user's call (decision 77).
 2. **Real-use follow-ups:** run `pytest -m ollama` once `qwen3.5:9b` is back, to check the MCQ rule with the real model. Decide whether to check, counts only, if the 3 held-out option sets were ever sent as evidence (see "Held-out count"). Investigate the index-table and exact-reference failures.
 3. **Optional, any time:** run `pytest -m cloud -k openai` or `-k anthropic` with the user's own keys, to verify those two adapters for real.
 4. **Future work, top item: Stage 5b (table extraction)** (decision 58).
