@@ -75,8 +75,10 @@ class Settings(BaseSettings):
     # document's answer-key section. Both modes. Stage 3-5 results were measured without it;
     # evaluation runs turn it off with --no-answer-keys.
     answer_keys: bool = True
-    # Stage 5b exact lookups (contents rows, reference labels), both modes. Off until measured.
-    structured_lookup: bool = False
+    # Stage 5b exact lookups (contents rows, reference labels), both modes. On by default since
+    # 2026-11-09 (user decision after measurement); ADAPTIVE_RAG_STRUCTURED_LOOKUP=false turns
+    # it off, and evaluation runs use --no-lookup.
+    structured_lookup: bool = True
     adaptive_split_parts: bool = True
     adaptive_delta: float | None = None
     adaptive_min_chunks: int = 3

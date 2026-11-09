@@ -197,7 +197,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     settings.adaptive_keyword_query = args.keyword_query
     settings.adaptive_fusion = args.fusion
     settings.adaptive_keyword_bypass = args.keyword_bypass
-    settings.structured_lookup = args.lookup
+    settings.structured_lookup = not args.no_lookup
     embedder, llm = _providers(settings)
     documents = load_manifest(split=args.set)
     ctx, kb, indexed = build_index(
@@ -229,7 +229,7 @@ def cmd_run(args: argparse.Namespace) -> int:
         suffix += "_S" if args.retrieval == "adaptive" else ""
         suffix += "_tblprompt" if args.table_prompt else ""
         suffix += "" if args.no_answer_keys else "_anskeys"
-        suffix += "_lookup" if args.lookup else ""
+        suffix += "" if args.no_lookup else "_lookup"
         model = args.embedding_model.replace(":", "_")
         path = RESULTS / f"{args.set}_{model}{suffix}_{stamp}.json"
         print(f"Saving progress to {path}. To resume after a stop, add: --resume {path}")
@@ -342,7 +342,11 @@ def main() -> int:
     run.add_argument("--keyword-query", default="words", choices=["words", "phrases"])
     run.add_argument("--fusion", default="weighted", choices=["weighted", "rrf"])
     run.add_argument("--keyword-bypass", action="store_true", help="best numeric-phrase match")
-    run.add_argument("--lookup", action="store_true", help="Stage 5b exact lookups")
+    run.add_argument(
+        "--no-lookup",
+        action="store_true",
+        help="turn off Stage 5b exact lookups, as in runs before 2026-11-09 (on in the app)",
+    )
     run.add_argument(
         "--no-answer-keys",
         action="store_true",

@@ -40,8 +40,21 @@ Most RAG demos use one fixed chunk size and a fixed top-k, and say nothing about
 **Caveats:**
 - 24 answerable questions give wide intervals. Small real differences can't be detected.
 - The test questions were written by an LLM in a separate session and spot-checked by a human, not written by a human. A human-written subset is planned.
-- Measured before MCQ answer-key linking and the MCQ option check (both added 2026-11-09, aimed at question banks). The held-out passages contain 3 option sets, so these numbers aren't guaranteed to be unchanged with those features on.
+- Measured before MCQ answer-key linking, the MCQ option check and exact lookups (all added 2026-11-09, aimed at question banks and index pages). The held-out passages contain 3 option sets, so these numbers aren't guaranteed to be unchanged with those features on.
 - Numbers come from [stage4_test_report](benchmarks/results/stage4_test_report_20261104T093653.json) and [stage5_test_report](benchmarks/results/stage5_test_report_20261105T152950.json). The pre-registration, every decision, and the dev-set work are in [docs/PROGRESS.md](docs/PROGRESS.md).
+
+### Exact lookups (dev set, 2026-11-09)
+
+Index pages and labelled items ("which pages cover chapter X", "how many questions on Y", "what is Table 3", "Q.5 of a given exam paper") are found by exact match against contents rows and reference labels parsed at upload, not by similarity search. On by default; `ADAPTIVE_RAG_STRUCTURED_LOOKUP=false` turns it off. Measured retrieval-only on the dev set (the held-out set was not used), as recall over the evidence sent to the model, lookup off → on:
+
+| Dev set | Questions | Baseline | Adaptive retrieval |
+|---|---|---|---|
+| Main | 29 | 0.862 → 0.862 | 0.862 → 0.862 |
+| Tables | 15 | 0.800 → 0.800 | 0.867 → 0.867 |
+| Multi-part | 12 | 0.810 → 0.810 | 0.810 → 0.810 |
+| New lookup questions | 10 | 0.500 → 0.600 | 0.300 → 0.400 |
+
+**In plain words:** it changed nothing on the existing dev questions, and the dev gain is **one question** out of 10. Most of the evidence for turning it on comes from a **private set of 7 real questions** on CA study material and question books (not in this repo): the questions whose evidence reached the model went from 1 to 5 with baseline retrieval (3 to 6 with table-aware chunks). That is a small, single-user sample, not a benchmark. The new lookup questions were written in a separate session and reviewed by a human before any run ([questions_dev_lookup.yaml](benchmarks/questions_dev_lookup.yaml), results in [benchmarks/results/stage5b](benchmarks/results/stage5b)). Known gaps are listed in [docs/PROGRESS.md](docs/PROGRESS.md).
 
 ![Evaluation view](docs/screenshots/evaluation.png)
 

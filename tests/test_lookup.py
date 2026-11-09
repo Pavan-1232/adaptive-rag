@@ -67,7 +67,11 @@ def test_structure_is_stored_at_upload(ctx, book):
     assert ("rtp may 2025 q 5", 1, "1") in [tuple(r) for r in refs]
 
 
-def test_lookup_is_off_by_default_and_changes_nothing(ctx, book):
+def test_lookup_is_on_by_default_and_can_be_turned_off(ctx, book):
+    from adaptive_rag.config import Settings
+
+    assert Settings(_env_file=None).structured_lookup is True  # default since 2026-11-09
+    ctx.settings.structured_lookup = False
     question = "What does RTP May 2025 Q.5 ask in Chapter 1?"
     off = retrieve_evidence(ctx, book, question)
     assert "lookup" not in off.info and not lookups(off)
@@ -132,6 +136,7 @@ def test_generic_documents_and_questions_are_unchanged(ctx, tmp_path):
     _, job_id, _ = register_upload(ctx, kb, path, "notes.txt")
     run_ingest_job(ctx, job_id)
     question = "Why did revenue grow?"
+    ctx.settings.structured_lookup = False
     off = retrieve_evidence(ctx, kb, question)
     ctx.settings.structured_lookup = True
     on = retrieve_evidence(ctx, kb, question)

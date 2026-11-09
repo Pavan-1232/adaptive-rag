@@ -20,27 +20,31 @@ from adaptive_rag.retrieval import retrieve_baseline
 from adaptive_rag.retrieval.evidence import retrieve_evidence
 from adaptive_rag.vectorstore.process import start_store_process
 
+# Every setup states structured_lookup, so the app default never decides a comparison.
 SETUPS = {
-    "baseline": {"retrieval": "baseline"},
+    "baseline": {"retrieval": "baseline", "structured_lookup": False},
     "base+lookup": {"retrieval": "baseline", "structured_lookup": True},
     "adapt+lookup": {"retrieval": "adaptive", "structured_lookup": True},
-    "adaptive": {"retrieval": "adaptive", "adaptive_hybrid": False},
-    "hybrid": {"retrieval": "adaptive", "adaptive_hybrid": True},
+    "adaptive": {"retrieval": "adaptive", "adaptive_hybrid": False, "structured_lookup": False},
+    "hybrid": {"retrieval": "adaptive", "adaptive_hybrid": True, "structured_lookup": False},
     "hyb+phrases": {
         "retrieval": "adaptive",
         "adaptive_hybrid": True,
         "adaptive_keyword_query": "phrases",
+        "structured_lookup": False,
     },
     "hyb+bypass": {
         "retrieval": "adaptive",
         "adaptive_hybrid": True,
         "adaptive_keyword_bypass": True,
+        "structured_lookup": False,
     },
     "hyb+phr+rrf": {
         "retrieval": "adaptive",
         "adaptive_hybrid": True,
         "adaptive_keyword_query": "phrases",
         "adaptive_fusion": "rrf",
+        "structured_lookup": False,
     },
 }
 POOL = 30
