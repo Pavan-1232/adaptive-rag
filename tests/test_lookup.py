@@ -211,9 +211,12 @@ def bare(ctx, kb, question):
     return [(m["label"], m.get("trigger")) for m in evidence.info["lookup"]["matches"]], evidence
 
 
-def test_bare_titles_are_off_by_default(ctx, book):
+def test_bare_titles_are_on_by_default_and_can_be_turned_off(ctx, book):
+    from adaptive_rag.config import Settings
+
+    assert Settings(_env_file=None).lookup_bare_titles is True  # default since 2026-11-09
     ctx.settings.structured_lookup = True
-    assert ctx.settings.lookup_bare_titles is False
+    ctx.settings.lookup_bare_titles = False
     assert bare(ctx, book, "Revision case studies")[0] == []
 
 

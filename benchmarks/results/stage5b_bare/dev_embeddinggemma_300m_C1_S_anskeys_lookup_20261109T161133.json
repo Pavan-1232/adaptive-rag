@@ -1,0 +1,2755 @@
+{
+ "metadata": {
+  "system": "S (adaptive retrieval on C1) + answer keys",
+  "retrieval": "adaptive",
+  "table_prompt": false,
+  "answer_keys": true,
+  "structured_lookup": true,
+  "lookup_bare_titles": false,
+  "adaptive_params": {
+   "budget": 2560,
+   "pool_size": 30,
+   "split_parts": true,
+   "floor": 0.25,
+   "delta": null,
+   "gap_cutoff": true,
+   "min_chunks": 3,
+   "max_chunks": {
+    "factual": 5,
+    "table": 5,
+    "multi_part": 8,
+    "comparative": 10,
+    "broad": 10
+   },
+   "dedupe": false,
+   "dedupe_jaccard": 0.9,
+   "merge_spans": false,
+   "doc_cap": null,
+   "neighbors": true,
+   "expand_threshold": 0.5,
+   "neighbor_reserve": 0.0,
+   "hybrid": false,
+   "keyword_weight": 0.05,
+   "keyword_pool": 10,
+   "keyword_query": "words",
+   "fusion": "weighted",
+   "rrf_k": 60,
+   "strong_keyword_rank": 2,
+   "keyword_bypass": false
+  },
+  "chunking": "C1",
+  "set": "dev",
+  "created_at": "2026-11-09T16:11:33+00:00",
+  "commit": "5f425d5+uncommitted",
+  "embedding_model": "embeddinggemma:300m",
+  "embedding_version": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+  "llm_model": "qwen3.5:9b",
+  "judge_model": "none",
+  "judge_prompt": null,
+  "judge_check": null,
+  "recall_budget_tokens": 2560,
+  "questions_sha256": "7feff01e0e678aa7542e5aeb916dccd50634971638ed778ef4c2bd3e4d86c55a",
+  "retrieval_only": true,
+  "machine": "arm64 Darwin 27.2.0",
+  "question_source": "unspecified",
+  "notes": "Bare titles: adaptive, rule off (lookup on)",
+  "complete": true
+ },
+ "results": [
+  {
+   "id": "tesla_10k-gen-001",
+   "document": "tesla_10k.pdf",
+   "type": "conceptual",
+   "question": "How does a company manage the risk associated with relying on single suppliers for key components?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.47014403343200684,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.0,
+   "parts": 1,
+   "part_coverage": 0.0,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.0,
+   "part_coverage_sent": 0.0,
+   "tokens_sent": 1536,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How does a company manage the risk associated with relying on single suppliers for key components?"
+    ],
+    "part_top_scores": [
+     0.4701
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-25"
+     ],
+     [
+      "1-26"
+     ],
+     [
+      "1-37"
+     ]
+    ],
+    "evidence_tokens": 1536,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla_10k-gen-002",
+   "document": "tesla_10k.pdf",
+   "type": "multi_part",
+   "question": "How does Tesla ensure employee safety and address misconduct while also managing its talent strategy?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.6705584526062012,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "multi_part",
+    "parts": [
+     "How does Tesla ensure employee safety and address misconduct",
+     "Managing its talent strategy?"
+    ],
+    "part_top_scores": [
+     0.6722,
+     0.4693
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-21"
+     ],
+     [
+      "1-22"
+     ],
+     [
+      "1-23"
+     ],
+     [
+      "1-24"
+     ],
+     [
+      "1-37"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla_10k-gen-005",
+   "document": "tesla_10k.pdf",
+   "type": "multi_part",
+   "question": "How does the organization structure its approach to handling cybersecurity threats and ensuring regulatory compliance?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5476197004318237,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 1536,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How does the organization structure its approach to handling cybersecurity threats and ensuring regulatory compliance?"
+    ],
+    "part_top_scores": [
+     0.5476
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-55"
+     ],
+     [
+      "1-56"
+     ],
+     [
+      "1-57"
+     ]
+    ],
+    "evidence_tokens": 1536,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla_10k-gen-006",
+   "document": "tesla_10k.pdf",
+   "type": "factual",
+   "question": "How is warranty expense categorized within the company's financial statements?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.635671854019165,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How is warranty expense categorized within the company's financial statements?"
+    ],
+    "part_top_scores": [
+     0.6357
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-113"
+     ],
+     [
+      "1-114"
+     ],
+     [
+      "1-115"
+     ],
+     [
+      "1-66"
+     ],
+     [
+      "1-67"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla_10k-gen-009",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "How many millions of weighted average shares were added to the basic count due to convertible senior notes for the year ended December 31, 2024?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.4491472840309143,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 1536,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "How many millions of weighted average shares were added to the basic count due to convertible senior notes for the year ended December 31, 2024?"
+    ],
+    "part_top_scores": [
+     0.4491
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-106"
+     ],
+     [
+      "1-134"
+     ],
+     [
+      "1-121"
+     ]
+    ],
+    "evidence_tokens": 1536,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla_10k-gen-015",
+   "document": "tesla_10k.pdf",
+   "type": "factual",
+   "question": "Are personal emergencies or financial hardships considered valid reasons to ignore trading blackout restrictions?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.48056936264038086,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.25,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2048,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "Are personal emergencies or financial hardships considered valid reasons to ignore trading blackout restrictions?"
+    ],
+    "part_top_scores": [
+     0.4806
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-196"
+     ],
+     [
+      "1-197"
+     ],
+     [
+      "1-200"
+     ],
+     [
+      "1-191"
+     ]
+    ],
+    "evidence_tokens": 2048,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla_10k-gen-016",
+   "document": "tesla_10k.pdf",
+   "type": "conceptual",
+   "question": "Under what specific circumstances would a transfer of company securities not be considered a violation of the trading restrictions?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5619819760322571,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "Under what specific circumstances would a transfer of company securities not be considered a violation of the trading restrictions?"
+    ],
+    "part_top_scores": [
+     0.562
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-202"
+     ],
+     [
+      "1-203"
+     ],
+     [
+      "1-197"
+     ],
+     [
+      "1-198"
+     ],
+     [
+      "1-191"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "nist_ai_rmf-gen-004",
+   "document": "nist_ai_rmf.pdf",
+   "type": "conceptual",
+   "question": "Why is it necessary for organizations to integrate AI risk management into their broader enterprise strategies rather than handling it separately?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.6278631687164307,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "Why is it necessary for organizations to integrate AI risk management into their broader enterprise strategies rather than handling it separately?"
+    ],
+    "part_top_scores": [
+     0.6279
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-9"
+     ],
+     [
+      "2-10"
+     ],
+     [
+      "2-11"
+     ],
+     [
+      "2-22"
+     ],
+     [
+      "2-23"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "nist_ai_rmf-gen-007",
+   "document": "nist_ai_rmf.pdf",
+   "type": "conceptual",
+   "question": "How can developers balance the need for transparency with the requirement to protect proprietary information when building AI systems?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.6213963627815247,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How can developers balance the need for transparency with the requirement to protect proprietary information when building AI systems?"
+    ],
+    "part_top_scores": [
+     0.6214
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-17"
+     ],
+     [
+      "2-18"
+     ],
+     [
+      "2-19"
+     ],
+     [
+      "2-20"
+     ],
+     [
+      "2-14"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "nist_ai_rmf-gen-009",
+   "document": "nist_ai_rmf.pdf",
+   "type": "factual",
+   "question": "What role does senior leadership play in shaping an organization's approach to managing risks associated with artificial intelligence?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5444215536117554,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "What role does senior leadership play in shaping an organization's approach to managing risks associated with artificial intelligence?"
+    ],
+    "part_top_scores": [
+     0.5444
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-9"
+     ],
+     [
+      "2-10"
+     ],
+     [
+      "2-11"
+     ],
+     [
+      "2-22"
+     ],
+     [
+      "2-23"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "nist_ai_rmf-gen-012",
+   "document": "nist_ai_rmf.pdf",
+   "type": "factual",
+   "question": "Who should be involved in regularly assessing and updating AI metrics and controls?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5453227758407593,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "Who should be involved in regularly assessing and updating AI metrics and controls?"
+    ],
+    "part_top_scores": [
+     0.5453
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-30"
+     ],
+     [
+      "2-31"
+     ],
+     [
+      "2-32"
+     ],
+     [
+      "2-38"
+     ],
+     [
+      "2-21"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "nist_ai_rmf-gen-015",
+   "document": "nist_ai_rmf.pdf",
+   "type": "factual",
+   "question": "What types of entities might provide formal or quasi-formal norms to help manage risks associated with artificial intelligence?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5688104629516602,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.0625,
+   "parts": 1,
+   "part_coverage": 0.0,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.0,
+   "part_coverage_sent": 0.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "What types of entities might provide formal or quasi-formal norms to help manage risks associated with artificial intelligence?"
+    ],
+    "part_top_scores": [
+     0.5688
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-6"
+     ],
+     [
+      "2-7"
+     ],
+     [
+      "2-9"
+     ],
+     [
+      "2-10"
+     ],
+     [
+      "2-11"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "nist_ai_rmf-gen-016",
+   "document": "nist_ai_rmf.pdf",
+   "type": "conceptual",
+   "question": "How does the process of converting complex human behaviors into mathematical models potentially hinder efforts to manage AI risks?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5300260186195374,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.2,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How does the process of converting complex human behaviors into mathematical models potentially hinder efforts to manage AI risks?"
+    ],
+    "part_top_scores": [
+     0.53
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-6"
+     ],
+     [
+      "2-7"
+     ],
+     [
+      "2-8"
+     ],
+     [
+      "2-41"
+     ],
+     [
+      "2-42"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "ragas-gen-000",
+   "document": "ragas.pdf",
+   "type": "factual",
+   "question": "How can one assess the performance of Retrieval Augmented Generation systems without relying on human annotations?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5946670174598694,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2048,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How can one assess the performance of Retrieval Augmented Generation systems without relying on human annotations?"
+    ],
+    "part_top_scores": [
+     0.5947
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-4"
+     ],
+     [
+      "3-10"
+     ],
+     [
+      "3-1"
+     ],
+     [
+      "3-2"
+     ]
+    ],
+    "evidence_tokens": 2048,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "ragas-gen-001",
+   "document": "ragas.pdf",
+   "type": "conceptual",
+   "question": "How does a system overcome an LLM's inability to answer questions about recent events or obscure facts?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.536386251449585,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 1536,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How does a system overcome an LLM's inability to answer questions about recent events or obscure facts?"
+    ],
+    "part_top_scores": [
+     0.5364
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-1"
+     ],
+     [
+      "3-2"
+     ],
+     [
+      "3-3"
+     ]
+    ],
+    "evidence_tokens": 1536,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "ragas-gen-003",
+   "document": "ragas.pdf",
+   "type": "factual",
+   "question": "How does the SelfCheckGPT method determine if an answer is factual when a model does not provide access to token probabilities?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5418739318847656,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 1536,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How does the SelfCheckGPT method determine if an answer is factual when a model does not provide access to token probabilities?"
+    ],
+    "part_top_scores": [
+     0.5419
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-3"
+     ],
+     [
+      "3-4"
+     ],
+     [
+      "3-5"
+     ]
+    ],
+    "evidence_tokens": 1536,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "ragas-gen-004",
+   "document": "ragas.pdf",
+   "type": "conceptual",
+   "question": "How do methods like BERTScore and MoverScore measure the quality of a generated response?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.5647473335266113,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How do methods like BERTScore and MoverScore measure the quality of a generated response?"
+    ],
+    "part_top_scores": [
+     0.5647
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-3"
+     ],
+     [
+      "3-4"
+     ],
+     [
+      "3-5"
+     ],
+     [
+      "3-15"
+     ],
+     [
+      "3-9"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "ragas-gen-007",
+   "document": "ragas.pdf",
+   "type": "conceptual",
+   "question": "How does the system determine whether a question's context contains only necessary information or includes redundant details?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.4915813207626343,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How does the system determine whether a question's context contains only necessary information or includes redundant details?"
+    ],
+    "part_top_scores": [
+     0.4916
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-4"
+     ],
+     [
+      "3-5"
+     ],
+     [
+      "3-6"
+     ],
+     [
+      "3-9"
+     ],
+     [
+      "3-10"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "ragas-gen-009",
+   "document": "ragas.pdf",
+   "type": "factual",
+   "question": "How did the researchers handle Wikipedia pages that had no back-links when trying to measure context relevance?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.4445509910583496,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 1536,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How did the researchers handle Wikipedia pages that had no back-links when trying to measure context relevance?"
+    ],
+    "part_top_scores": [
+     0.4446
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-6"
+     ],
+     [
+      "3-7"
+     ],
+     [
+      "3-8"
+     ]
+    ],
+    "evidence_tokens": 1536,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "ragas-gen-010",
+   "document": "ragas.pdf",
+   "type": "conceptual",
+   "question": "How does one determine if an AI's response accurately reflects the provided source material without making up unsupported claims?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.4582899808883667,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 1536,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How does one determine if an AI's response accurately reflects the provided source material without making up unsupported claims?"
+    ],
+    "part_top_scores": [
+     0.4583
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-5"
+     ],
+     [
+      "3-3"
+     ],
+     [
+      "2-15"
+     ]
+    ],
+    "evidence_tokens": 1536,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "ragas-gen-011",
+   "document": "ragas.pdf",
+   "type": "multi_part",
+   "question": "How do the automated metrics compare to human judgments across different quality dimensions, and which specific aspect proves most difficult for current models to evaluate?",
+   "answerable": true,
+   "source": "llm, reviewed by assistant",
+   "top_score": 0.4622499942779541,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 1536,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "comparative",
+    "parts": [
+     "How do the automated metrics compare to human judgments across different quality dimensions",
+     "Which specific aspect proves most difficult for current models to evaluate?"
+    ],
+    "part_top_scores": [
+     0.4413,
+     0.348
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-9"
+     ],
+     [
+      "3-4"
+     ],
+     [
+      "2-8"
+     ]
+    ],
+    "evidence_tokens": 1536,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla-a1",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "How much did Tesla spend on R&D in 2024?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.6815968155860901,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.16666666666666666,
+   "parts": 1,
+   "part_coverage": 0.0,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.0,
+   "part_coverage_sent": 0.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "How much did Tesla spend on R&D in 2024?"
+    ],
+    "part_top_scores": [
+     0.6816
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-60"
+     ],
+     [
+      "1-61"
+     ],
+     [
+      "1-62"
+     ],
+     [
+      "1-75"
+     ],
+     [
+      "1-136"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla-a2",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "What were Tesla total liabilities at the end of 2024?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.7167409658432007,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "What were Tesla total liabilities at the end of 2024?"
+    ],
+    "part_top_scores": [
+     0.7167
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-124"
+     ],
+     [
+      "1-125"
+     ],
+     [
+      "1-126"
+     ],
+     [
+      "1-86"
+     ],
+     [
+      "1-151"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla-a3",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "How much cash and cash equivalents did Tesla hold at year end 2024?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.6750268340110779,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.0,
+   "parts": 1,
+   "part_coverage": 0.0,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.0,
+   "part_coverage_sent": 0.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "How much cash and cash equivalents did Tesla hold at year end 2024?"
+    ],
+    "part_top_scores": [
+     0.675
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-151"
+     ],
+     [
+      "1-86"
+     ],
+     [
+      "1-123"
+     ],
+     [
+      "1-153"
+     ],
+     [
+      "1-90"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla-a4",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "By how much did car sales revenue fall in 2024 compared with 2023?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.5737408995628357,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "comparative",
+    "parts": [
+     "By how much did car sales revenue fall in 2024 compared with 2023?"
+    ],
+    "part_top_scores": [
+     0.5737
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-70"
+     ],
+     [
+      "1-71"
+     ],
+     [
+      "1-72"
+     ],
+     [
+      "1-73"
+     ],
+     [
+      "1-74"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla-a5",
+   "document": "tesla_10k.pdf",
+   "type": "factual",
+   "question": "How many stockholders of record did Tesla have in January 2025?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.7123640179634094,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "How many stockholders of record did Tesla have in January 2025?"
+    ],
+    "part_top_scores": [
+     0.7124
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-1"
+     ],
+     [
+      "1-2"
+     ],
+     [
+      "1-3"
+     ],
+     [
+      "1-88"
+     ],
+     [
+      "1-58"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "nist-a1",
+   "document": "nist_ai_rmf.pdf",
+   "type": "factual",
+   "question": "Which four functions make up the core of the AI risk framework?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.6234188675880432,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "Which four functions make up the core of the AI risk framework?"
+    ],
+    "part_top_scores": [
+     0.6234
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-4"
+     ],
+     [
+      "2-5"
+     ],
+     [
+      "2-26"
+     ],
+     [
+      "2-27"
+     ],
+     [
+      "2-22"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "nist-a2",
+   "document": "nist_ai_rmf.pdf",
+   "type": "conceptual",
+   "question": "Is an organization legally required to adopt the framework?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.4634890556335449,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 1138,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "Is an organization legally required to adopt the framework?"
+    ],
+    "part_top_scores": [
+     0.4635
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-44"
+     ],
+     [
+      "2-4"
+     ],
+     [
+      "2-5"
+     ]
+    ],
+    "evidence_tokens": 1138,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "ragas-a1",
+   "document": "ragas.pdf",
+   "type": "factual",
+   "question": "How many Wikipedia articles were picked to build the evaluation dataset?",
+   "answerable": true,
+   "source": "assistant",
+   "top_score": 0.5548268556594849,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 1536,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "How many Wikipedia articles were picked to build the evaluation dataset?"
+    ],
+    "part_top_scores": [
+     0.5548
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-7"
+     ],
+     [
+      "3-8"
+     ],
+     [
+      "3-10"
+     ]
+    ],
+    "evidence_tokens": 1536,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla-u1",
+   "document": "tesla_10k.pdf",
+   "type": "near_miss",
+   "question": "What base salary did Tesla pay its CEO in 2024?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.5730707049369812,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "parts": null,
+   "part_coverage": null,
+   "all_parts_covered": null,
+   "recall_sent": null,
+   "part_coverage_sent": null,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "What base salary did Tesla pay its CEO in 2024?"
+    ],
+    "part_top_scores": [
+     0.5731
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-141"
+     ],
+     [
+      "1-142"
+     ],
+     [
+      "1-143"
+     ],
+     [
+      "1-19"
+     ],
+     [
+      "1-37"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla-u2",
+   "document": "tesla_10k.pdf",
+   "type": "near_miss",
+   "question": "How many Cybertrucks did Tesla deliver in 2024?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.5329217314720154,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "parts": null,
+   "part_coverage": null,
+   "all_parts_covered": null,
+   "recall_sent": null,
+   "part_coverage_sent": null,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "How many Cybertrucks did Tesla deliver in 2024?"
+    ],
+    "part_top_scores": [
+     0.5329
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-60"
+     ],
+     [
+      "1-61"
+     ],
+     [
+      "1-62"
+     ],
+     [
+      "1-5"
+     ],
+     [
+      "1-73"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tesla-u3",
+   "document": "tesla_10k.pdf",
+   "type": "near_miss",
+   "question": "What will Tesla's revenue be in fiscal 2026?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.6016888618469238,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "parts": null,
+   "part_coverage": null,
+   "all_parts_covered": null,
+   "recall_sent": null,
+   "part_coverage_sent": null,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "What will Tesla's revenue be in fiscal 2026?"
+    ],
+    "part_top_scores": [
+     0.6017
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-69"
+     ],
+     [
+      "1-70"
+     ],
+     [
+      "1-87"
+     ],
+     [
+      "1-72"
+     ],
+     [
+      "1-96"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "nist-u1",
+   "document": "nist_ai_rmf.pdf",
+   "type": "near_miss",
+   "question": "What fines does NIST impose on companies that violate the AI RMF?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.5729648470878601,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "parts": null,
+   "part_coverage": null,
+   "all_parts_covered": null,
+   "recall_sent": null,
+   "part_coverage_sent": null,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "What fines does NIST impose on companies that violate the AI RMF?"
+    ],
+    "part_top_scores": [
+     0.573
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-4"
+     ],
+     [
+      "2-5"
+     ],
+     [
+      "2-0"
+     ],
+     [
+      "2-21"
+     ],
+     [
+      "2-40"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "nist-u2",
+   "document": "nist_ai_rmf.pdf",
+   "type": "near_miss",
+   "question": "How much money did Congress allocate to develop the AI RMF?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.46745169162750244,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "parts": null,
+   "part_coverage": null,
+   "all_parts_covered": null,
+   "recall_sent": null,
+   "part_coverage_sent": null,
+   "tokens_sent": 2048,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "How much money did Congress allocate to develop the AI RMF?"
+    ],
+    "part_top_scores": [
+     0.4675
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-43"
+     ],
+     [
+      "2-4"
+     ],
+     [
+      "2-5"
+     ],
+     [
+      "2-10"
+     ]
+    ],
+    "evidence_tokens": 2048,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "ragas-u1",
+   "document": "ragas.pdf",
+   "type": "near_miss",
+   "question": "How much did the ChatGPT API calls cost during the Ragas experiments?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.4546903967857361,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "parts": null,
+   "part_coverage": null,
+   "all_parts_covered": null,
+   "recall_sent": null,
+   "part_coverage_sent": null,
+   "tokens_sent": 1536,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "How much did the ChatGPT API calls cost during the Ragas experiments?"
+    ],
+    "part_top_scores": [
+     0.4547
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-8"
+     ],
+     [
+      "3-1"
+     ],
+     [
+      "3-2"
+     ]
+    ],
+    "evidence_tokens": 1536,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "ragas-u2",
+   "document": "ragas.pdf",
+   "type": "near_miss",
+   "question": "What learning rate was used to train the Ragas metrics?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.48326563835144043,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "parts": null,
+   "part_coverage": null,
+   "all_parts_covered": null,
+   "recall_sent": null,
+   "part_coverage_sent": null,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "What learning rate was used to train the Ragas metrics?"
+    ],
+    "part_top_scores": [
+     0.4833
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-0"
+     ],
+     [
+      "3-1"
+     ],
+     [
+      "3-2"
+     ],
+     [
+      "3-9"
+     ],
+     [
+      "3-10"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "oos-1",
+   "document": "tesla_10k.pdf",
+   "type": "out_of_scope",
+   "question": "What is the capital of France?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.10577058792114258,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "parts": null,
+   "part_coverage": null,
+   "all_parts_covered": null,
+   "recall_sent": null,
+   "part_coverage_sent": null,
+   "tokens_sent": 0,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "What is the capital of France?"
+    ],
+    "part_top_scores": [
+     0.1058
+    ],
+    "uncovered_parts": [
+     "What is the capital of France?"
+    ],
+    "stop_reason": "floor",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [],
+    "evidence_tokens": 0,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "oos-2",
+   "document": "nist_ai_rmf.pdf",
+   "type": "out_of_scope",
+   "question": "What is the boiling point of liquid nitrogen?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.13005685806274414,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "parts": null,
+   "part_coverage": null,
+   "all_parts_covered": null,
+   "recall_sent": null,
+   "part_coverage_sent": null,
+   "tokens_sent": 0,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "What is the boiling point of liquid nitrogen?"
+    ],
+    "part_top_scores": [
+     0.1301
+    ],
+    "uncovered_parts": [
+     "What is the boiling point of liquid nitrogen?"
+    ],
+    "stop_reason": "floor",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [],
+    "evidence_tokens": 0,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "oos-3",
+   "document": "ragas.pdf",
+   "type": "out_of_scope",
+   "question": "How long should sourdough dough proof before baking?",
+   "answerable": false,
+   "source": "assistant",
+   "top_score": 0.12733525037765503,
+   "recall_at_budget": null,
+   "recall_at_5": null,
+   "hit_at_5": null,
+   "reciprocal_rank": null,
+   "parts": null,
+   "part_coverage": null,
+   "all_parts_covered": null,
+   "recall_sent": null,
+   "part_coverage_sent": null,
+   "tokens_sent": 0,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How long should sourdough dough proof before baking?"
+    ],
+    "part_top_scores": [
+     0.1273
+    ],
+    "uncovered_parts": [
+     "How long should sourdough dough proof before baking?"
+    ],
+    "stop_reason": "floor",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [],
+    "evidence_tokens": 0,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  }
+ ]
+}

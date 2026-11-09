@@ -80,8 +80,9 @@ class Settings(BaseSettings):
     # it off, and evaluation runs use --no-lookup.
     structured_lookup: bool = True
     # Also look up a short question that is just an index title ("Revision case studies").
-    # Whole-title match only. Off until measured on dev (user decision, 2026-11-09).
-    lookup_bare_titles: bool = False
+    # Whole-title match only. On by default since 2026-11-09 (user decision after measurement);
+    # ADAPTIVE_RAG_LOOKUP_BARE_TITLES=false turns it off; evaluation uses --no-bare-titles.
+    lookup_bare_titles: bool = True
     adaptive_split_parts: bool = True
     adaptive_delta: float | None = None
     adaptive_min_chunks: int = 3

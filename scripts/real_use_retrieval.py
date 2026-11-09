@@ -23,9 +23,18 @@ from adaptive_rag.vectorstore.process import start_store_process
 # Every setup states structured_lookup, so the app default never decides a comparison.
 SETUPS = {
     "baseline": {"retrieval": "baseline", "structured_lookup": False},
-    "base+lookup": {"retrieval": "baseline", "structured_lookup": True},
-    "adapt+lookup": {"retrieval": "adaptive", "structured_lookup": True},
+    "base+lookup": {
+        "retrieval": "baseline",
+        "structured_lookup": True,
+        "lookup_bare_titles": False,
+    },
+    "adapt+lookup": {
+        "retrieval": "adaptive",
+        "structured_lookup": True,
+        "lookup_bare_titles": False,
+    },
     "base+bare": {"retrieval": "baseline", "structured_lookup": True, "lookup_bare_titles": True},
+    "adapt+bare": {"retrieval": "adaptive", "structured_lookup": True, "lookup_bare_titles": True},
     "adaptive": {"retrieval": "adaptive", "adaptive_hybrid": False, "structured_lookup": False},
     "hybrid": {"retrieval": "adaptive", "adaptive_hybrid": True, "structured_lookup": False},
     "hyb+phrases": {

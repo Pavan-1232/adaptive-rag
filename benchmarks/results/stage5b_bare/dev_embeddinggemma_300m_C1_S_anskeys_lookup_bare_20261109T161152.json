@@ -1,0 +1,1133 @@
+{
+ "metadata": {
+  "system": "S (adaptive retrieval on C1) + answer keys",
+  "retrieval": "adaptive",
+  "table_prompt": false,
+  "answer_keys": true,
+  "structured_lookup": true,
+  "lookup_bare_titles": true,
+  "adaptive_params": {
+   "budget": 2560,
+   "pool_size": 30,
+   "split_parts": true,
+   "floor": 0.25,
+   "delta": null,
+   "gap_cutoff": true,
+   "min_chunks": 3,
+   "max_chunks": {
+    "factual": 5,
+    "table": 5,
+    "multi_part": 8,
+    "comparative": 10,
+    "broad": 10
+   },
+   "dedupe": false,
+   "dedupe_jaccard": 0.9,
+   "merge_spans": false,
+   "doc_cap": null,
+   "neighbors": true,
+   "expand_threshold": 0.5,
+   "neighbor_reserve": 0.0,
+   "hybrid": false,
+   "keyword_weight": 0.05,
+   "keyword_pool": 10,
+   "keyword_query": "words",
+   "fusion": "weighted",
+   "rrf_k": 60,
+   "strong_keyword_rank": 2,
+   "keyword_bypass": false
+  },
+  "chunking": "C1",
+  "set": "dev",
+  "created_at": "2026-11-09T16:11:52+00:00",
+  "commit": "5f425d5+uncommitted",
+  "embedding_model": "embeddinggemma:300m",
+  "embedding_version": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+  "llm_model": "qwen3.5:9b",
+  "judge_model": "none",
+  "judge_prompt": null,
+  "judge_check": null,
+  "recall_budget_tokens": 2560,
+  "questions_sha256": "03fd41009c6062bc23488dd74e209a0ce213ef0efcefacf74ac7973c13bcb18e",
+  "retrieval_only": true,
+  "machine": "arm64 Darwin 27.2.0",
+  "question_source": "unspecified",
+  "notes": "Bare titles: adaptive, rule on (lookup on)",
+  "complete": true
+ },
+ "results": [
+  {
+   "id": "tbl-fed-01",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "table",
+   "question": "In the December 2024 projections, what median unemployment rate did Fed officials expect for the end of 2025?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6597958207130432,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.1111111111111111,
+   "parts": 1,
+   "part_coverage": 0.0,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.0,
+   "part_coverage_sent": 0.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "In the December 2024 projections, what median unemployment rate did Fed officials expect for the end of 2025?"
+    ],
+    "part_top_scores": [
+     0.6598
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-70"
+     ],
+     [
+      "4-72"
+     ],
+     [
+      "4-73"
+     ],
+     [
+      "4-76"
+     ],
+     [
+      "4-17"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-fed-02",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "table",
+   "question": "Where do Fed participants expect the federal funds rate to settle over the long term, according to the December 2024 median?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.653021514415741,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.1,
+   "parts": 1,
+   "part_coverage": 0.0,
+   "all_parts_covered": 0.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "Where do Fed participants expect the federal funds rate to settle over the long term, according to the December 2024 median?"
+    ],
+    "part_top_scores": [
+     0.653
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-72"
+     ],
+     [
+      "4-73"
+     ],
+     [
+      "4-74"
+     ],
+     [
+      "4-70"
+     ],
+     [
+      "4-79"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-fed-03",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "table",
+   "question": "Back in September 2024, what median federal funds rate had officials pencilled in for the end of 2025?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6711812019348145,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "Back in September 2024, what median federal funds rate had officials pencilled in for the end of 2025?"
+    ],
+    "part_top_scores": [
+     0.6712
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-70"
+     ],
+     [
+      "4-71"
+     ],
+     [
+      "4-72"
+     ],
+     [
+      "4-73"
+     ],
+     [
+      "4-74"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-fed-04",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "table",
+   "question": "What median core inflation (PCE excluding food and energy) did participants project for 2026 in December 2024?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6177630424499512,
+   "recall_at_budget": 0.0,
+   "recall_at_5": 0.0,
+   "hit_at_5": 0.0,
+   "reciprocal_rank": 0.047619047619047616,
+   "parts": 1,
+   "part_coverage": 0.0,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.0,
+   "part_coverage_sent": 0.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "What median core inflation (PCE excluding food and energy) did participants project for 2026 in December 2024?"
+    ],
+    "part_top_scores": [
+     0.6178
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-77"
+     ],
+     [
+      "4-78"
+     ],
+     [
+      "4-79"
+     ],
+     [
+      "4-15"
+     ],
+     [
+      "4-74"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-fed-05",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "table",
+   "question": "In the September 2024 projections, what median headline PCE inflation was expected for 2025?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6032798290252686,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.25,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "In the September 2024 projections, what median headline PCE inflation was expected for 2025?"
+    ],
+    "part_top_scores": [
+     0.6033
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-73"
+     ],
+     [
+      "4-16"
+     ],
+     [
+      "4-77"
+     ],
+     [
+      "4-78"
+     ],
+     [
+      "4-71"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-fed-06",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "table",
+   "question": "Based on past forecasting errors, how wide is the typical error band around the unemployment rate projection for 2026?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.5897190570831299,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "Based on past forecasting errors, how wide is the typical error band around the unemployment rate projection for 2026?"
+    ],
+    "part_top_scores": [
+     0.5897
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-82"
+     ],
+     [
+      "4-87"
+     ],
+     [
+      "4-88"
+     ],
+     [
+      "4-89"
+     ],
+     [
+      "4-84"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-tsla-01",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "How much revenue did Tesla make from selling regulatory credits in 2024?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6420183777809143,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "How much revenue did Tesla make from selling regulatory credits in 2024?"
+    ],
+    "part_top_scores": [
+     0.642
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-69"
+     ],
+     [
+      "1-70"
+     ],
+     [
+      "1-71"
+     ],
+     [
+      "1-96"
+     ],
+     [
+      "1-87"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-tsla-02",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "What was Tesla's pre-tax profit for 2024?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6413785219192505,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "What was Tesla's pre-tax profit for 2024?"
+    ],
+    "part_top_scores": [
+     0.6414
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-135"
+     ],
+     [
+      "1-136"
+     ],
+     [
+      "1-137"
+     ],
+     [
+      "1-87"
+     ],
+     [
+      "1-90"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-tsla-03",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "How much did Tesla spend on buying property and equipment in 2024, per the cash flow statement?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6800646185874939,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "table",
+    "parts": [
+     "How much did Tesla spend on buying property and equipment in 2024, per the cash flow statement?"
+    ],
+    "part_top_scores": [
+     0.6801
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-123"
+     ],
+     [
+      "1-124"
+     ],
+     [
+      "1-125"
+     ],
+     [
+      "1-61"
+     ],
+     [
+      "1-80"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-tsla-04",
+   "document": "tesla_10k.pdf",
+   "type": "table",
+   "question": "What gross profit did Tesla's energy generation and storage business earn in 2023?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6384210586547852,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "What gross profit did Tesla's energy generation and storage business earn in 2023?"
+    ],
+    "part_top_scores": [
+     0.6384
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-72"
+     ],
+     [
+      "1-73"
+     ],
+     [
+      "1-74"
+     ],
+     [
+      "1-87"
+     ],
+     [
+      "1-152"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-nist-01",
+   "document": "nist_ai_rmf.pdf",
+   "type": "table",
+   "question": "What does the GOVERN function expect organisations to have ready in case third-party data or AI systems fail?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.5583228468894958,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2048,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "What does the GOVERN function expect organisations to have ready in case third-party data or AI systems fail?"
+    ],
+    "part_top_scores": [
+     0.5583
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-22"
+     ],
+     [
+      "2-23"
+     ],
+     [
+      "2-24"
+     ],
+     [
+      "2-25"
+     ]
+    ],
+    "evidence_tokens": 2048,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-nist-02",
+   "document": "nist_ai_rmf.pdf",
+   "type": "table",
+   "question": "Under the MAP function, what must be true of the processes for humans overseeing an AI system?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.5710659027099609,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "Under the MAP function, what must be true of the processes for humans overseeing an AI system?"
+    ],
+    "part_top_scores": [
+     0.5711
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-26"
+     ],
+     [
+      "2-27"
+     ],
+     [
+      "2-28"
+     ],
+     [
+      "2-29"
+     ],
+     [
+      "2-42"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-nist-03",
+   "document": "nist_ai_rmf.pdf",
+   "type": "table",
+   "question": "Which MEASURE subcategory deals with an AI system's privacy risk, and what does it require?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6328099966049194,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "multi_part",
+    "parts": [
+     "Which MEASURE subcategory deals with an AI system's privacy risk",
+     "What does it require?"
+    ],
+    "part_top_scores": [
+     0.6309,
+     0.2734
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "budget",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-28"
+     ],
+     [
+      "2-29"
+     ],
+     [
+      "2-30"
+     ],
+     [
+      "2-31"
+     ],
+     [
+      "2-32"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-nist-04",
+   "document": "nist_ai_rmf.pdf",
+   "type": "table",
+   "question": "According to the MANAGE function, who should be told about incidents and errors?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.4535508155822754,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 1536,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "According to the MANAGE function, who should be told about incidents and errors?"
+    ],
+    "part_top_scores": [
+     0.4536
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-33"
+     ],
+     [
+      "2-34"
+     ],
+     [
+      "2-26"
+     ]
+    ],
+    "evidence_tokens": 1536,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "tbl-ragas-01",
+   "document": "ragas.pdf",
+   "type": "table",
+   "question": "How often did the GPT Score baseline agree with human annotators on context relevance?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.513547420501709,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 1,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "factual",
+    "parts": [
+     "How often did the GPT Score baseline agree with human annotators on context relevance?"
+    ],
+    "part_top_scores": [
+     0.5135
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "max chunks",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-8"
+     ],
+     [
+      "3-9"
+     ],
+     [
+      "3-4"
+     ],
+     [
+      "3-5"
+     ],
+     [
+      "3-6"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  }
+ ]
+}

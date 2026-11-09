@@ -1,0 +1,188 @@
+# Dev short-lookup questions (12). Written in a separate session from the PDFs in
+# benchmarks/documents/dev/ only. Pages in evidence are physical PDF pages (blank pages counted).
+# For "short title" questions the evidence is the contents line, and expected_answer gives the
+# PRINTED page number shown on the contents page (not the physical page).
+# ragas.pdf has no table of contents, so it is not used.
+
+# ---------------------------------------------------------------- Short title (8)
+
+- id: sl-01
+  document: tesla_10k.pdf
+  type: factual
+  question: Cybersecurity in Tesla's 10-K
+  answerable: true
+  evidence:
+    - page: 3
+      quote: Item 1C. Cybersecurity 28
+  expected_answer: Item 1C. Cybersecurity, page 28
+  notes: Short title; one-word item title plus document mention, asking where the section is.
+  source: "claude-separate-session, user-reviewed"
+
+- id: sl-02
+  document: tesla_10k.pdf
+  type: factual
+  question: Management's Discussion and Analysis of Financial Condition and Results of Operations
+  answerable: true
+  evidence:
+    - page: 3
+      quote: Item 7. Management's Discussion and Analysis of Financial Condition and Results of Operations 32
+  expected_answer: Item 7, page 32
+  notes: Short title; full Item 7 title on its own, no document mention.
+  source: "claude-separate-session, user-reviewed"
+
+- id: sl-03
+  document: tesla_10k.pdf
+  type: factual
+  question: Legal Proceedings section of the Tesla annual report
+  answerable: true
+  evidence:
+    - page: 3
+      quote: Item 3. Legal Proceedings 29
+  expected_answer: Item 3. Legal Proceedings, page 29
+  notes: >-
+    Short title; trap: Item 2 (Properties) and Item 4 (Mine Safety Disclosures) are on the same
+    printed page 29, so the item must be named, not just the page.
+  source: "claude-separate-session, user-reviewed"
+
+- id: sl-04
+  document: nist_ai_rmf.pdf
+  type: factual
+  question: Risk Tolerance in the NIST AI framework
+  answerable: true
+  evidence:
+    - page: 4
+      quote: 1.2.2 Risk Tolerance 7
+  expected_answer: Section 1.2.2, page 7
+  notes: >-
+    Short title; a sub-subsection title. Trap: 1.2.3 Risk Prioritization is also on page 7 and
+    1.2.1 Risk Measurement is on page 5.
+  source: "claude-separate-session, user-reviewed"
+
+- id: sl-05
+  document: nist_ai_rmf.pdf
+  type: factual
+  question: How AI Risks Differ from Traditional Software Risks
+  answerable: true
+  evidence:
+    - page: 4
+      quote: "Appendix B: How AI Risks Differ from Traditional Software Risks 38"
+  expected_answer: Appendix B, page 38
+  notes: Short title; appendix title without its "Appendix B:" label.
+  source: "claude-separate-session, user-reviewed"
+
+- id: sl-06
+  document: nist_ai_rmf.pdf
+  type: factual
+  question: AI RMF Profiles
+  answerable: true
+  evidence:
+    - page: 4
+      quote: 6 AI RMF Profiles 33
+  expected_answer: Section 6, page 33
+  notes: >-
+    Short title; trap: "Part 2: Core and Profiles" (page 20) also contains the word Profiles.
+  source: "claude-separate-session, user-reviewed"
+
+- id: sl-07
+  document: fed_mpr_feb2025.pdf
+  type: factual
+  question: Labor Productivity since the Start of the Pandemic
+  answerable: true
+  evidence:
+    - page: 5
+      quote: Box 2. Labor Productivity since the Start of the Pandemic . . . . . . . . . . . . . . . . . . . . . . 18
+  expected_answer: Box 2, page 18
+  notes: >-
+    Short title; box title without its "Box 2." label. Quote keeps the leader dots exactly as
+    pdfplumber extracts them.
+  source: "claude-separate-session, user-reviewed"
+
+- id: sl-08
+  document: fed_mpr_feb2025.pdf
+  type: factual
+  question: Periodic review of monetary policy strategy, tools, and communications in the February 2025 Monetary Policy Report
+  answerable: true
+  evidence:
+    - page: 5
+      quote: Box 5. Periodic Review of Monetary Policy Strategy, Tools, and Communications . . . . . . . . 45
+  expected_answer: Box 5, page 45
+  notes: >-
+    Short title; full box title in lower case plus the report's name. Trap: Box 4 (page 42) and
+    Box 6 (page 46) are also monetary-policy boxes.
+  source: "claude-separate-session, user-reviewed"
+
+# ---------------------------------------------------------------- Short topical (4)
+
+- id: sl-09
+  document: tesla_10k.pdf
+  type: factual
+  question: What does Tesla's 10-K say about how it responds to cybersecurity incidents?
+  answerable: true
+  evidence:
+    - page: 31
+      quote: >-
+        We have implemented incident response and breach management processes which have four
+        overarching and interconnected stages: 1) preparation for a cybersecurity incident, 2)
+        detection and analysis of a security incident, 3) containment, eradication and recovery,
+        and 4) post-incident analysis.
+  expected_answer: >-
+    A four-stage incident response and breach management process: preparation, detection and
+    analysis, containment/eradication/recovery, and post-incident analysis.
+  notes: >-
+    Short topical; the topic resembles the "Cybersecurity" contents entry, but the answer is the
+    Item 1C content, not the contents page.
+  source: "claude-separate-session, user-reviewed"
+
+- id: sl-10
+  document: nist_ai_rmf.pdf
+  type: conceptual
+  question: Explain risk tolerance in the AI RMF
+  answerable: true
+  evidence:
+    - page: 12
+      quote: >-
+        it does not prescribe risk tolerance. Risk tolerance refers to the organization’s or AI
+        actor’s (see Appendix A) readiness to bear the risk in order to achieve its objectives.
+  expected_answer: >-
+    Risk tolerance is an organization’s or AI actor's readiness to bear risk to achieve its
+    objectives; the AI RMF does not prescribe it, and it is contextual and use-case specific.
+  notes: >-
+    Short topical; same topic as sl-04 but asks for the meaning, so the evidence is section
+    1.2.2's text, not its contents line.
+  source: "claude-separate-session, user-reviewed"
+
+- id: sl-11
+  document: nist_ai_rmf.pdf
+  type: conceptual
+  question: What does the Govern function do?
+  answerable: true
+  evidence:
+    - page: 26
+      quote: >-
+        cultivates and implements a culture of risk management within
+        organizations designing, developing, deploying, evaluating, or acquiring AI systems;
+  expected_answer: >-
+    It cultivates a culture of risk management in organizations working with AI systems, and
+    sets out processes, structures and policies for managing AI risks across the lifecycle.
+  notes: >-
+    Short topical; "Govern" is contents entry 5.1. The first bullet is the required fact; the
+    expected answer summarises the remaining bullets on the same page.
+  source: "claude-separate-session, user-reviewed"
+
+- id: sl-12
+  document: fed_mpr_feb2025.pdf
+  type: factual
+  question: How fast has labor productivity grown since the pandemic began?
+  answerable: true
+  evidence:
+    - page: 28
+      quote: >-
+        productivity has increased at an average annual rate of 1.8 percent from 2019:Q4 to
+        2024:Q4
+  expected_answer: >-
+    About 1.8 percent a year on average from 2019:Q4 to 2024:Q4, above the 1.5 percent pace of
+    2007:Q4 to 2019:Q4.
+  notes: >-
+    Short topical; same topic as sl-07 (Box 2) but asks for the content. Trap: the 1.5 percent
+    figure is the previous business cycle's pace.
+  source: "claude-separate-session, user-reviewed"

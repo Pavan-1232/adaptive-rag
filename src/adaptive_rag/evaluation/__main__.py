@@ -199,7 +199,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     settings.adaptive_fusion = args.fusion
     settings.adaptive_keyword_bypass = args.keyword_bypass
     settings.structured_lookup = not args.no_lookup
-    settings.lookup_bare_titles = args.bare_titles
+    settings.lookup_bare_titles = not args.no_bare_titles
     embedder, llm = _providers(settings)
     documents = load_manifest(split=args.set)
     ctx, kb, indexed = build_index(
@@ -232,7 +232,7 @@ def cmd_run(args: argparse.Namespace) -> int:
         suffix += "_tblprompt" if args.table_prompt else ""
         suffix += "" if args.no_answer_keys else "_anskeys"
         suffix += "" if args.no_lookup else "_lookup"
-        suffix += "_bare" if args.bare_titles else ""
+        suffix += "" if args.no_bare_titles else "_bare"
         model = args.embedding_model.replace(":", "_")
         path = RESULTS / f"{args.set}_{model}{suffix}_{stamp}.json"
         print(f"Saving progress to {path}. To resume after a stop, add: --resume {path}")
@@ -345,7 +345,11 @@ def main() -> int:
     run.add_argument("--keyword-query", default="words", choices=["words", "phrases"])
     run.add_argument("--fusion", default="weighted", choices=["weighted", "rrf"])
     run.add_argument("--keyword-bypass", action="store_true", help="best numeric-phrase match")
-    run.add_argument("--bare-titles", action="store_true", help="look up bare index titles")
+    run.add_argument(
+        "--no-bare-titles",
+        action="store_true",
+        help="don't look up bare index titles, as in runs before 2026-11-09 (on in the app)",
+    )
     run.add_argument(
         "--no-lookup",
         action="store_true",

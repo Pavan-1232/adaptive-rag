@@ -1,0 +1,950 @@
+{
+ "metadata": {
+  "system": "S (adaptive retrieval on C1) + answer keys",
+  "retrieval": "adaptive",
+  "table_prompt": false,
+  "answer_keys": true,
+  "structured_lookup": true,
+  "lookup_bare_titles": false,
+  "adaptive_params": {
+   "budget": 2560,
+   "pool_size": 30,
+   "split_parts": true,
+   "floor": 0.25,
+   "delta": null,
+   "gap_cutoff": true,
+   "min_chunks": 3,
+   "max_chunks": {
+    "factual": 5,
+    "table": 5,
+    "multi_part": 8,
+    "comparative": 10,
+    "broad": 10
+   },
+   "dedupe": false,
+   "dedupe_jaccard": 0.9,
+   "merge_spans": false,
+   "doc_cap": null,
+   "neighbors": true,
+   "expand_threshold": 0.5,
+   "neighbor_reserve": 0.0,
+   "hybrid": false,
+   "keyword_weight": 0.05,
+   "keyword_pool": 10,
+   "keyword_query": "words",
+   "fusion": "weighted",
+   "rrf_k": 60,
+   "strong_keyword_rank": 2,
+   "keyword_bypass": false
+  },
+  "chunking": "C1",
+  "set": "dev",
+  "created_at": "2026-11-09T16:11:41+00:00",
+  "commit": "5f425d5+uncommitted",
+  "embedding_model": "embeddinggemma:300m",
+  "embedding_version": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+  "llm_model": "qwen3.5:9b",
+  "judge_model": "none",
+  "judge_prompt": null,
+  "judge_check": null,
+  "recall_budget_tokens": 2560,
+  "questions_sha256": "7e0f1b68350e9c4d47e02933d82aa9c7f761732c22efe8581b4a6ffa4494dd96",
+  "retrieval_only": true,
+  "machine": "arm64 Darwin 27.2.0",
+  "question_source": "unspecified",
+  "notes": "Bare titles: adaptive, rule off (lookup on)",
+  "complete": true
+ },
+ "results": [
+  {
+   "id": "mp-tesla-01",
+   "document": "tesla_10k.pdf",
+   "type": "multi_part",
+   "question": "What does Tesla mainly make at its Buffalo factory, and how long does it have to meet its $5 billion New York spending commitment?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.634452223777771,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 2,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "multi_part",
+    "parts": [
+     "What does Tesla mainly make at its Buffalo factory",
+     "How long does it have to meet its $5 billion New York spending commitment?"
+    ],
+    "part_top_scores": [
+     0.5636,
+     0.3815
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-35"
+     ],
+     [
+      "1-36"
+     ],
+     [
+      "1-141"
+     ],
+     [
+      "1-11"
+     ],
+     [
+      "1-61"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "mp-tesla-02",
+   "document": "tesla_10k.pdf",
+   "type": "multi_part",
+   "question": "How much energy storage did Tesla deploy in 2024, what drove the jump in energy revenue, and does Tesla own or lease its Lathrop, California Megafactory?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.5879127979278564,
+   "recall_at_budget": 0.8725761772853186,
+   "recall_at_5": 0.8725761772853186,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.5,
+   "parts": 3,
+   "part_coverage": 0.6666666666666666,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.8725761772853186,
+   "part_coverage_sent": 0.6666666666666666,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "multi_part",
+    "parts": [
+     "How much energy storage did Tesla deploy in 2024",
+     "What drove the jump in energy revenue",
+     "Does Tesla own or lease its Lathrop, California Megafactory?"
+    ],
+    "part_top_scores": [
+     0.5782,
+     0.4185,
+     0.4914
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-74"
+     ],
+     [
+      "1-60"
+     ],
+     [
+      "1-61"
+     ],
+     [
+      "1-71"
+     ],
+     [
+      "1-36"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "mp-tesla-03",
+   "document": "tesla_10k.pdf",
+   "type": "multi_part",
+   "question": "Roughly how many vehicles did Tesla deliver in 2024? Did its automotive sales revenue grow or shrink that year, and by how much?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6590700745582581,
+   "recall_at_budget": 0.6230366492146597,
+   "recall_at_5": 0.6230366492146597,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.25,
+   "parts": 2,
+   "part_coverage": 0.5,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.6230366492146597,
+   "part_coverage_sent": 0.5,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "multi_part",
+    "parts": [
+     "Roughly how many vehicles did Tesla deliver in 2024?",
+     "Did its automotive sales revenue grow or shrink that year By how much?"
+    ],
+    "part_top_scores": [
+     0.5901,
+     0.5983
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "budget",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "1-73"
+     ],
+     [
+      "1-70"
+     ],
+     [
+      "1-71"
+     ],
+     [
+      "1-60"
+     ],
+     [
+      "1-87"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "mp-nist-01",
+   "document": "nist_ai_rmf.pdf",
+   "type": "multi_part",
+   "question": "Does the AI RMF tell organizations how much risk they should accept? If not, where in the Core is setting risk tolerance covered?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6759152412414551,
+   "recall_at_budget": 0.5512820512820513,
+   "recall_at_5": 0.5512820512820513,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 2,
+   "part_coverage": 0.5,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.5512820512820513,
+   "part_coverage_sent": 0.5,
+   "tokens_sent": 2048,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "multi_part",
+    "parts": [
+     "Does the AI RMF tell organizations how much risk they should accept?",
+     "If not, where in the Core is setting risk tolerance covered?"
+    ],
+    "part_top_scores": [
+     0.6793,
+     0.4534
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-8"
+     ],
+     [
+      "2-9"
+     ],
+     [
+      "2-10"
+     ],
+     [
+      "2-11"
+     ]
+    ],
+    "evidence_tokens": 2048,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "mp-nist-02",
+   "document": "nist_ai_rmf.pdf",
+   "type": "multi_part",
+   "question": "How does the framework deal with AI's environmental footprint? I'd like its definition of sustainability, the subcategory that assesses environmental impact, and the environmental cost it lists among AI-specific risks.",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.5607014894485474,
+   "recall_at_budget": 0.8117408906882592,
+   "recall_at_5": 0.8117408906882592,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 3,
+   "part_coverage": 0.6666666666666666,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.8117408906882592,
+   "part_coverage_sent": 0.6666666666666666,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "multi_part",
+    "parts": [
+     "How does the framework deal with AI's environmental footprint?",
+     "I'd like its definition of sustainability, the subcategory that assesses environmental impact, the environmental cost it lists among AI-specific risks."
+    ],
+    "part_top_scores": [
+     0.5009,
+     0.5377
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "budget",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-32"
+     ],
+     [
+      "2-27"
+     ],
+     [
+      "2-3"
+     ],
+     [
+      "2-4"
+     ],
+     [
+      "2-13"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "mp-nist-03",
+   "document": "nist_ai_rmf.pdf",
+   "type": "multi_part",
+   "question": "What are the three kinds of AI bias NIST says to manage? And does every AI system need human oversight? Give the framework's example.",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.7102375626564026,
+   "recall_at_budget": 0.5967078189300411,
+   "recall_at_5": 0.5967078189300411,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 2,
+   "part_coverage": 0.5,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.5967078189300411,
+   "part_coverage_sent": 0.5,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "multi_part",
+    "parts": [
+     "What are the three kinds of AI bias NIST says to manage?",
+     "And does every AI system need human oversight?",
+     "Give the framework's example."
+    ],
+    "part_top_scores": [
+     0.718,
+     0.5065,
+     0.3726
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "2-20"
+     ],
+     [
+      "2-42"
+     ],
+     [
+      "2-30"
+     ],
+     [
+      "2-5"
+     ],
+     [
+      "2-35"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "mp-ragas-01",
+   "document": "ragas.pdf",
+   "type": "multi_part",
+   "question": "Where can I get the Ragas code, which OpenAI model runs its evaluation prompts, and how often did Ragas agree with human annotators on faithfulness?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6300030946731567,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 3,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "multi_part",
+    "parts": [
+     "Where can I get the Ragas code",
+     "Which OpenAI model runs its evaluation prompts",
+     "How often did Ragas agree with human annotators on faithfulness?"
+    ],
+    "part_top_scores": [
+     0.4844,
+     0.4713,
+     0.54
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-2"
+     ],
+     [
+      "3-8"
+     ],
+     [
+      "3-9"
+     ],
+     [
+      "3-10"
+     ],
+     [
+      "3-5"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "mp-ragas-02",
+   "document": "ragas.pdf",
+   "type": "multi_part",
+   "question": "Compare how GPTScore works in the original prior work with how the authors set up their GPTScore baseline.",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.4842824339866638,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 2,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "comparative",
+    "parts": [
+     "How GPTScore works in the original prior work",
+     "How the authors set up their GPTScore baseline"
+    ],
+    "part_top_scores": [
+     0.4954,
+     0.4427
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "budget",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-3"
+     ],
+     [
+      "3-4"
+     ],
+     [
+      "3-5"
+     ],
+     [
+      "3-8"
+     ],
+     [
+      "3-9"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "mp-ragas-03",
+   "document": "ragas.pdf",
+   "type": "multi_part",
+   "question": "How did the authors build the low context relevance examples for WikiEval, and in the Chimnabai Clock Tower example, what extra detail about the tower's design appears only in the low-relevance context?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.43929237127304077,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 2,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2048,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "multi_part",
+    "parts": [
+     "How did the authors build the low context relevance examples for WikiEval",
+     "In the Chimnabai Clock Tower example, what extra detail about the tower's design appears only in the low-relevance context?"
+    ],
+    "part_top_scores": [
+     0.5198,
+     0.4801
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "3-7"
+     ],
+     [
+      "3-8"
+     ],
+     [
+      "3-10"
+     ],
+     [
+      "3-16"
+     ]
+    ],
+    "evidence_tokens": 2048,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "mp-fed-01",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "multi_part",
+   "question": "Compare PCE inflation in 2024 with the median FOMC projection for PCE inflation in 2025.",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6385833024978638,
+   "recall_at_budget": 0.6901840490797546,
+   "recall_at_5": 0.6901840490797546,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 0.3333333333333333,
+   "parts": 2,
+   "part_coverage": 0.5,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.6901840490797546,
+   "part_coverage_sent": 0.5,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "comparative",
+    "parts": [
+     "PCE inflation in 2024",
+     "The median FOMC projection for PCE inflation in 2025"
+    ],
+    "part_top_scores": [
+     0.6302,
+     0.6818
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-82"
+     ],
+     [
+      "4-83"
+     ],
+     [
+      "4-74"
+     ],
+     [
+      "4-86"
+     ],
+     [
+      "4-11"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "mp-fed-02",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "multi_part",
+   "question": "How quickly was the Fed letting securities run off its balance sheet in the second half of 2024, and how large were its total assets at the end of January 2025?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6459641456604004,
+   "recall_at_budget": 1.0,
+   "recall_at_5": 1.0,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 2,
+   "part_coverage": 1.0,
+   "all_parts_covered": 1.0,
+   "recall_sent": 1.0,
+   "part_coverage_sent": 1.0,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "multi_part",
+    "parts": [
+     "How quickly was the Fed letting securities run off its balance sheet in the second half of 2024",
+     "How large were its total assets at the end of January 2025?"
+    ],
+    "part_top_scores": [
+     0.5742,
+     0.5084
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-57"
+     ],
+     [
+      "4-58"
+     ],
+     [
+      "4-60"
+     ],
+     [
+      "4-61"
+     ],
+     [
+      "4-62"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  },
+  {
+   "id": "mp-fed-03",
+   "document": "fed_mpr_feb2025.pdf",
+   "type": "multi_part",
+   "question": "The labor picture: where did unemployment end 2024, where do FOMC participants see it at the end of 2025, and what's been happening with immigration?",
+   "answerable": true,
+   "source": "claude-separate-session, user spot-checked",
+   "top_score": 0.6416880488395691,
+   "recall_at_budget": 0.5775193798449613,
+   "recall_at_5": 0.5775193798449613,
+   "hit_at_5": 1.0,
+   "reciprocal_rank": 1.0,
+   "parts": 3,
+   "part_coverage": 0.6666666666666666,
+   "all_parts_covered": 0.0,
+   "recall_sent": 0.5775193798449613,
+   "part_coverage_sent": 0.6666666666666666,
+   "tokens_sent": 2560,
+   "retrieval_info": {
+    "mode": "adaptive",
+    "kind": "multi_part",
+    "parts": [
+     "Where did unemployment end 2024",
+     "Where do FOMC participants see it at the end of 2025",
+     "What's been happening with immigration?"
+    ],
+    "part_top_scores": [
+     0.4697,
+     0.6039,
+     0.4496
+    ],
+    "uncovered_parts": [],
+    "stop_reason": "gap",
+    "duplicates_dropped": 0,
+    "duplicate_tokens": 0,
+    "merged_tokens_saved": 0,
+    "blocks": [
+     [
+      "4-25"
+     ],
+     [
+      "4-26"
+     ],
+     [
+      "4-27"
+     ],
+     [
+      "4-17"
+     ],
+     [
+      "4-64"
+     ]
+    ],
+    "evidence_tokens": 2560,
+    "budget": 2560,
+    "lookup": {
+     "matches": [],
+     "skipped": []
+    },
+    "answer_keys": []
+   },
+   "status": null,
+   "answer": null,
+   "citations": [],
+   "citation_on_evidence": null,
+   "citation_precision": null,
+   "faithfulness": null,
+   "addresses_question": null,
+   "reference_verdict": null,
+   "judged": false,
+   "judge_claims": [],
+   "input_tokens": null,
+   "output_tokens": null,
+   "timings_ms": {},
+   "error": null
+  }
+ ]
+}
