@@ -1,7 +1,7 @@
 # Adaptive RAG: Progress
 
-**Last updated:** 2026-11-06
-**Current state:** Stage 8 on `stage-8-polish`: leak fix, README, licence, CI and clean-machine test done and committed. Waiting on the user for the 10 human-written questions, the screenshots, branch-deletion confirmation, and the private GitHub repo. Nothing pushed.
+**Last updated:** 2026-11-09
+**Current state:** Stage 8 on `stage-8-polish`: leak fix, README, licence, CI and clean-machine test done and committed. Merged stage branches deleted 2026-11-08. Waiting on the user for the 10 human-written questions, the screenshots, and the private GitHub repo. Nothing pushed.
 
 The approved architecture is in [DESIGN.md](DESIGN.md).
 
@@ -1120,11 +1120,12 @@ For UI development: run the backend as above and `cd frontend && npm run dev`, t
 - **Step 5, CI:** `.github/workflows/ci.yml`: backend (Python 3.11, ruff, pytest) and frontend (Node 24, `npm ci`, test, build). Action versions checked 2026-11-06 (`checkout`, `setup-python`, `setup-node`, all v7). Not run on GitHub yet: there's no remote.
 - **Step 6, clean-machine test:** fresh `git clone` of `stage-8-polish` into a scratch folder, new conda env `ar-clean`, README steps only: `pip install -e .`, `npm install && npm run build`, `python -m adaptive_rag`. The UI was served, a knowledge base created, a TXT indexed, and a cited answer returned; the store process stopped on shutdown. In the clone: `pytest` 357 passed, ruff clean, `npm test` 11 passed. No README fixes were needed. **Not fully clean:** the same Mac, so Ollama and its models, pip and npm caches, and conda were already present. The env and clone were deleted afterwards.
 - **Step 7, secret scan (part 1):** all 21 commits on all branches. No `.env`, data, database, PDF or vector files ever committed (only `.env.example`). No key patterns (OpenAI, Anthropic, Google, GitHub, Slack, AWS, private keys). The user's Gemini key: 0 matches in history, checked by exact match without printing it. Branch deletion waits for the user.
+- **Step 7, part 2 (2026-11-08):** user approved; `stage-3` to `stage-7` branches deleted with `git branch -d` (all were fully merged into `main`).
 - **Step 8, human subset:** template in `benchmarks/questions_test_human_template.yaml`; waiting for the user's file.
 
 ## Workspace state
 
-- **Branches:** `main` has Stages 2–7 (Stage 7 merged 2026-11-06, not pushed). Commit only when the user asks.
+- **Branches:** only `main` and `stage-8-polish` remain. `main` has Stages 2–7 (Stage 7 merged 2026-11-06, not pushed). Commit only when the user asks.
 - **Frontend:** `frontend/node_modules/` and `frontend/dist/` are gitignored; `package-lock.json` is committed with the rest.
 - **Keys:** the user's Gemini key is in the gitignored `.env`. Never print, log or commit it.
 - **Environment:** conda env `adaptive-rag` (Python 3.11.18), project installed in editable mode. Ollama 0.40.14; models unchanged.
