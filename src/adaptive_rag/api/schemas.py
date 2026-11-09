@@ -125,3 +125,4 @@ class HealthOut(BaseModel):
     llm_model: bool
     # Whether a key is configured per cloud provider. Never the key, or any part of it.
     cloud_keys: dict[str, bool]
+    default_provider: str

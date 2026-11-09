@@ -52,6 +52,28 @@ def test_default_settings_allow_only_local_hosts():
     assert Settings(_env_file=None).allowed_hosts == ["127.0.0.1", "localhost"]
 
 
+def test_default_provider_setting(monkeypatch, client, ctx):
+    from pydantic import ValidationError
+
+    from adaptive_rag.config import Settings
+
+    assert Settings(_env_file=None).default_provider == "ollama"
+    monkeypatch.setenv("ADAPTIVE_RAG_DEFAULT_PROVIDER", "gemini")
+    assert Settings(_env_file=None).default_provider == "gemini"
+    monkeypatch.setenv("ADAPTIVE_RAG_DEFAULT_PROVIDER", "gemni")
+    with pytest.raises(ValidationError):  # a typo fails at startup, not silently
+        Settings(_env_file=None)
+
+    assert client.get("/health").json()["default_provider"] == "ollama"
+    ctx.settings.default_provider = "gemini"
+    assert client.get("/health").json()["default_provider"] == "gemini"
+    # The API's own default is unchanged: only the UI pre-selects the setting.
+    kb = make_kb(client)
+    ctx.llm.queue()
+    body = client.post(f"/kbs/{kb['id']}/query", json={"question": "q"}).json()
+    assert body["provider"] == "ollama"
+
+
 @pytest.mark.parametrize(
     "headers",
     [

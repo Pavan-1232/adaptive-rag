@@ -149,6 +149,28 @@ describe("questions and citations", () => {
     expect(await screen.findByText("Answered by Gemini")).toBeInTheDocument();
     expect(calls).toContainEqual({ key: "POST /api/kbs/1/query", body: { question: "Revenue?", provider: "gemini" } });
   });
+
+  it("pre-selects the configured default provider only when the KB allows cloud and a key is set", async () => {
+    routes["GET /api/health"] = [200, { status: "ok", embedding_model: true, llm_model: true, default_provider: "gemini" }];
+    routes["GET /api/keys"] = [200, { ...KEYS_NONE, gemini: "env" }];
+    routes["PATCH /api/kbs/1"] = [200, { ...KB, allow_cloud: true }];
+    const { unmount } = render(<App />);
+    const picker = (await screen.findByLabelText("Answer model")) as HTMLSelectElement;
+    await within(picker).findByRole("option", { name: "Gemini" });
+    expect(picker.value).toBe("ollama"); // KB hasn't opted in
+
+    const user = userEvent.setup();
+    await user.click(screen.getByLabelText("Allow cloud models"));
+    await waitFor(() => expect(picker.value).toBe("gemini"));
+    unmount();
+
+    routes["GET /api/kbs"] = [200, [{ ...KB, allow_cloud: true }]];
+    routes["GET /api/keys"] = [200, KEYS_NONE]; // default set, but no Gemini key
+    render(<App />);
+    const second = (await screen.findByLabelText("Answer model")) as HTMLSelectElement;
+    await waitFor(() => expect(calls.filter((c) => c.key === "GET /api/keys")).toHaveLength(2));
+    expect(second.value).toBe("ollama");
+  });
 });
 
 describe("API keys", () => {

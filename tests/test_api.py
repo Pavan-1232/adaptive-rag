@@ -174,6 +174,7 @@ def test_health_reports_degraded_when_model_unavailable(client, ctx):
         "embedding_model": True,
         "llm_model": False,
         "cloud_keys": {"openai": False, "gemini": False, "anthropic": False},
+        "default_provider": "ollama",
     }
 
 

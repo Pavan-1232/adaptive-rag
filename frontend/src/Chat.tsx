@@ -15,6 +15,7 @@ export type Turn = { question: string; answer?: Answer; error?: string };
 
 type Props = {
   kb: KnowledgeBase;
+  defaultProvider: Provider;
   turns: Turn[];
   setTurns: (update: (turns: Turn[]) => Turn[]) => void;
   onKbChange: (kb: KnowledgeBase) => void;
@@ -23,7 +24,7 @@ type Props = {
 
 const CLOUD: CloudProvider[] = ["openai", "gemini", "anthropic"];
 
-export default function Chat({ kb, turns, setTurns, onKbChange, onKbDeleted }: Props) {
+export default function Chat({ kb, defaultProvider, turns, setTurns, onKbChange, onKbDeleted }: Props) {
   const [question, setQuestion] = useState("");
   const [provider, setProvider] = useState<Provider>("ollama");
   const [keys, setKeys] = useState<KeySources | null>(null);
@@ -41,10 +42,12 @@ export default function Chat({ kb, turns, setTurns, onKbChange, onKbDeleted }: P
     bottom.current?.scrollIntoView?.({ behavior: "smooth" });
   }, [turns.length, busy]);
 
-  // A cloud choice is dropped if the knowledge base stops allowing cloud models.
+  // Pre-select the configured default only if it's usable here; a cloud choice is dropped
+  // if the knowledge base stops allowing cloud models.
   useEffect(() => {
-    if (!kb.allow_cloud) setProvider("ollama");
-  }, [kb.allow_cloud]);
+    const usable = defaultProvider === "ollama" || (kb.allow_cloud && keys && keys[defaultProvider] !== "not set");
+    setProvider(usable ? defaultProvider : "ollama");
+  }, [kb.allow_cloud, keys, defaultProvider]);
 
   const cloudWithKeys = CLOUD.filter((p) => keys && keys[p] !== "not set");
 

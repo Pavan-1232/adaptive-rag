@@ -228,6 +228,7 @@ def _add_routes(app: FastAPI) -> None:
             embedding_model=embedding,
             llm_model=llm,
             cloud_keys={p: api_key(ctx.settings, p) is not None for p in CLOUD_PROVIDERS},
+            default_provider=ctx.settings.default_provider,
         )
 
     @app.post("/kbs", response_model=KnowledgeBaseOut, status_code=201)

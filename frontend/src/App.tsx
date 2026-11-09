@@ -126,6 +126,7 @@ export default function App() {
             <Chat
               key={selected.id}
               kb={selected}
+              defaultProvider={health?.default_provider ?? "ollama"}
               turns={history[selected.id] ?? []}
               setTurns={(update) =>
                 setHistory((all) => ({ ...all, [selected.id]: update(all[selected.id] ?? []) }))
