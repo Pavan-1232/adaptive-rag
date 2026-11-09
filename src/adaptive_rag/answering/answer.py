@@ -93,7 +93,12 @@ def _resolve(
         status = "partial"
         warnings.append("Citations to evidence that doesn't exist were removed.")
     citations = [build_citation(item, evidence[item]) for item in valid]
-    return status, strip_unknown_ids(output.answer, set(evidence)), citations, warnings
+    answer = strip_unknown_ids(output.answer, set(evidence))
+    if not ids_in_text(answer):
+        # Cited only through cited_ids: show the markers too, so every citation has a place in
+        # the text (real use, 2026-11-09: a chip with no inline marker).
+        answer = f"{answer.rstrip()} [{', '.join(valid)}]"
+    return status, answer, citations, warnings
 
 
 def _write_trace(

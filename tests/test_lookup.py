@@ -20,7 +20,7 @@ CONTENTS = [
     ("2 Framework for Reports 2 4 - 4", 9),
     ("4.5 AS 20 - Earnings Per Share 4 5 - 6", 9),
     ("15 Branch Accounts 2 7 - 7", 9),
-    ("Mix Mixed-topic case scenarios 6 8 - 9", 9),
+    ("Mix Revision case studies 6 8 - 9", 9),
 ]
 PAGES = [
     CONTENTS,
@@ -38,7 +38,7 @@ PAGES = [
     [("AS 20 - Earnings Per Share", 12), (FILLER, 9)],
     [(FILLER, 9)],
     [("Branch Accounts", 12), (FILLER, 9)],
-    [("Mixed-topic case scenarios", 12), (FILLER, 9)],
+    [("Revision case studies", 12), (FILLER, 9)],
     [(FILLER, 9)],
 ]
 
@@ -100,7 +100,7 @@ def test_contents_row_and_printed_count(ctx, book):
     assert "AS 20 - Earnings Per Share 4 5 - 6" in chunk.text
     assert "No. of Qs Page number" in (chunk.context_text or "") + chunk.text  # header present
 
-    counted = retrieve_evidence(ctx, book, "How many mixed-topic case scenarios are there?")
+    counted = retrieve_evidence(ctx, book, "How many questions are in revision case studies?")
     [match] = counted.info["lookup"]["matches"]
     assert match["label"] == "Mix" and match["count"] == 6  # printed, never computed
 
@@ -201,3 +201,58 @@ def test_eval_runs_record_lookup_and_old_runs_count_as_without():
     assert resume_conflicts(old, {"retrieval": "baseline", "structured_lookup": True}) == [
         "structured_lookup"
     ]
+
+
+# ---------------------------------------------------------------- bare index titles (opt-in)
+
+
+def bare(ctx, kb, question):
+    evidence = retrieve_evidence(ctx, kb, question)
+    return [(m["label"], m.get("trigger")) for m in evidence.info["lookup"]["matches"]], evidence
+
+
+def test_bare_titles_are_off_by_default(ctx, book):
+    ctx.settings.structured_lookup = True
+    assert ctx.settings.lookup_bare_titles is False
+    assert bare(ctx, book, "Revision case studies")[0] == []
+
+
+@pytest.mark.parametrize(
+    ("question", "expected"),
+    [
+        ("Revision case studies", [("Mix", "bare_title")]),
+        ("Branch Accounts in the Book of Questions", [("15", "bare_title")]),
+        ("branch accounts", [("15", "bare_title")]),
+        # Not an index request: a question word, part of a title, words that don't name the
+        # document, or too long to be a title.
+        ("Explain branch accounts", []),
+        ("Branch", []),
+        ("Branch Accounts in the Annual Report", []),
+        ("Branch accounts for a large retailer with many outlets across several states", []),
+    ],
+)
+def test_a_bare_title_triggers_only_on_a_whole_title(ctx, book, question, expected):
+    ctx.settings.structured_lookup = True
+    ctx.settings.lookup_bare_titles = True
+    matches, evidence = bare(ctx, book, question)
+    assert matches == expected
+    if expected:
+        [match] = evidence.info["lookup"]["matches"]
+        assert any(c.chunk_id == match["chunk"] for c in evidence.used)
+
+
+def test_a_named_document_wins_between_two_books_with_the_same_title(ctx, book, tmp_path):
+    ctx.settings.structured_lookup = True
+    ctx.settings.lookup_bare_titles = True
+    other = [("Choice Based Questions", 14), *CONTENTS[1:]]
+    path = make_pdf(tmp_path / "choice.pdf", [other, *PAGES[1:]])
+    _, job_id, _ = register_upload(ctx, book, path, "Choice Based Questions.pdf")
+    run_ingest_job(ctx, job_id)
+    named, _ = bare(ctx, book, "Branch Accounts in the Book of Questions")
+    both, _ = bare(ctx, book, "Branch Accounts")
+    assert len(named) == 1 and len(both) == 2
+    with ctx.db() as conn:
+        books = dict(conn.execute("SELECT filename, id FROM documents").fetchall())
+    _, evidence = bare(ctx, book, "Branch Accounts in the Book of Questions")
+    [match] = evidence.info["lookup"]["matches"]
+    assert match["chunk"].startswith(f"{books['Book of Questions.pdf']}-")

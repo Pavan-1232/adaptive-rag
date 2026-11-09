@@ -34,7 +34,12 @@ def retrieve_evidence(ctx: AppContext, kb: sqlite3.Row, question: str) -> Eviden
     evidence = _retrieve(ctx, kb, question)
     if ctx.settings.structured_lookup:
         evidence.used, evidence.info["lookup"] = add_lookups(
-            ctx, kb, evidence.used, question, ctx.settings.evidence_max_tokens
+            ctx,
+            kb,
+            evidence.used,
+            question,
+            ctx.settings.evidence_max_tokens,
+            ctx.settings.lookup_bare_titles,
         )
     if ctx.settings.answer_keys:
         evidence.used, links = link_answer_keys(

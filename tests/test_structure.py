@@ -28,7 +28,7 @@ BOOK = paged(
     "2 Framework for Reports 2 4 - 4\n"
     "4.5 AS 20 · Earnings Per Share 4 5 - 6\n"
     "15 Branch Accounts 2 7 - 7\n"
-    "Mix Mixed-topic case scenarios 6 8 - 9\n",
+    "Mix Revision case studies 6 8 - 9\n",
     "Introduction to Standards\nQuestion index\n"
     "01 RTP - May 2025, Q.5\n02 ICAI SM - 1 Basics of Standards, TYK Q.1\n"
     "01 RTP - May 2025, Q.5 Notebook Page No.\nWhat is the role of standards?\n",
@@ -46,7 +46,7 @@ def test_contents_rows_with_printed_counts_and_header():
         ("2", "Framework for Reports", 2, 4, 4),
         ("4.5", "AS 20 · Earnings Per Share", 4, 5, 6),
         ("15", "Branch Accounts", 2, 7, 7),
-        ("Mix", "Mixed-topic case scenarios", 6, 8, 9),
+        ("Mix", "Revision case studies", 6, 8, 9),
     ]
     assert rows[0].header == "No. Chapter No. of Qs Page number"
     assert {r.locator for r in rows} == {1}

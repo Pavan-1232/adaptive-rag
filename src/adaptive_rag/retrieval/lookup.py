@@ -8,7 +8,10 @@ the real chunks that hold them, marked "lookup", so citations point to real page
   by a chapter in the question; more than MAX_MATCHES candidates is ambiguous and skipped;
 - a contents question ("which pages cover AS 20", "how many questions on ...") -> the row, with
   the index's column header as context when the chunk doesn't contain it;
-- a listing question ("which questions cover ...") -> the chapter's printed question index.
+- a listing question ("which questions cover ...") -> the chapter's printed question index;
+- optionally (`lookup_bare_titles`, off by default): a short question that is just an index
+  title, possibly with the name of its document ("Lease Accounts in the Question Book"),
+  -> that row. Whole-title match only, no question words; see _bare_title_rows.
 Counts are only those printed in a row.
 """
 
@@ -37,10 +40,22 @@ _STANDARD = re.compile(r"\bas\s+(\d{1,2})\b", re.IGNORECASE)
 MAX_MATCHES = 3  # more reference matches than this is ambiguous: skipped, never guessed
 MAX_NGRAM = 8
 _STOP = frozenset("the a an of in on to for and or is are what which how does do".split())
+# A question with any of these is about the topic, not a request for its index entry.
+_ASKING = re.compile(
+    r"\b(?:how|why|what|when|who|which|where|explain|describe|define|meaning|difference|"
+    r"differ|compare|calculate|compute|prepare|discuss|example|examples|treatment|treat)\b",
+    re.IGNORECASE,
+)
+MAX_BARE_WORDS = 8  # a bare title is short
 
 
 def add_lookups(
-    ctx: AppContext, kb: sqlite3.Row, used: list[RetrievedChunk], question: str, max_tokens: int
+    ctx: AppContext,
+    kb: sqlite3.Row,
+    used: list[RetrievedChunk],
+    question: str,
+    max_tokens: int,
+    bare_titles: bool = False,
 ) -> tuple[list[RetrievedChunk], dict]:
     documents = ready_document_ids(ctx, kb)
     info: dict = {"matches": [], "skipped": []}
@@ -52,7 +67,11 @@ def add_lookups(
         if _LISTING.search(question):
             found += _listing(conn, documents, question, info)
         elif _CONTENTS.search(question):
-            found += _contents(conn, documents, question, info)
+            found += _contents(conn, _contents_rows(conn, documents, question), info)
+        elif bare_titles:
+            found += _contents(
+                conn, _bare_title_rows(conn, documents, question), info, "bare_title"
+            )
     if not found:
         return used, info
 
@@ -164,21 +183,47 @@ def _references(conn, documents: list[int], question: str, info: dict):
     return found
 
 
+def _document_words(conn, document_id: int) -> set[str]:
+    """Words that name a document: its filename and the text above its contents."""
+    doc = conn.execute(
+        "SELECT d.filename, substr(d.canonical_text, 1, MIN(c.char_start)) AS head"
+        " FROM documents d LEFT JOIN doc_contents c ON c.document_id = d.id"
+        " WHERE d.id = ?",
+        (document_id,),
+    ).fetchone()
+    return set(words(f"{doc['filename']} {doc['head'] or ''}"))
+
+
 def _document_hint(conn, documents: list[int], question: str) -> dict[int, int]:
-    """How well the question names each document, from its filename and the text above its
-    contents ("Book of Questions"). Used only to break ties between documents."""
+    """How well the question names each document ("Book of Questions"). Breaks ties only."""
     asked = {w for w in words(question) if w not in _STOP}
-    hints = {}
-    for document_id in documents:
-        doc = conn.execute(
-            "SELECT d.filename, substr(d.canonical_text, 1, MIN(c.char_start)) AS head"
-            " FROM documents d LEFT JOIN doc_contents c ON c.document_id = d.id"
-            " WHERE d.id = ?",
-            (document_id,),
-        ).fetchone()
-        text = f"{doc['filename']} {doc['head'] or ''}"
-        hints[document_id] = len(asked & set(words(text)))
-    return hints
+    return {d: len(asked & _document_words(conn, d)) for d in documents}
+
+
+def _bare_title_rows(conn, documents, question: str):
+    """Rows whose whole title is the question, apart from words naming the row's document:
+    "Revision case studies", "Lease Accounts in the Question Book". Not
+    "Explain lease accounts" (a question word) or "lease" alone (part of a title)."""
+    if _ASKING.search(question):
+        return []
+    asked = {w for w in words(question) if w not in _STOP}
+    if not asked or len(asked) > MAX_BARE_WORDS:
+        return []
+    marks = ",".join("?" * len(documents))
+    sql = f"SELECT * FROM doc_contents WHERE document_id IN ({marks})"  # noqa: S608
+    matches, names = [], {}
+    for r in conn.execute(sql, documents).fetchall():
+        title = {w for w in r["title_key"].split() if w not in _STOP}
+        if not title or not title <= asked:
+            continue
+        if r["document_id"] not in names:
+            names[r["document_id"]] = _document_words(conn, r["document_id"])
+        if asked - title <= names[r["document_id"]]:
+            matches.append(r)
+    # Prefer the most specific title when one title's words contain another's.
+    longest = max((len(r["title_key"].split()) for r in matches), default=0)
+    matches = [r for r in matches if len(r["title_key"].split()) == longest]
+    return matches[:MAX_MATCHES]
 
 
 def _contents_rows(conn, documents, question: str):
@@ -208,9 +253,9 @@ def _contents_rows(conn, documents, question: str):
     return top[:MAX_MATCHES]
 
 
-def _contents(conn, documents, question: str, info: dict):
+def _contents(conn, rows, info: dict, trigger: str = "wording"):
     found = []
-    for r in _contents_rows(conn, documents, question):
+    for r in rows:
         chunk = _chunk_at(conn, r["document_id"], r["char_start"])
         if chunk is None:
             continue
@@ -226,6 +271,7 @@ def _contents(conn, documents, question: str, info: dict):
                 "count": r["question_count"],
                 "chunk": chunk.chunk_id,
                 "page": r["locator"],
+                "trigger": trigger,
             }
         )
     return found

@@ -25,6 +25,7 @@ SETUPS = {
     "baseline": {"retrieval": "baseline", "structured_lookup": False},
     "base+lookup": {"retrieval": "baseline", "structured_lookup": True},
     "adapt+lookup": {"retrieval": "adaptive", "structured_lookup": True},
+    "base+bare": {"retrieval": "baseline", "structured_lookup": True, "lookup_bare_titles": True},
     "adaptive": {"retrieval": "adaptive", "adaptive_hybrid": False, "structured_lookup": False},
     "hybrid": {"retrieval": "adaptive", "adaptive_hybrid": True, "structured_lookup": False},
     "hyb+phrases": {

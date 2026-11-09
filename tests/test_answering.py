@@ -285,3 +285,13 @@ def test_option_blocks_ignore_references_inside_options():
     assert BANK_MCQS[start:end].strip() == "Both (a) and (b)."
     start, end = blocks[0]["d"]
     assert BANK_MCQS[start:end].strip() == "the Chief Justice of India"
+
+
+def test_citations_given_only_in_cited_ids_get_inline_markers(ctx, kb):
+    """Real use (2026-11-09): the model cited via cited_ids only; the UI had no inline marker."""
+    ctx.llm.queue(answer="Revenue grew eight percent.", cited_ids=["E1"])
+    result = answer_question(ctx, kb, QUESTION)
+    assert result.answer == "Revenue grew eight percent. [E1]"
+    assert [c.id for c in result.citations] == ["E1"]
+    ctx.llm.queue(answer="Revenue grew eight percent [E1].", cited_ids=["E1"])
+    assert answer_question(ctx, kb, QUESTION).answer == "Revenue grew eight percent [E1]."

@@ -331,10 +331,11 @@ RESUME_KEYS = (
     "table_prompt",
     "answer_keys",
     "structured_lookup",
+    "lookup_bare_titles",
     "adaptive_params",
 )
 # Runs saved before a key existed were measured without that feature.
-RESUME_DEFAULTS = {"answer_keys": False, "structured_lookup": False}
+RESUME_DEFAULTS = {"answer_keys": False, "structured_lookup": False, "lookup_bare_titles": False}
 
 
 def load_partial(path: Path) -> tuple[dict, dict[str, QuestionResult]]:
