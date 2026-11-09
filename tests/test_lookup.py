@@ -259,3 +259,50 @@ def test_a_named_document_wins_between_two_books_with_the_same_title(ctx, book, 
     _, evidence = bare(ctx, book, "Branch Accounts in the Book of Questions")
     [match] = evidence.info["lookup"]["matches"]
     assert match["chunk"].startswith(f"{books['Book of Questions.pdf']}-")
+
+
+# ---------------------------------------------------------------- chunk boundaries
+
+
+def test_a_row_cut_by_a_chunk_boundary_comes_from_the_chunk_holding_it_whole(ctx, tmp_path):
+    """Bug found 2026-11-09: a row starting 2 characters before a chunk's end was added from
+    that chunk, which held only "1." of the line; the whole row is in the next chunk."""
+    from adaptive_rag.retrieval.lookup import _chunk_at, add_lookups
+
+    rows = [
+        f"{i} {name} Topics {i + 1} {2 * i} - {2 * i + 1}"
+        for i, name in enumerate(["Alpha", "Beta", "Gamma", "Delta", "Lease"], start=1)
+    ]
+    text = "Book of Questions\nNo. Chapter No. of Qs Page number\n" + "\n".join(rows) + "\n"
+    kb = create_knowledge_base(ctx, "Cut")
+    path = tmp_path / "book.txt"
+    path.write_text(text)
+    _, job_id, _ = register_upload(ctx, kb, path, "book.txt")
+    run_ingest_job(ctx, job_id)
+    with ctx.db() as conn:
+        document_id, config_id = conn.execute(
+            "SELECT document_id, chunking_config_id FROM chunks LIMIT 1"
+        ).fetchone()
+        start, end = conn.execute(
+            "SELECT char_start, char_end FROM doc_contents WHERE title = 'Lease Topics'"
+        ).fetchone()
+        canonical = conn.execute(
+            "SELECT canonical_text FROM documents WHERE id = ?", (document_id,)
+        ).fetchone()[0]
+        conn.execute("DELETE FROM chunks WHERE document_id = ?", (document_id,))
+        cuts = [(0, start + 2), (start - 20, len(canonical))]  # A ends 2 chars into the row
+        for index, (a, b) in enumerate(cuts):
+            conn.execute(
+                "INSERT INTO chunks (id, document_id, chunk_index, start_char, end_char, text,"
+                " token_count, locator_start, locator_end, chunking_config_id, context_tokens,"
+                " is_table) VALUES (?, ?, ?, ?, ?, ?, 10, 1, 1, ?, 0, 0)",
+                (f"{document_id}-{index}", document_id, index, a, b, canonical[a:b], config_id),
+            )
+        assert _chunk_at(conn, document_id, start, end).chunk_id == f"{document_id}-1"
+        # No chunk holds this range whole: fall back to the chunk where it starts.
+        assert _chunk_at(conn, document_id, 5, len(canonical) + 10).chunk_id == f"{document_id}-0"
+
+    used, info = add_lookups(ctx, kb, [], "Which pages cover Lease Topics?", 4000)
+    [match] = info["matches"]
+    assert match["chunk"] == f"{document_id}-1"
+    assert "5 Lease Topics 6 10 - 11" in used[0].text

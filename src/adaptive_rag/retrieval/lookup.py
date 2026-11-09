@@ -107,13 +107,21 @@ def _chunk_number(conn, document_id: int, index: int) -> RetrievedChunk | None:
     return None if row is None else _to_chunk(row, 0.0)
 
 
-def _chunk_at(conn, document_id: int, position: int) -> RetrievedChunk | None:
-    row = conn.execute(
-        _CHUNK_SELECT + "c.document_id = ? AND c.start_char <= ? AND c.end_char > ?"
-        " ORDER BY c.chunk_index LIMIT 1",
-        (document_id, position, position),
-    ).fetchone()
-    return None if row is None else _to_chunk(row, 0.0)
+def _chunk_at(conn, document_id: int, start: int, end: int) -> RetrievedChunk | None:
+    """The first chunk holding the whole line [start, end). Chunks overlap, so a line cut by
+    one chunk's end is usually whole in the next (bug fixed 2026-11-09: the chunk holding only
+    the line's start was used). If no chunk holds it whole, the one where it starts."""
+    for sql, args in (
+        ("c.start_char <= ? AND c.end_char >= ?", (start, end)),
+        ("c.start_char <= ? AND c.end_char > ?", (start, start)),
+    ):
+        row = conn.execute(
+            _CHUNK_SELECT + "c.document_id = ? AND " + sql + " ORDER BY c.chunk_index LIMIT 1",
+            (document_id, *args),
+        ).fetchone()
+        if row is not None:
+            return _to_chunk(row, 0.0)
+    return None
 
 
 def _chapter_filter(question: str) -> str | None:
@@ -162,7 +170,7 @@ def _references(conn, documents: list[int], question: str, info: dict):
         return []
     found = []
     for r in headers:
-        chunk = _chunk_at(conn, r["document_id"], r["char_start"])
+        chunk = _chunk_at(conn, r["document_id"], r["char_start"], r["char_end"])
         if chunk is None:
             continue
         found.append(("reference", chunk))
@@ -256,7 +264,7 @@ def _contents_rows(conn, documents, question: str):
 def _contents(conn, rows, info: dict, trigger: str = "wording"):
     found = []
     for r in rows:
-        chunk = _chunk_at(conn, r["document_id"], r["char_start"])
+        chunk = _chunk_at(conn, r["document_id"], r["char_start"], r["char_end"])
         if chunk is None:
             continue
         header = r["header"]
@@ -294,7 +302,8 @@ def _listing(conn, documents, question: str, info: dict):
         ).fetchall()
         if not entries:
             continue
-        chunk = _chunk_at(conn, r["document_id"], entries[0]["char_start"])
+        first = entries[0]
+        chunk = _chunk_at(conn, r["document_id"], first["char_start"], first["char_end"])
         if chunk is None:
             continue
         found.append(("listing", chunk))
