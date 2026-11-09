@@ -1,0 +1,159 @@
+# Dev lookup questions (12). Written in a separate session from the PDFs in
+# benchmarks/documents/dev/ only (plus manifest.yaml, questions_template.yaml and
+# questions_dev_tables.yaml for format). Pages are physical PDF pages (blank pages counted).
+# Where an answer is a page number taken from a contents page, it is the PRINTED page number
+# the document shows, not the physical PDF page.
+
+# ---------------------------------------------------------------- Contents / index lookups
+
+- id: lk-01
+  document: tesla_10k.pdf
+  type: factual
+  question: Which page of Tesla's 10-K does the cybersecurity item start on?
+  answerable: true
+  evidence:
+    - page: 3
+      quote: Item 1C. Cybersecurity 28
+  expected_answer: Item 1C (Cybersecurity) starts on page 28 (printed page number)
+  notes: Contents lookup; answered from the 10-K index on physical page 3.
+  source: "claude-separate-session, user-reviewed"
+
+- id: lk-02
+  document: nist_ai_rmf.pdf
+  type: factual
+  question: Which section of the AI RMF talks about risk tolerance, and what page is it on?
+  answerable: true
+  evidence:
+    - page: 4
+      quote: 1.2.2 Risk Tolerance 7
+  expected_answer: Section 1.2.2 (Risk Tolerance), page 7 (printed page number)
+  notes: Contents lookup by topic; the table of contents maps the topic to a section number and page.
+  source: "claude-separate-session, user-reviewed"
+
+- id: lk-03
+  document: fed_mpr_feb2025.pdf
+  type: factual
+  question: Is there a box in the February 2025 report on labor productivity since the pandemic? Where can I find it?
+  answerable: true
+  evidence:
+    - page: 5
+      quote: Box 2. Labor Productivity since the Start of the Pandemic
+  expected_answer: Yes, Box 2 ("Labor Productivity since the Start of the Pandemic"), on page 18 (printed page number)
+  notes: Contents lookup; the box number and page come from the Contents page (physical page 5).
+  source: "claude-separate-session, user-reviewed"
+
+- id: lk-04
+  document: nist_ai_rmf.pdf
+  type: factual
+  question: Where does the framework explain how AI risks differ from traditional software risks?
+  answerable: true
+  evidence:
+    - page: 4
+      quote: "Appendix B: How AI Risks Differ from Traditional Software Risks 38"
+  expected_answer: Appendix B (How AI Risks Differ from Traditional Software Risks), page 38 (printed page number)
+  notes: Contents lookup by topic, pointing to an appendix rather than a numbered section.
+  source: "claude-separate-session, user-reviewed"
+
+# ---------------------------------------------------------------- Labelled items
+
+- id: lk-05
+  document: tesla_10k.pdf
+  type: factual
+  question: What does Tesla report under Item 6?
+  answerable: true
+  evidence:
+    - page: 34
+      quote: ITEM 6. [RESERVED]
+      alternatives:
+        - page: 3
+          quote: Item 6. [Reserved] 31
+  expected_answer: Nothing; Item 6 is marked [Reserved]
+  notes: Exact reference to a numbered Item whose only content is its label.
+  source: "claude-separate-session, user-reviewed"
+
+- id: lk-06
+  document: tesla_10k.pdf
+  type: table
+  question: What is exhibit 21.1 in Tesla's annual report?
+  answerable: true
+  evidence:
+    - page: 110
+      quote: 21.1 List of Subsidiaries of the Registrant
+  expected_answer: The list of subsidiaries of the registrant (Tesla)
+  notes: Exact reference to a numbered exhibit in the exhibit index table.
+  source: "claude-separate-session, user-reviewed"
+
+- id: lk-07
+  document: fed_mpr_feb2025.pdf
+  type: factual
+  question: What is Table 2 in the Summary of Economic Projections about?
+  answerable: true
+  evidence:
+    - page: 74
+      quote: Table 2. average Historical Projection Error Ranges
+  expected_answer: Average historical projection error ranges
+  notes: >-
+    Exact reference to a numbered table; the report also has a Table 1 (economic projections),
+    so the label has to be matched, not the topic.
+  source: "claude-separate-session, user-reviewed"
+
+- id: lk-08
+  document: ragas.pdf
+  type: factual
+  question: In the Ragas paper, what kind of example does table 3 give?
+  answerable: true
+  evidence:
+    - page: 8
+      quote: "Table 3: Example from WikiEval, showing answers with high and low answer relevance."
+  expected_answer: An example from WikiEval showing answers with high and low answer relevance
+  notes: >-
+    Exact reference to a numbered table; Tables 2 and 4 have near-identical captions
+    (faithfulness, context relevance), so the number decides the answer.
+  source: "claude-separate-session, user-reviewed"
+
+# ---------------------------------------------------------------- Counts stated in the text
+
+- id: lk-09
+  document: nist_ai_rmf.pdf
+  type: factual
+  question: How many functions make up the AI RMF Core, and what are they?
+  answerable: true
+  evidence:
+    - page: 25
+      quote: "the Core is composed of four functions: GOVERN, MAP, MEASURE,"
+  expected_answer: "Four: GOVERN, MAP, MEASURE and MANAGE"
+  notes: Count printed in the text ("four functions"); no counting needed.
+  source: "claude-separate-session, user-reviewed"
+
+- id: lk-10
+  document: ragas.pdf
+  type: factual
+  question: How many quality aspects does Ragas focus on?
+  answerable: true
+  evidence:
+    - page: 3
+      quote: We now explain how these three quality aspects
+  expected_answer: Three (faithfulness, answer relevance and context relevance)
+  notes: Count printed in the text ("these three quality aspects").
+  source: "claude-separate-session, user-reviewed"
+
+# ---------------------------------------------------------------- Unanswerable near-misses
+
+- id: lk-11
+  document: nist_ai_rmf.pdf
+  type: near_miss
+  question: What does Table 5 of the NIST AI RMF list?
+  answerable: false
+  evidence: []
+  notes: >-
+    The List of Tables has only Tables 1-4 (GOVERN, MAP, MEASURE, MANAGE); there is no Table 5.
+  source: "claude-separate-session, user-reviewed"
+
+- id: lk-12
+  document: fed_mpr_feb2025.pdf
+  type: near_miss
+  question: What topic does Box 8 of the February 2025 Monetary Policy Report cover?
+  answerable: false
+  evidence: []
+  notes: The Contents lists Boxes 1-7 only; there is no Box 8 in this edition.
+  source: "claude-separate-session, user-reviewed"
