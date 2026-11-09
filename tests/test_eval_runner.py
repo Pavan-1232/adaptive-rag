@@ -390,3 +390,33 @@ def test_resume_refuses_a_different_setup():
     saved = {"embedding_model": "a", "judge_prompt": "audit-1", "questions_sha256": "x"}
     assert resume_conflicts(saved, {**saved, "questions_sha256": "y"}) == ["questions_sha256"]
     assert resume_conflicts(saved, dict(saved)) == []
+
+
+def test_evaluation_settings_ignore_a_personal_env(tmp_path, monkeypatch):
+    """A local .env with hybrid on once leaked into dev runs (PROGRESS.md, 2026-11-09)."""
+    import argparse
+
+    import adaptive_rag.evaluation.__main__ as cli
+    from adaptive_rag.config import Settings, code_default_settings
+
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / ".env").write_text("ADAPTIVE_RAG_TOP_K=9\nADAPTIVE_RAG_ADAPTIVE_FUSION=rrf\n")
+    monkeypatch.setenv("ADAPTIVE_RAG_ADAPTIVE_HYBRID", "true")
+    monkeypatch.setenv("ADAPTIVE_RAG_RETRIEVAL", "adaptive")
+    leaky = Settings()  # the app's normal loading does pick these up
+    assert (leaky.top_k, leaky.adaptive_fusion, leaky.adaptive_hybrid) == (9, "rrf", True)
+
+    for settings in (code_default_settings(), cli._settings("dev", "embeddinggemma:300m", "C1")):
+        assert settings.top_k == 5 and settings.retrieval == "baseline"
+        assert settings.adaptive_hybrid is False and settings.adaptive_fusion == "weighted"
+    assert cli._settings("dev", "m", "C7").chunking == "C7"  # explicit values still apply
+
+    # Retrieval switches for a run come from its flags, which go into the run's metadata.
+    args = argparse.Namespace(chunking="C1", retrieval="adaptive", table_prompt=False)
+    run = cli._settings("dev", "m", "C1")
+    run.retrieval, run.adaptive_hybrid, run.adaptive_fusion = "adaptive", True, "rrf"
+    params = cli._metadata(
+        args, run, type("E", (), {"version": lambda self: "v"})(), "dev", "x", "none"
+    )
+    assert params["adaptive_params"]["hybrid"] is True
+    assert params["adaptive_params"]["fusion"] == "rrf"

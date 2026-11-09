@@ -18,7 +18,7 @@ from pathlib import Path
 import numpy as np
 
 from adaptive_rag.chunking import embedding_text
-from adaptive_rag.config import Settings
+from adaptive_rag.config import code_default_settings
 from adaptive_rag.evaluation.__main__ import DOCUMENTS
 from adaptive_rag.evaluation.benchmark import load_manifest
 from adaptive_rag.loaders import LOADERS
@@ -40,7 +40,7 @@ def main() -> int:
         Path(sys.argv[1]) if len(sys.argv) > 1 else Path(f"benchmarks/results/optimize_dev_{stamp}")
     )
     out_dir.mkdir(parents=True, exist_ok=True)
-    settings = Settings()
+    settings = code_default_settings()
     embedder = OllamaEmbeddings(MODEL, settings.ollama_host, settings.embedding_batch_size)
     llm = OllamaLLM(settings.llm_model, settings.ollama_host, settings.num_ctx)
     for item in load_manifest(split="dev"):

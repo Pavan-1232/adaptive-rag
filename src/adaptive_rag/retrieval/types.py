@@ -23,6 +23,8 @@ class RetrievedChunk:
     context_tokens: int = 0
     # Hybrid search: BM25 strength in 0..1 (1 = best keyword hit for the query). 0 when off.
     keyword: float = 0.0
+    # Keyword bypass (2026-11-09): the best match for the question's numeric phrases.
+    exact: bool = False
     # A merged evidence block: the chunks it was built from, in document order. Empty for a
     # plain chunk. The block's own fields span all members; score is the best direct score.
     members: tuple["RetrievedChunk", ...] = ()

@@ -41,6 +41,27 @@ def match_query(text: str, style: str = "words") -> str | None:
     return " OR ".join(dict.fromkeys(pairs + words)) or None
 
 
+def numeric_phrases(text: str) -> list[str]:
+    """Adjacent word pairs of the question that contain a number ("q 5", "may 2026", "as 20")."""
+    query = match_query(text, "phrases") or ""
+    return [t for t in query.split(" OR ") if " " in t and any(ch.isdigit() for ch in t)]
+
+
+def exact_hit(ctx: AppContext, text: str, document_ids: list[int]) -> str | None:
+    """The best keyword match for the question's numeric phrases only, or None."""
+    phrases = numeric_phrases(text)
+    if not phrases or not document_ids:
+        return None
+    placeholders = ",".join("?" * len(document_ids))
+    sql = (
+        "SELECT f.chunk_id FROM chunks_fts f JOIN chunks c ON c.id = f.chunk_id"  # noqa: S608
+        f" WHERE chunks_fts MATCH ? AND c.document_id IN ({placeholders}) ORDER BY rank LIMIT 1"
+    )
+    with ctx.db() as conn:
+        row = conn.execute(sql, [" OR ".join(phrases), *document_ids]).fetchone()
+    return row["chunk_id"] if row else None
+
+
 def keyword_search(
     ctx: AppContext, text: str, n: int, document_ids: list[int], style: str = "words"
 ) -> list[tuple[str, float]]:

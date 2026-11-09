@@ -12,7 +12,7 @@ from pathlib import Path
 
 import yaml
 
-from adaptive_rag.config import Settings
+from adaptive_rag.config import Settings, code_default_settings
 from adaptive_rag.loaders import LOADERS
 from adaptive_rag.providers import OllamaEmbeddings, OllamaLLM
 from adaptive_rag.retrieval import AdaptiveParams
@@ -65,7 +65,8 @@ def _settings(split: str, model: str, chunking: str = "fixed") -> Settings:
     """Each chunking mode gets its own index folder, so systems never share chunks."""
     slug = model.replace(":", "_")
     folder = f"{split}_{slug}" if chunking == "fixed" else f"{split}_{slug}_{chunking}"
-    return Settings(
+    # Code defaults only: a personal .env or shell variable must not change a measured run.
+    return code_default_settings(
         data_dir=Path("data") / "eval" / folder, embedding_model=model, chunking=chunking
     )
 
@@ -191,6 +192,10 @@ def cmd_run(args: argparse.Namespace) -> int:
     settings.retrieval = args.retrieval
     settings.table_prompt = args.table_prompt
     settings.answer_keys = not args.no_answer_keys
+    settings.adaptive_hybrid = args.hybrid
+    settings.adaptive_keyword_query = args.keyword_query
+    settings.adaptive_fusion = args.fusion
+    settings.adaptive_keyword_bypass = args.keyword_bypass
     embedder, llm = _providers(settings)
     documents = load_manifest(split=args.set)
     ctx, kb, indexed = build_index(
@@ -330,6 +335,10 @@ def main() -> int:
         help="baseline: fixed top-5 (A); adaptive: Stage 5 retrieval with config.py settings (S)",
     )
     run.add_argument("--table-prompt", action="store_true", help="Stage 5 table-reading rule")
+    run.add_argument("--hybrid", action="store_true", help="adaptive: add keyword search")
+    run.add_argument("--keyword-query", default="words", choices=["words", "phrases"])
+    run.add_argument("--fusion", default="weighted", choices=["weighted", "rrf"])
+    run.add_argument("--keyword-bypass", action="store_true", help="best numeric-phrase match")
     run.add_argument(
         "--no-answer-keys",
         action="store_true",

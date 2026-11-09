@@ -21,7 +21,7 @@ from adaptive_rag.retrieval import (
 )
 from adaptive_rag.retrieval.adaptive import expand, merge_block, select, uncovered_parts
 from adaptive_rag.retrieval.baseline import load_neighbor, ready_document_ids
-from adaptive_rag.retrieval.keyword import keyword_search, match_query
+from adaptive_rag.retrieval.keyword import exact_hit, keyword_search, match_query, numeric_phrases
 
 
 def chunk(cid, score, doc=1, index=0, tokens=100, text=None, heading=None, source="direct"):
@@ -600,3 +600,44 @@ def test_rrf_respects_the_budget_and_off_means_unchanged():
     assert "exact" not in [c.chunk_id for c in select(plan, [[chunk("a", 0.6), exact]], rrf)[0]]
     no_hybrid = AdaptiveParams(budget=5000, delta=None, min_chunks=1, fusion="rrf", **OFF)
     assert [c.chunk_id for c in select(plan, [[chunk("a", 0.6), exact]], no_hybrid)[0]] == ["a"]
+
+
+def test_numeric_phrases_are_the_pairs_with_a_number():
+    assert numeric_phrases("What does Paper 4 May 2025 Q.5 ask?") == [
+        '"paper 4"',
+        '"4 may"',
+        '"may 2025"',
+        '"2025 q"',
+        '"q 5"',
+        '"5 ask"',
+    ]
+    assert numeric_phrases("What is comparability?") == []
+
+
+def test_keyword_bypass_puts_one_exact_hit_first_with_weighted_ranking():
+    plan = analyze("What is Paper 4 May 2025 Q.5?")
+    dense = [chunk(f"d{i}", 0.6 - i * 0.01) for i in range(6)]
+    exact = replace(chunk("exact", 0.1), exact=True)  # below the floor by cosine
+    pool = [*dense, exact]
+    bypass = AdaptiveParams(
+        budget=5000, delta=None, min_chunks=1, hybrid=True, keyword_bypass=True, **OFF
+    )
+    chosen = [c.chunk_id for c in select(plan, [pool], bypass)[0]]
+    assert chosen == ["exact", "d0", "d1", "d2", "d3"]  # first, and the limit of 5 holds
+    off = AdaptiveParams(budget=5000, delta=None, min_chunks=1, hybrid=True, **OFF)
+    assert "exact" not in [c.chunk_id for c in select(plan, [pool], off)[0]]
+
+
+def test_exact_hit_matches_only_numeric_phrases(ctx, kb, tmp_path):
+    add(ctx, kb, tmp_path, "papers.txt", "Paper 4 May 2025 Q.5: prepare the cash flow statement.")
+    add(ctx, kb, tmp_path, "notes.txt", "Notes on the cash flow statement for May.")
+    documents = ready_document_ids(ctx, kb)
+    hit = exact_hit(ctx, "What does Paper 4 May 2025 Q.5 ask?", documents)
+    with ctx.db() as conn:
+        name = conn.execute(
+            "SELECT d.filename FROM chunks c JOIN documents d ON d.id = c.document_id"
+            " WHERE c.id = ?",
+            (hit,),
+        ).fetchone()[0]
+    assert name == "papers.txt"
+    assert exact_hit(ctx, "What is a cash flow statement?", documents) is None

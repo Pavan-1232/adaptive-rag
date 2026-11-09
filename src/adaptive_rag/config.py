@@ -107,6 +107,9 @@ class Settings(BaseSettings):
     adaptive_fusion: str = "weighted"
     adaptive_rrf_k: int = 60
     adaptive_strong_keyword_rank: int = 2
+    # Weighted hybrid only: the best match for a numeric phrase of the question ("Q.5", "AS 20")
+    # goes in first, past the floor and the gap cut. At most one chunk.
+    adaptive_keyword_bypass: bool = False
     # Name parts with no evidence above the floor in the prompt, so the answer can be partial.
     adaptive_part_notice: bool = True
     # Ask the model to name the row label and column header for every number it reports.
@@ -132,3 +135,18 @@ class Settings(BaseSettings):
     @property
     def chroma_dir(self) -> Path:
         return self.data_dir / "chroma"
+
+
+class _CodeDefaults(Settings):
+    @classmethod
+    def settings_customise_sources(
+        cls, settings_cls, init_settings, env_settings, dotenv_settings, file_secret_settings
+    ):
+        return (init_settings,)  # only values passed in code: no .env, no environment variables
+
+
+def code_default_settings(**values) -> Settings:
+    """Settings for evaluation and real-use runs: code defaults plus the values given here.
+    The .env file and ADAPTIVE_RAG_* environment variables are ignored, so a personal setup
+    can't leak into measured results (it did once: PROGRESS.md, 2026-11-09)."""
+    return _CodeDefaults(**values)

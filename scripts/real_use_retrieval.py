@@ -15,7 +15,7 @@ from pathlib import Path
 import yaml
 
 from adaptive_rag.api import build_context
-from adaptive_rag.config import Settings
+from adaptive_rag.config import code_default_settings
 from adaptive_rag.retrieval import retrieve_baseline
 from adaptive_rag.retrieval.evidence import retrieve_evidence
 from adaptive_rag.vectorstore.process import start_store_process
@@ -28,6 +28,11 @@ SETUPS = {
         "retrieval": "adaptive",
         "adaptive_hybrid": True,
         "adaptive_keyword_query": "phrases",
+    },
+    "hyb+bypass": {
+        "retrieval": "adaptive",
+        "adaptive_hybrid": True,
+        "adaptive_keyword_bypass": True,
     },
     "hyb+phr+rrf": {
         "retrieval": "adaptive",
@@ -66,7 +71,7 @@ def main() -> int:
     setups = {name: SETUPS[name] for name in args.setups.split(",")}
 
     cases = yaml.safe_load(Path(args.questions).read_text())["questions"]
-    ctx = build_context(Settings(_env_file=None, data_dir=Path(args.index), chunking=args.chunking))
+    ctx = build_context(code_default_settings(data_dir=Path(args.index), chunking=args.chunking))
     process, ctx.store = start_store_process(ctx.settings.chroma_dir)
     base = ctx.settings.model_copy()
     try:

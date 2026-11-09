@@ -17,7 +17,7 @@ from adaptive_rag.context import AppContext
 from adaptive_rag.knowledge_bases import check_embedding_lock
 
 from .baseline import load_chunks, load_neighbor, ready_document_ids
-from .keyword import keyword_search
+from .keyword import exact_hit, keyword_search
 from .query import QueryPlan, analyze
 from .types import RetrievedChunk
 
@@ -67,6 +67,8 @@ class AdaptiveParams:
     fusion: str = "weighted"
     rrf_k: int = 60
     strong_keyword_rank: int = 2
+    # Weighted hybrid: the best numeric-phrase match goes in first (at most one chunk).
+    keyword_bypass: bool = False
 
     @classmethod
     def from_settings(cls, settings: Settings, embedding_model: str) -> "AdaptiveParams":
@@ -92,6 +94,7 @@ class AdaptiveParams:
             fusion=settings.adaptive_fusion,
             rrf_k=settings.adaptive_rrf_k,
             strong_keyword_rank=settings.adaptive_strong_keyword_rank,
+            keyword_bypass=settings.adaptive_keyword_bypass,
         )
 
 
@@ -212,7 +215,10 @@ def ranking(pools: list[list[RetrievedChunk]], params: AdaptiveParams):
     if not params.hybrid:
         return (lambda c: c.score), set()
     if params.fusion == "weighted":
-        return (lambda c: c.score + params.keyword_weight * c.keyword), set()
+        bypass = (
+            {c.chunk_id for c in pools[0] if c.exact} if params.keyword_bypass and pools else set()
+        )
+        return (lambda c: c.score + params.keyword_weight * c.keyword), bypass
     if params.fusion != "rrf":
         raise ValueError(f"unknown fusion: {params.fusion}")
     fused: dict[str, float] = {}
@@ -396,11 +402,15 @@ def _pool(ctx: AppContext, kb, text: str, params: AdaptiveParams, document_ids: 
     strength = dict(
         keyword_search(ctx, text, params.keyword_pool, document_ids, params.keyword_query)
     )
+    exact = exact_hit(ctx, text, document_ids) if params.keyword_bypass else None
     known = {chunk_id for chunk_id, _ in scored}
-    missing = [chunk_id for chunk_id in strength if chunk_id not in known]
+    missing = [c for c in dict.fromkeys([*strength, exact]) if c is not None and c not in known]
     cosine = ctx.store.similarity(kb["collection_name"], embedding, missing)
     scored += [(chunk_id, cosine[chunk_id]) for chunk_id in missing if chunk_id in cosine]
-    return [replace(c, keyword=strength.get(c.chunk_id, 0.0)) for c in load_chunks(ctx, scored)]
+    return [
+        replace(c, keyword=strength.get(c.chunk_id, 0.0), exact=c.chunk_id == exact)
+        for c in load_chunks(ctx, scored)
+    ]
 
 
 def retrieve_adaptive(
