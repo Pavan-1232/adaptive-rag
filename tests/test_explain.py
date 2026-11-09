@@ -71,9 +71,14 @@ def test_the_explanation_prompt_has_no_evidence_and_gets_the_final_answer(ctx, k
     assert result.status == "partial" and result.answer == NOT_GIVEN_MESSAGE  # grounded unchanged
     assert result.explanation_label == LABEL_UNVERIFIED
     system, user = (m["content"] for m in ctx.llm.calls[-1])
-    assert "<evidence" not in system + user
+    assert "<evidence" not in system + user  # no evidence passages
     assert "You do not have the user's documents" in system
-    assert NOT_GIVEN_MESSAGE.split(".")[0] in user and "(c) No - providers" not in user
+    grounded_block = user.split("<grounded_answer>")[1]
+    assert NOT_GIVEN_MESSAGE.split(".")[0] in grounded_block
+    assert "(c) No - providers" not in grounded_block  # the withheld pick isn't the answer
+    # The options reach it only as the question being explained, from the cited passage.
+    question_block = user.split("<the_question>")[1].split("</the_question>")[0]
+    assert "(a) Yes, always." in question_block and "(d) No, AS 18" in question_block
 
 
 def test_stronger_label_when_the_grounded_answer_is_not_answered(ctx, kb):
@@ -161,3 +166,53 @@ def test_api_explain_flag(ctx, kb):
         assert body["explanation"] == "A general explanation."
         assert body["explanation_label"] == LABEL
         assert body["answer"] == plain["answer"] and body["status"] == plain["status"]
+
+
+TWO_MCQS = (
+    "TEST YOUR KNOWLEDGE\n"
+    "1. Vega Ltd. sold a machine with a book value of 40,000 at a gain of 5,000. The amount "
+    "shown under operating activities is\n(a) Nil\n(b) 5,000\n(c) 45,000\n(d) 40,000\n"
+    "2. Interest received by a manufacturing company is shown as\n(a) operating inflow\n"
+    "(b) investing inflow\n(c) financing inflow\n(d) cash equivalent\n\n"
+    "ANSWERS/HINTS\nAnswers to the Multiple Choice Questions\n1. (a) 2. (b)\n"
+)
+
+
+def test_the_numbered_question_is_sent_alone_and_only_from_a_cited_passage(ctx, tmp_path):
+    kb = create_knowledge_base(ctx, "Unit")
+    path = tmp_path / "unit.txt"
+    path.write_text(TWO_MCQS)
+    _, job_id, _ = register_upload(ctx, kb, path, "unit.txt")
+    run_ingest_job(ctx, job_id)
+    question = "Vega Ltd sold a machine at a gain: what is the answer to question 1?"
+
+    ctx.llm.queue(answer="1. (a) Nil [E1].")
+    ctx.llm.responses.append("The gain is investing; operating shows nil.")
+    answer_question(ctx, kb, question, explain=True)
+    user = ctx.llm.calls[-1][1]["content"]
+    block = user.split("<the_question>")[1].split("</the_question>")[0]
+    assert "book value of 40,000" in block and "(d) 40,000" in block
+    assert "Interest received" not in block  # question 2 is not sent
+
+    # Not cited (the model cited nothing valid, so it was withheld): no question text is sent.
+    ctx.llm.queue(answer="1. (a) Nil.", cited_ids=[])
+    ctx.llm.responses.append("General explanation.")
+    result = answer_question(ctx, kb, question, explain=True)
+    assert result.status == "insufficient"
+    assert "<the_question>" not in ctx.llm.calls[-1][1]["content"]
+
+
+def test_no_question_is_guessed_when_two_cited_mcqs_match_equally(ctx, tmp_path):
+    from adaptive_rag.answering.answer import _question_to_explain
+    from adaptive_rag.answering.citations import Citation  # noqa: F401
+    from adaptive_rag.retrieval import Evidence, RetrievedChunk
+
+    chunk = RetrievedChunk("1-0", 1, "u.txt", 0, TWO_MCQS, 100, 0.8, "line", 1, 9, None)
+    cite = type("C", (), {"id": "E1"})()
+    info = {"answer_keys": [{"question": None, "keyed": None}]}
+    evidence = Evidence("baseline", [chunk], [chunk], info=info)
+    assert _question_to_explain(evidence, [cite], {"E1": chunk}, "explain it simply") is None
+    picked = _question_to_explain(
+        evidence, [cite], {"E1": chunk}, "Interest received by a manufacturing company shown"
+    )
+    assert picked is not None and picked.startswith("2. Interest received")

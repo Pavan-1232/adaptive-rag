@@ -159,6 +159,20 @@ def visible_questions(text: str) -> tuple[list[tuple[int, int]], bool]:
     return found, len(letters) >= 2
 
 
+def mcq_questions(text: str) -> list[tuple[int | None, str]]:
+    """Each MCQ in the text as (number, its stem and options on clean lines). For the tutor
+    explanation, so it sees the question it explains."""
+    found = []
+    for block in option_blocks(text):
+        start = block["a"][0]
+        numbers = list(_QUESTION_NUMBER.finditer(text, max(0, start - 800), start))
+        begin = numbers[-1].start() if numbers else max(0, text.rfind("\n", 0, start - 4))
+        number = int(numbers[-1].group(1)) if numbers else None
+        lines = [" ".join(line.split()) for line in text[begin : block["d"][1]].splitlines()]
+        found.append((number, "\n".join(line for line in lines if line)[:1500]))
+    return found
+
+
 def option_text(evidence_texts: list[str], number: int, letter: str) -> str | None:
     """The text of option `letter` of question `number`, from the evidence, on one line."""
     for text in evidence_texts:

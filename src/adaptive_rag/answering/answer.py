@@ -1,6 +1,7 @@
 """Question to grounded answer: retrieve, check evidence, generate, validate, trace."""
 
 import json
+import re
 import sqlite3
 import time
 from dataclasses import dataclass
@@ -15,6 +16,7 @@ from adaptive_rag.mcq import (
     NOT_GIVEN_MESSAGE,
     NOT_GIVEN_WARNING,
     contradicts_key,
+    mcq_questions,
     option_text,
     picks_unkeyed_option,
     restate_option,
@@ -234,8 +236,13 @@ def answer_question(
                 text = option_text(texts, link["question"], link["keyed"])
                 if text:
                     answer = restate_option(answer, link["keyed"], text)
-    # The grounded answer is final here. The explanation only reads it.
-    tutor = _explain_if_asked(explain, llm, question, resolved, status, answer, settings)
+    # The grounded answer is final here. The explanation only reads it, plus the MCQ it's about.
+    the_question = (
+        _question_to_explain(retrieved, citations, evidence, resolved.searched) if explain else None
+    )
+    tutor = _explain_if_asked(
+        explain, llm, question, resolved, status, answer, settings, the_question
+    )
     if tutor:
         retrieved.info["explanation"] = tutor.info
     trace_id = _write_trace(
@@ -263,12 +270,40 @@ def answer_question(
     )
 
 
-def _explain_if_asked(explain, llm, question, resolved, status, answer, settings):
+def _explain_if_asked(
+    explain, llm, question, resolved, status, answer, settings, the_question=None
+):
     if not explain:
         return None
     return explain_answer(
-        llm, question, resolved.earlier, status, answer, settings.max_answer_tokens
+        llm, question, resolved.earlier, status, answer, settings.max_answer_tokens, the_question
     )
+
+
+def _question_to_explain(retrieved, citations, evidence, searched: str) -> str | None:
+    """The MCQ the explanation is about, from a passage the grounded answer cited: the linked
+    question when it's certain, else the only cited MCQ, else the one that clearly best
+    matches what was searched. None rather than a guess."""
+    cited = [evidence[c.id] for c in citations if c.id in evidence]
+    found = [
+        q for chunk in cited if chunk.source != "answer_key" for q in mcq_questions(chunk.text)
+    ]
+    found = list(dict.fromkeys(found))
+    for link in retrieved.info.get("answer_keys", []):
+        if link["question"] is not None:
+            match = [text for number, text in found if number == link["question"]]
+            if match:
+                return match[0]
+    if len(found) == 1:
+        return found[0][1]
+    words = {w for w in re.findall(r"[a-z0-9]+", searched.lower()) if len(w) > 3}
+    scored = sorted(
+        ((len(words & set(re.findall(r"[a-z0-9]+", text.lower()))), text) for _, text in found),
+        reverse=True,
+    )
+    if scored and scored[0][0] >= 3 and (len(scored) == 1 or scored[0][0] > scored[1][0]):
+        return scored[0][1]
+    return None
 
 
 def _tutor_fields(tutor) -> tuple[str | None, str | None, str | None]:
