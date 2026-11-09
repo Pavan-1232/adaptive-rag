@@ -144,6 +144,8 @@ def _system_label(args) -> str:
         label = f"S (adaptive retrieval on {chunking})"
     if getattr(args, "table_prompt", False):
         label += " + table prompt"
+    if not getattr(args, "no_answer_keys", True):
+        label += " + answer keys"
     return label
 
 
@@ -158,6 +160,7 @@ def _metadata(args, settings, embedder, split, question_source, judge_model) -> 
         "system": _system_label(args),
         "retrieval": settings.retrieval,
         "table_prompt": settings.table_prompt,
+        "answer_keys": settings.answer_keys,
         "adaptive_params": _adaptive_params(settings),
         "chunking": getattr(args, "chunking", "fixed"),
         "set": split,
@@ -187,6 +190,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     settings = _settings(args.set, args.embedding_model, args.chunking)
     settings.retrieval = args.retrieval
     settings.table_prompt = args.table_prompt
+    settings.answer_keys = not args.no_answer_keys
     embedder, llm = _providers(settings)
     documents = load_manifest(split=args.set)
     ctx, kb, indexed = build_index(
@@ -217,6 +221,7 @@ def cmd_run(args: argparse.Namespace) -> int:
         suffix = "" if args.chunking == "fixed" else f"_{args.chunking}"
         suffix += "_S" if args.retrieval == "adaptive" else ""
         suffix += "_tblprompt" if args.table_prompt else ""
+        suffix += "" if args.no_answer_keys else "_anskeys"
         model = args.embedding_model.replace(":", "_")
         path = RESULTS / f"{args.set}_{model}{suffix}_{stamp}.json"
         print(f"Saving progress to {path}. To resume after a stop, add: --resume {path}")
@@ -325,6 +330,11 @@ def main() -> int:
         help="baseline: fixed top-5 (A); adaptive: Stage 5 retrieval with config.py settings (S)",
     )
     run.add_argument("--table-prompt", action="store_true", help="Stage 5 table-reading rule")
+    run.add_argument(
+        "--no-answer-keys",
+        action="store_true",
+        help="turn off MCQ answer-key linking, as in the Stage 3-5 runs (on in the app)",
+    )
     run.add_argument("--judge", nargs="?", const=JUDGE_MODEL, default=None)
     run.add_argument("--final", action="store_true", help="required for the held-out test set")
     run.add_argument("--question-source", default="unspecified")

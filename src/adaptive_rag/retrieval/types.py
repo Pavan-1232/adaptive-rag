@@ -15,7 +15,7 @@ class RetrievedChunk:
     locator_start: int
     locator_end: int
     section_heading: str | None
-    source: Literal["direct", "expansion"] = "direct"
+    source: Literal["direct", "expansion", "answer_key"] = "direct"
     start_char: int = 0
     end_char: int = 0
     # C7 table header shown before the chunk text; its tokens are charged to the budget.

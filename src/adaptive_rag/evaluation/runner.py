@@ -329,8 +329,11 @@ RESUME_KEYS = (
     "retrieval_only",
     "retrieval",
     "table_prompt",
+    "answer_keys",
     "adaptive_params",
 )
+# Runs saved before a key existed were measured without that feature.
+RESUME_DEFAULTS = {"answer_keys": False}
 
 
 def load_partial(path: Path) -> tuple[dict, dict[str, QuestionResult]]:
@@ -340,7 +343,11 @@ def load_partial(path: Path) -> tuple[dict, dict[str, QuestionResult]]:
 
 
 def resume_conflicts(saved: dict, current: dict) -> list[str]:
-    return [key for key in RESUME_KEYS if saved.get(key) != current.get(key)]
+    return [
+        key
+        for key in RESUME_KEYS
+        if saved.get(key, RESUME_DEFAULTS.get(key)) != current.get(key, RESUME_DEFAULTS.get(key))
+    ]
 
 
 def is_complete(payload: dict) -> bool:

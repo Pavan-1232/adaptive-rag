@@ -1,7 +1,6 @@
 """Application settings, read from environment variables or a gitignored .env file."""
 
 from pathlib import Path
-from typing import Literal
 
 from pydantic import AliasChoices, Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -28,9 +27,6 @@ class Settings(BaseSettings):
 
     ollama_host: str = "http://localhost:11434"
     llm_model: str = "qwen3.5:9b"
-    # The UI pre-selects this answer model, but only when the knowledge base allows cloud models
-    # and the provider has a key; otherwise Ollama. The API's own default stays "ollama".
-    default_provider: Literal["ollama", "openai", "gemini", "anthropic"] = "ollama"
     # Stage 6 cloud answer models: cost-sensitive defaults checked against each provider's docs
     # on 2026-11-06. Used only with the user's own key and the knowledge base's cloud opt-in.
     openai_model: str = "gpt-6-luna"
@@ -75,6 +71,10 @@ class Settings(BaseSettings):
     # Stage 5. "baseline" is fixed top_k. "adaptive" is opt-in until the held-out run supports it.
     # The adaptive_* defaults below are finalist S, chosen on dev by decision 49's rule.
     retrieval: str = "baseline"
+    # Answer-key linking (approved 2026-11-09): when the evidence holds an MCQ, add the same
+    # document's answer-key section. Both modes. Stage 3-5 results were measured without it;
+    # evaluation runs turn it off with --no-answer-keys.
+    answer_keys: bool = True
     adaptive_split_parts: bool = True
     adaptive_delta: float | None = None
     adaptive_min_chunks: int = 3

@@ -15,7 +15,6 @@ export type Turn = { question: string; answer?: Answer; error?: string };
 
 type Props = {
   kb: KnowledgeBase;
-  defaultProvider: Provider;
   turns: Turn[];
   setTurns: (update: (turns: Turn[]) => Turn[]) => void;
   onKbChange: (kb: KnowledgeBase) => void;
@@ -23,8 +22,26 @@ type Props = {
 };
 
 const CLOUD: CloudProvider[] = ["openai", "gemini", "anthropic"];
+// The last answer model picked, remembered in this browser. Only the provider name, never a key.
+const LAST_PROVIDER = "lastProvider";
 
-export default function Chat({ kb, defaultProvider, turns, setTurns, onKbChange, onKbDeleted }: Props) {
+function readLastProvider(): string | null {
+  try {
+    return localStorage.getItem(LAST_PROVIDER);
+  } catch {
+    return null; // storage blocked (private window, previews): just don't remember
+  }
+}
+
+function saveLastProvider(provider: Provider) {
+  try {
+    localStorage.setItem(LAST_PROVIDER, provider);
+  } catch {
+    // as above
+  }
+}
+
+export default function Chat({ kb, turns, setTurns, onKbChange, onKbDeleted }: Props) {
   const [question, setQuestion] = useState("");
   const [provider, setProvider] = useState<Provider>("ollama");
   const [keys, setKeys] = useState<KeySources | null>(null);
@@ -42,14 +59,22 @@ export default function Chat({ kb, defaultProvider, turns, setTurns, onKbChange,
     bottom.current?.scrollIntoView?.({ behavior: "smooth" });
   }, [turns.length, busy]);
 
-  // Pre-select the configured default only if it's usable here; a cloud choice is dropped
-  // if the knowledge base stops allowing cloud models.
-  useEffect(() => {
-    const usable = defaultProvider === "ollama" || (kb.allow_cloud && keys && keys[defaultProvider] !== "not set");
-    setProvider(usable ? defaultProvider : "ollama");
-  }, [kb.allow_cloud, keys, defaultProvider]);
-
   const cloudWithKeys = CLOUD.filter((p) => keys && keys[p] !== "not set");
+  // Usable here: Ollama, plus cloud providers with a key if this knowledge base allows cloud.
+  const usable: Provider[] = ["ollama", ...(kb.allow_cloud ? cloudWithKeys : [])];
+  const usableKey = usable.join(",");
+
+  // Pre-select the last choice if it's usable here, else the first usable one. Re-checked when
+  // keys load or cloud is switched on or off; the remembered choice itself is kept.
+  useEffect(() => {
+    const last = readLastProvider();
+    setProvider(usable.find((p) => p === last) ?? usable[0]);
+  }, [usableKey]);
+
+  function choose(next: Provider) {
+    setProvider(next);
+    saveLastProvider(next);
+  }
 
   async function ask(event: React.FormEvent) {
     event.preventDefault();
@@ -170,7 +195,7 @@ export default function Chat({ kb, defaultProvider, turns, setTurns, onKbChange,
                 />
                 <select
                   value={provider}
-                  onChange={(e) => setProvider(e.target.value as Provider)}
+                  onChange={(e) => choose(e.target.value as Provider)}
                   aria-label="Answer model"
                   className="rounded-md border border-zinc-200 bg-white px-2 py-1.5 text-sm"
                 >
@@ -276,6 +301,7 @@ export function AnswerView({ answer }: { answer: Answer }) {
             <span className="font-medium text-zinc-800">{open.label}</span>
             {open.section_heading && <span>· {open.section_heading}</span>}
             {open.source === "expansion" && <span>· neighboring passage</span>}
+            {open.source === "answer_key" && <span>· answer key, added for the question</span>}
           </figcaption>
           <blockquote className="max-h-72 overflow-y-auto whitespace-pre-wrap text-zinc-700">{open.passage}</blockquote>
         </figure>

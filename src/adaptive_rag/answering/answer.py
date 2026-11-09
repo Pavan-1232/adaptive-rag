@@ -9,6 +9,14 @@ from typing import Literal
 from pydantic import BaseModel, ValidationError
 
 from adaptive_rag.context import AppContext
+from adaptive_rag.mcq import (
+    KEY_MISMATCH_MESSAGE,
+    KEY_MISMATCH_WARNING,
+    NOT_GIVEN_MESSAGE,
+    NOT_GIVEN_WARNING,
+    contradicts_key,
+    picks_unkeyed_option,
+)
 from adaptive_rag.providers.cloud import cloud_llm
 from adaptive_rag.retrieval import Evidence, RetrievedChunk, retrieve_evidence
 
@@ -173,6 +181,16 @@ def answer_question(
         raise GenerationFailed(f"The model's response {reason}. Please try again.") from exc
 
     status, answer, citations, warnings = _resolve(output, evidence)
+    # Gate 4: an MCQ option the evidence never confirms is withheld (prompt rule wasn't enough),
+    # and so is one that differs from the answer key linked by retrieval.
+    texts = [c.evidence_text for c in used]
+    keyed = {link["keyed"] for link in retrieved.info.get("answer_keys", []) if link["keyed"]}
+    if status != "insufficient" and keyed and contradicts_key(answer, texts, keyed):
+        status, answer = "partial", KEY_MISMATCH_MESSAGE
+        warnings = [*warnings, KEY_MISMATCH_WARNING]
+    elif status != "insufficient" and picks_unkeyed_option(answer, texts):
+        status, answer = "partial", NOT_GIVEN_MESSAGE
+        warnings = [*warnings, NOT_GIVEN_WARNING]
     trace_id = _write_trace(
         ctx,
         kb,

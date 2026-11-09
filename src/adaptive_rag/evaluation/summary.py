@@ -42,7 +42,11 @@ def evaluation_summary(results_dir: Path) -> dict:
     s = stage5["primary"]
     recall = "Recall@budget (2,560 tokens)"
     return {
-        "dataset": "Held-out test set: 5 public documents, 30 questions (24 answerable), run once",
+        "dataset": (
+            "Held-out test set: 5 public documents, 30 questions (24 answerable), run once. "
+            "Measured without MCQ answer-key linking and the MCQ option check (both added "
+            "2026-11-09)."
+        ),
         "baseline": {
             "name": "A: fixed 512/50 chunks, top-5 retrieval",
             "answerable": baseline["answerable"],

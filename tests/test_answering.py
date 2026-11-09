@@ -4,11 +4,18 @@ import pytest
 
 from adaptive_rag.answering import INSUFFICIENT_MESSAGE, GenerationFailed, answer_question
 from adaptive_rag.answering.citations import format_label, ids_in_text, strip_unknown_ids
-from adaptive_rag.answering.prompts import build_messages
+from adaptive_rag.answering.prompts import build_messages, has_options
 from adaptive_rag.ingest import register_upload, run_ingest_job
 from adaptive_rag.knowledge_bases import create_knowledge_base
+from adaptive_rag.mcq import (
+    NOT_GIVEN_MESSAGE,
+    NOT_GIVEN_WARNING,
+    option_blocks,
+    picks_unkeyed_option,
+)
 from adaptive_rag.providers import LLMResult
 from adaptive_rag.retrieval import RetrievedChunk
+from test_cloud_e2e import BANK_EXPLANATORY, BANK_MCQS, UNIT_KEY, UNIT_QUESTIONS
 
 QUESTION = "What happened to revenue this year?"
 
@@ -154,3 +161,127 @@ def test_labels_are_format_specific(item, label):
 def test_citation_marker_parsing():
     assert ids_in_text("A [E2] then [E1, E3] and [E2], not E7 or [note].") == ["E2", "E1", "E3"]
     assert strip_unknown_ids("A [E1, E9] b [E9].", {"E1"}) == "A [E1] b."
+
+
+MCQ_OPTIONS_ONLY = (
+    "Q14. Which section of the Companies Act, 2013 deals with Corporate Social Responsibility?\n"
+    "(a) Section 135\n(b) Section 149\n(c) Section 186\n(d) Section 188\n"
+)
+
+
+def test_options_only_mcq_gets_the_no_answer_key_rule_and_reminder():
+    system, user = (m["content"] for m in build_messages("Answer Q14", [chunk(MCQ_OPTIONS_ONLY)]))
+    assert "an option listed in the evidence is a possible answer, not a fact" in system
+    assert MCQ_OPTIONS_ONLY.strip() in user  # options reach the model unaltered
+    assert user.index("lists multiple-choice options") > user.index("</evidence>")
+
+
+def test_option_detector():
+    inline = "Q3. Who appoints the auditor? (a) Board (b) CAG (c) Members (d) Registrar"
+    lines = "Q4. Pick one:\nA. Debit\nB. Credit\nC. Neither\n"
+    two_items = "Either (a) the company or (b) its directors may apply."
+    prose = "Revenue grew eight percent across all regions."
+    assert has_options([chunk(inline)]) and has_options([chunk(lines)])
+    assert not has_options([chunk(two_items)]) and not has_options([chunk(prose)])
+    assert "multiple-choice" not in build_messages("q", [chunk(prose)])[1]["content"]
+
+
+def test_options_only_mcq_reply_keeps_partial_status_and_citation(ctx, tmp_path):
+    knowledge_base = create_knowledge_base(ctx, "CA")
+    path = tmp_path / "question_bank.txt"
+    path.write_text(MCQ_OPTIONS_ONLY)
+    _, job_id, _ = register_upload(ctx, knowledge_base, path, "question_bank.txt")
+    run_ingest_job(ctx, job_id)
+    reply = "Q14 and its options are listed [E1], but the correct option isn't given."
+    ctx.llm.queue(answer=reply, cited_ids=["E1"], status="partial")
+    question = "Which section of the Companies Act deals with Corporate Social Responsibility?"
+    result = answer_question(ctx, knowledge_base, question)
+    assert result.status == "partial"
+    assert "isn't given" in result.answer
+    assert result.citations[0].filename == "question_bank.txt"
+
+
+# Gate 4: the code check after generation (mcq.py). Real-use failure on a question-bank page.
+LENDER_Q = "Is Lakeview Bank a related party of Harbor Foods under AS 18 because of the loan?"
+# What Gemini did in the app (in the real case): it reworded option (c) as the document's answer.
+PICKED_C = (
+    "No. AS 18 states that providers of finance, in the course of their business with an "
+    "enterprise, are not related parties merely because of those dealings, so Lakeview Bank is "
+    "not a related party [E1]."
+)
+
+
+def test_unkeyed_option_pick_is_withheld(ctx, tmp_path):
+    knowledge_base = create_knowledge_base(ctx, "CA")
+    path = tmp_path / "question_bank.txt"
+    path.write_text(BANK_EXPLANATORY)
+    _, job_id, _ = register_upload(ctx, knowledge_base, path, "question_bank.txt")
+    run_ingest_job(ctx, job_id)
+    ctx.llm.queue(answer=PICKED_C, cited_ids=["E1"])
+    result = answer_question(ctx, knowledge_base, LENDER_Q)
+    assert result.status == "partial"
+    assert result.answer == NOT_GIVEN_MESSAGE
+    assert NOT_GIVEN_WARNING in result.warnings
+    assert result.citations[0].filename == "question_bank.txt"  # still shows where the question is
+    with ctx.db() as conn:
+        status = conn.execute(
+            "SELECT status FROM query_traces WHERE id = ?", (result.trace_id,)
+        ).fetchone()[0]
+    assert status == "partial"
+
+
+@pytest.mark.parametrize(
+    "answer",
+    [PICKED_C, "The answer is (c) [E1].", "Option C [E1].", "(C) No [E1]."],
+)
+def test_option_picks_are_detected(answer):
+    assert picks_unkeyed_option(answer, [BANK_EXPLANATORY])
+
+
+@pytest.mark.parametrize(
+    ("answer", "evidence"),
+    [
+        # A separate answer key in the evidence: the model may use it.
+        ("Question 1's answer is (a) Operating activities [E1, E2].", [UNIT_QUESTIONS, UNIT_KEY]),
+        # Already declined.
+        ("The correct option isn't given in the documents [E1].", [BANK_EXPLANATORY]),
+        # Same wording, but grounded in real text outside the options.
+        (
+            PICKED_C,
+            [
+                BANK_EXPLANATORY,
+                "AS 18, para 10: providers of finance, in the course of their business with an "
+                "enterprise, are not related parties merely because of those dealings. AS 18 "
+                "states that providers of finance, in the course of their business with an "
+                "enterprise, are not related parties merely because of those dealings.",
+            ],
+        ),
+        # Not an MCQ: two clauses only, and "135(a)" is a section reference, not an option.
+        (
+            "Either party may apply under section 135(a) [E1].",
+            ["Either (a) the company or (b) its directors may apply."],
+        ),
+        ("Revenue grew eight percent [E1].", ["Revenue grew eight percent."]),
+        # A clause list (like a 10-K certification), quoted as the answer.
+        (
+            "They designed disclosure controls to ensure material information is made known [E1].",
+            [
+                "The officers certify that they have:\n(a) Designed disclosure controls to ensure "
+                "material information is made known;\n(b) Designed internal control over financial "
+                "reporting;\n(c) Evaluated the effectiveness of the controls; and\n"
+                "(d) Disclosed any change in internal control.\n"
+            ],
+        ),
+    ],
+)
+def test_option_check_leaves_these_alone(answer, evidence):
+    assert not picks_unkeyed_option(answer, evidence)
+
+
+def test_option_blocks_ignore_references_inside_options():
+    blocks = option_blocks(BANK_MCQS)
+    assert len(blocks) == 2
+    start, end = blocks[1]["c"]
+    assert BANK_MCQS[start:end].strip() == "Both (a) and (b)."
+    start, end = blocks[0]["d"]
+    assert BANK_MCQS[start:end].strip() == "the Chief Justice of India"

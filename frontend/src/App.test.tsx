@@ -150,26 +150,39 @@ describe("questions and citations", () => {
     expect(calls).toContainEqual({ key: "POST /api/kbs/1/query", body: { question: "Revenue?", provider: "gemini" } });
   });
 
-  it("pre-selects the configured default provider only when the KB allows cloud and a key is set", async () => {
-    routes["GET /api/health"] = [200, { status: "ok", embedding_model: true, llm_model: true, default_provider: "gemini" }];
-    routes["GET /api/keys"] = [200, { ...KEYS_NONE, gemini: "env" }];
+  it("remembers the last chosen provider and falls back to the first usable one", async () => {
+    localStorage.setItem("lastProvider", "gemini");
+    routes["GET /api/keys"] = [200, { ...KEYS_NONE, gemini: "env", openai: "keychain" }];
     routes["PATCH /api/kbs/1"] = [200, { ...KB, allow_cloud: true }];
     const { unmount } = render(<App />);
     const picker = (await screen.findByLabelText("Answer model")) as HTMLSelectElement;
     await within(picker).findByRole("option", { name: "Gemini" });
-    expect(picker.value).toBe("ollama"); // KB hasn't opted in
+    expect(picker.value).toBe("ollama"); // cloud not allowed for this knowledge base
 
     const user = userEvent.setup();
     await user.click(screen.getByLabelText("Allow cloud models"));
     await waitFor(() => expect(picker.value).toBe("gemini"));
+    await user.selectOptions(picker, "openai");
+    expect(localStorage.getItem("lastProvider")).toBe("openai");
+    expect(Object.keys(localStorage)).toEqual(["lastProvider"]); // a name, nothing else
     unmount();
 
+    // Next visit: OpenAI remembered but its key is gone, so the first usable one (Ollama).
     routes["GET /api/kbs"] = [200, [{ ...KB, allow_cloud: true }]];
-    routes["GET /api/keys"] = [200, KEYS_NONE]; // default set, but no Gemini key
+    routes["GET /api/keys"] = [200, { ...KEYS_NONE, gemini: "env" }];
     render(<App />);
-    const second = (await screen.findByLabelText("Answer model")) as HTMLSelectElement;
-    await waitFor(() => expect(calls.filter((c) => c.key === "GET /api/keys")).toHaveLength(2));
-    expect(second.value).toBe("ollama");
+    const next = (await screen.findByLabelText("Answer model")) as HTMLSelectElement;
+    await within(next).findByRole("option", { name: "Gemini" });
+    expect(next.value).toBe("ollama");
+    expect(localStorage.getItem("lastProvider")).toBe("openai"); // kept for when it's usable again
+  });
+
+  it("ignores a junk remembered provider", async () => {
+    localStorage.setItem("lastProvider", "<script>");
+    render(<App />);
+    const picker = (await screen.findByLabelText("Answer model")) as HTMLSelectElement;
+    await waitFor(() => expect(calls.some((c) => c.key === "GET /api/keys")).toBe(true));
+    expect(picker.value).toBe("ollama");
   });
 });
 

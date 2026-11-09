@@ -40,6 +40,7 @@ Most RAG demos use one fixed chunk size and a fixed top-k, and say nothing about
 **Caveats:**
 - 24 answerable questions give wide intervals. Small real differences can't be detected.
 - The test questions were written by an LLM in a separate session and spot-checked by a human, not written by a human. A human-written subset is planned.
+- Measured before MCQ answer-key linking and the MCQ option check (both added 2026-11-09, aimed at question banks). The held-out passages contain 3 option sets, so these numbers aren't guaranteed to be unchanged with those features on.
 - Numbers come from [stage4_test_report](benchmarks/results/stage4_test_report_20261104T093653.json) and [stage5_test_report](benchmarks/results/stage5_test_report_20261105T152950.json). The pre-registration, every decision, and the dev-set work are in [docs/PROGRESS.md](docs/PROGRESS.md).
 
 ![Evaluation view](docs/screenshots/evaluation.png)
@@ -105,6 +106,11 @@ The benchmark PDFs are **not** included in this repo. [benchmarks/manifest.yaml]
 | NIST AI RMF 1.0 (dev), NIST CSF 2.0 (test) | National Institute of Standards and Technology | NIST public information; credit to NIST |
 | Federal Reserve Monetary Policy Reports, Feb 2025 (dev), Jun 2025 (test) | Board of Governors of the Federal Reserve System | Public domain; cite the Board |
 | RAGAS (dev), RAPTOR (test), RAG best practices (test) | arXiv 2309.15217, 2401.18059, 2407.01219 | CC BY 4.0, credit to the authors |
+
+## Future work
+
+- **No-Ollama mode:** cloud embeddings so the app works with only a cloud key. Needs re-indexing per knowledge base and sends whole documents to the provider at upload, so it must be opt-in.
+- **Cross-document answer keys:** link a question bank's source label (e.g. "Source: Study Unit 4, Practice Q.7") to the answer key in the study-material PDF it cites, when both are in the same knowledge base.
 
 ## Background
 

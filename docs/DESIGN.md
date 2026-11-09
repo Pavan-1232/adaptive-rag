@@ -202,12 +202,14 @@ Stage 4 measures the regret of reuse: quality lost by reusing a config instead o
 
 | Step | Design | Evaluated by | Version |
 |---|---|---|---|
-| Baseline | Fixed top-5 by cosine similarity | Reference for everything else | v1 |
+| Baseline | Fixed top-5 by cosine similarity, plus answer-key linking (below) when on | Reference for everything else | v1 |
 | Query type | Rules only: factual, table lookup, multi-part, comparative, broad | Accuracy on labelled dev questions | v1 |
 | Per-part retrieval | Rule-based split of multi-part questions; each part embedded and searched separately; coverage-first selection (added 2026-11-04, decision 46) | Part coverage, Recall over sent evidence | v1 |
 | Dynamic depth | Fetch 30, then apply the cutoff rules below | Recall@budget, tokens used | v1 |
-| Evidence check | Score gate, LLM status, citation validation; parts with no candidate above the floor are named as uncovered | False-answer and false-refusal rates | v1 |
+| Evidence check | Score gate, LLM status, citation validation, MCQ option check (gate 4, 2026-11-09: an option pick without an answer key in the evidence is withheld, and so is a pick that differs from a linked key); parts with no candidate above the floor are named as uncovered | False-answer and false-refusal rates | v1 |
 | Table-reading prompt | Switch: when evidence contains a table (line-rule detector, `find_tables`), state the row label and column header for every number reported (decision 47). Not added when no table is detected | Gold-comparison correctness on dev table questions | v1, off unless dev shows a gain |
+| MCQ answer-key rule | System-prompt rule: a listed option is not a fact, however detailed its wording; pick one only if the evidence states it ("Ans.", solution, or a separate answer-key list for the same set of questions, cited with the question). When evidence has options (`has_options`: 3+ distinct (a)–(d) markers), the rule is repeated after the evidence (2026-11-09, from real use) | Real Gemini test with an options-only passage; not in the benchmark | v1, always on |
+| Answer-key linking | When the sent evidence holds an MCQ, add the same document's answer-key section as an `answer_key` chunk (algorithm below). Both retrieval modes. Setting `answer_keys`, on by default; evaluation runs turn it off with `--no-answer-keys` | Real-use check on the user's CA index; synthetic tests | v1, on (approved change to baseline retrieval, user, 2026-11-09) |
 | Neighbors | Algorithm below | Recall gain vs extra tokens | v1 |
 | Dedupe | Merge overlapping or adjacent spans of one document into one block, so chunk overlap is sent and charged once (`merge_spans`); drop near-identical chunks (`dedupe`) | Duplicate tokens removed | v1 |
 | Diversity | Per-document cap for comparative and broad questions only (`doc_cap`, default 3). Soft: chunks over the cap are used only if other documents run out of candidates, so a single-document answer isn't starved | Sources covered, recall | v1 |
@@ -216,6 +218,17 @@ Stage 4 measures the regret of reuse: quality lost by reusing a config instead o
 | Cross-encoder reranking | Heavy dependency on 16 GB | Compare later | Later |
 | LLM query rewriting, multi-hop | Extra LLM calls and latency. Rule-based splitting is v1 (above) | Compare later | Later |
 | Per-entity coverage check | Harder comparative logic | Compare later | Later |
+
+### Answer-key linking (approved 2026-11-09)
+
+**Approved change to baseline retrieval** (user, 2026-11-09). Baseline was "fixed top-5"; with this on, it's fixed top-5 plus answer-key chunks for any MCQ in the evidence. The Stage 3–5 results (dev and held-out) were measured **without** it and stay labelled that way; new evaluation runs record `answer_keys` in their metadata, and `--no-answer-keys` reproduces the old setup.
+
+1. Trigger: the sent evidence contains a complete (a)–(d) option set (`adaptive_rag/mcq.py`), whatever the question's wording. At most 2 documents per question.
+2. Target question: the number the user gives ("question 1", "Q.7"), or the only MCQ of that document in view (none cut off at a chunk edge). Otherwise there is no target: the key is still added and the model matches it, but gate 4 doesn't compare the answer with a keyed option. (Changed 2026-11-09 after real use: matching by shared words picked the wrong MCQ.) All MCQ chunks of a document in the evidence are considered, including questions whose options run past a chunk's end.
+3. Key: in the same document, the first "ANSWERS/HINTS" or "Answers to the Multiple Choice Questions" heading after the question, unless a "TEST YOUR KNOWLEDGE" heading comes in between (that key belongs to a later set). Positions are document character offsets, so overlapping chunks don't confuse it. If a question number in view isn't in the heading's chunk, the list is followed into up to 2 more chunks. Key lists with or without dots ("1. (a)", "1 (b)") are parsed.
+4. The key chunk is added after the other evidence as `source = "answer_key"`, cited with its own page and labelled in the UI. It must fit the hard maximum (`evidence_max_tokens`, both modes); if not, the lowest-scored chunk without an MCQ or key is dropped, and if that isn't enough the key is skipped. The trace records the question number, keyed letter, added and dropped chunks, or the reason nothing was added.
+5. Gate 4 uses the keyed letter only when there is a target: an answer that picks options, none of them the keyed one, is withheld.
+6. **Future work:** cross-document linking (a question bank's source label, such as "Source: Study Unit 4, Practice Q.7", to the study-material PDF in the same knowledge base).
 
 ### Per-part retrieval (added 2026-11-04)
 

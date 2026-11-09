@@ -66,12 +66,7 @@ export type Evaluation = {
   sources: string[];
 };
 
-export type Health = {
-  status: "ok" | "degraded";
-  embedding_model: boolean;
-  llm_model: boolean;
-  default_provider?: Provider;
-};
+export type Health = { status: "ok" | "degraded"; embedding_model: boolean; llm_model: boolean };
 
 export class ApiError extends Error {}
 
