@@ -186,6 +186,63 @@ def test_timeouts_and_network_errors_are_clean(settings, provider):
         assert_no_canary("".join(traceback.format_exception(caught.value)))
 
 
+# ---------------------------------------------------------------- one retry for temporary errors
+
+
+def sequence(*replies):
+    """A responder that plays the given replies in order (an exception is raised)."""
+    queue = list(replies)
+
+    def respond(request):
+        reply = queue.pop(0)
+        if isinstance(reply, Exception):
+            raise reply
+        return reply
+
+    return respond
+
+
+@pytest.mark.parametrize("provider", PROVIDERS)
+@pytest.mark.parametrize(
+    ("first", "pause"),
+    [
+        (httpx.Response(503, json={"error": {"status": "UNAVAILABLE"}}), 1.0),
+        (httpx.Response(429, headers={"retry-after": "2"}), 2.0),
+        (httpx.Response(429, headers={"retry-after": "120"}), 5.0),  # capped
+        (httpx.Response(502), 1.0),
+        (httpx.ReadTimeout("timed out"), 1.0),
+    ],
+)
+def test_a_temporary_error_is_retried_once(settings, provider, retry_pauses, first, pause):
+    recorder = Recorder(sequence(first, httpx.Response(200, json=ok_body(provider))))
+    result = cloud_llm(with_keys(settings), provider, recorder.transport).generate(MESSAGES)
+    assert json.loads(result.text)["status"] == "answered"
+    assert len(recorder.requests) == 2 and retry_pauses == [pause]
+
+
+@pytest.mark.parametrize("provider", PROVIDERS)
+def test_a_second_temporary_error_fails_cleanly(settings, provider, retry_pauses):
+    unavailable = httpx.Response(503, text=f"overloaded {CANARY}")
+    recorder = Recorder(sequence(unavailable, unavailable, unavailable))
+    with pytest.raises(ProviderUnavailable) as caught:
+        cloud_llm(with_keys(settings), provider, recorder.transport).generate(MESSAGES)
+    assert "HTTP 503" in str(caught.value) and "after one retry" in str(caught.value)
+    assert len(recorder.requests) == 2 and len(retry_pauses) == 1  # one retry, not more
+    assert_no_canary("".join(traceback.format_exception(caught.value)))
+
+
+@pytest.mark.parametrize("provider", PROVIDERS)
+@pytest.mark.parametrize("status", [400, 401, 403, 404, 422])
+def test_client_errors_are_never_retried(settings, provider, retry_pauses, status):
+    recorder = Recorder(
+        sequence(httpx.Response(status), httpx.Response(200, json=ok_body(provider)))
+    )
+    with pytest.raises(ProviderUnavailable) as caught:
+        cloud_llm(with_keys(settings), provider, recorder.transport).generate(MESSAGES)
+    assert f"HTTP {status}" in str(caught.value) and "retry" not in str(caught.value)
+    assert len(recorder.requests) == 1 and retry_pauses == []
+
+
 @pytest.mark.parametrize("provider", PROVIDERS)
 def test_missing_or_blank_key_makes_no_call(settings, provider):
     recorder = Recorder(lambda r: httpx.Response(200, json=ok_body(provider)))

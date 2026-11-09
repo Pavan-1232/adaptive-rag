@@ -234,11 +234,11 @@ Stage 4 measures the regret of reuse: quality lost by reusing a config instead o
 
 A short follow-up in the same chat ("what is the answer", "explain it simply") is answered with the previous question. Decisions (user, 2026-11-09): link by trace id on the server, rule-based detection, previous answer not used.
 
-1. The chat sends `previous_trace_id`: the immediately preceding answered turn of this knowledge base's chat (none after **New topic**). The server uses it only if that trace exists and belongs to the same knowledge base; otherwise the question is answered on its own, with a warning. A follow-up can't reach into another knowledge base.
+1. The chat sends `previous_trace_id`: the last successful turn of this knowledge base's chat. Failed turns are skipped, so an error doesn't break the chain; a turn asked after **New topic** is a boundary that is never crossed (changed 2026-11-09 after real use). The server uses it only if that trace exists and belongs to the same knowledge base; otherwise the question is answered on its own, with a warning. A follow-up can't reach into another knowledge base.
 2. Follow-up rule (`answering/followup.py`, no LLM call): no words beyond filler and reference words ("what is the answer", "why?"), or a leading continuation ("and question 2?", "what about part (b)?"). A question with its own subject stands alone.
 3. Retrieval searches the chain's **base** question (its first question) plus the follow-up, joined by " — ", so chains don't pile up. Answer-key linking still sees the question number.
 4. The prompt adds, written by code, "This is a follow-up. The user's earlier question in this chat was: …" before the follow-up, JSON-quoted like the question. It is the user's own text, never document text.
-5. The response returns `searched_question`; the UI shows "Searched: …" when it differs from what was typed. Traces store `searched_question`, `base_question` and `follows_trace_id` (migration 007).
+5. When an answer gives only the keyed letter of an MCQ whose question is certain ("1. (a)"), the code adds that option's text from the evidence ("1. (a) Nil"); the prompt also asks for letter and text. The response returns `searched_question`; the UI shows "Searched: …" when it differs from what was typed. Traces store `searched_question`, `base_question` and `follows_trace_id` (migration 007).
 6. Not used: the previous answer (traces don't store answer text). Open option if "explain it simply" proves weak in real use.
 
 ### Per-part retrieval (added 2026-11-04)
@@ -354,6 +354,7 @@ class LLMProvider(Protocol):
 - **Vector store in its own process (security fix, 2026-11-06):** Chroma runs in a separate spawned process that never holds an API key, because its index files can contain leftover process memory. The API starts and stops it.
 - The API binds to `127.0.0.1`. It accepts only `Host` values of `127.0.0.1` or `localhost`, and refuses changing requests whose `Origin` or `Sec-Fetch-Site` shows another site (Stage 7). The UI is served from the same origin and calls `/api/...`; the prefix is stripped, so routes keep their paths.
 - Cloud providers require explicit opt-in per knowledge base, because document text leaves the machine.
+- **One retry for temporary cloud errors (2026-11-09):** a timeout or HTTP 429, 500, 502, 503 or 504 is retried once, after `Retry-After` (capped at 5 s) or 1 s. 400, 401, 403 and every other client error are never retried. The error rules above still hold (no key or provider text in messages); a final failure says it was retried.
 - Document text goes inside delimited evidence blocks and is labelled as untrusted. The LLM has no tools. A prompt-injection test document stays in the test suite.
 
 ## 9. Evaluation plan

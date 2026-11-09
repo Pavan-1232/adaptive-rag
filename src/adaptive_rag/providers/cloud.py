@@ -27,6 +27,10 @@ from .base import LLMResult, ProviderUnavailable
 from .keys import CLOUD_PROVIDERS, api_key
 
 _ERROR_TYPE = re.compile(r"^[A-Za-z0-9_.\-]{1,64}$")
+# Temporary failures get one retry; 400/401/403 and other client errors never do.
+RETRY_STATUS = frozenset({429, 500, 502, 503, 504})
+RETRY_WAIT_S = 1.0
+RETRY_WAIT_MAX_S = 5.0
 
 
 class MissingKey(Exception):
@@ -81,24 +85,34 @@ class _CloudLLM:
     ) -> LLMResult:
         system, user = _split(messages)
         started = time.perf_counter()
-        try:
-            response = self._client.post(
-                self._url(),
-                headers=self._headers(),
-                json=self._body(system, user, schema, max_tokens),
-            )
-        except httpx.TimeoutException:
-            raise ProviderUnavailable(
-                f"{self.display} did not answer within {self._timeout_s:g} s."
-            ) from None
-        except httpx.HTTPError as exc:
-            raise ProviderUnavailable(
-                f"Could not reach {self.display} ({type(exc).__name__})."
-            ) from None
-        if response.status_code >= 400:
-            raise ProviderUnavailable(
-                f"{self.display} returned HTTP {response.status_code} ({_error_type(response)})."
-            ) from None
+        for attempt in (1, 2):
+            retried = " after one retry" if attempt == 2 else ""
+            try:
+                response = self._client.post(
+                    self._url(),
+                    headers=self._headers(),
+                    json=self._body(system, user, schema, max_tokens),
+                )
+            except httpx.TimeoutException:
+                if attempt == 1:
+                    _pause(RETRY_WAIT_S)
+                    continue
+                raise ProviderUnavailable(
+                    f"{self.display} did not answer within {self._timeout_s:g} s{retried}."
+                ) from None
+            except httpx.HTTPError as exc:
+                raise ProviderUnavailable(
+                    f"Could not reach {self.display} ({type(exc).__name__})."
+                ) from None
+            if response.status_code in RETRY_STATUS and attempt == 1:
+                _pause(_retry_wait(response))
+                continue
+            if response.status_code >= 400:
+                raise ProviderUnavailable(
+                    f"{self.display} returned HTTP {response.status_code}"
+                    f" ({_error_type(response)}){retried}."
+                ) from None
+            break
         try:
             text, input_tokens, output_tokens, finish = self._parse(response.json())
         except (ValueError, KeyError, TypeError, IndexError, AttributeError):
@@ -118,6 +132,18 @@ class _CloudLLM:
 
     def unload(self) -> None:
         """Nothing is loaded locally."""
+
+
+def _pause(seconds: float) -> None:
+    time.sleep(seconds)  # a function, so tests can replace it
+
+
+def _retry_wait(response: httpx.Response) -> float:
+    """Retry-After in seconds if the provider sent one, capped; otherwise a short pause."""
+    try:
+        return min(max(float(response.headers.get("retry-after", "")), 0.0), RETRY_WAIT_MAX_S)
+    except ValueError:
+        return RETRY_WAIT_S
 
 
 def _error_type(response: httpx.Response) -> str:

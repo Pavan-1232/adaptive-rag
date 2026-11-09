@@ -2,6 +2,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
+import { linkableTraceId } from "./Chat";
 import type { Answer } from "./api";
 
 // A tiny fake backend: "METHOD /path" -> [status, body] or a function of the request body.
@@ -215,6 +216,33 @@ describe("follow-up questions", () => {
     expect(queries()[2]).toEqual({ question: "explain it simply", provider: "ollama" }); // unlinked
   });
 
+  it("links past a failed turn to the last successful one, but not past New topic", async () => {
+    let n = 0;
+    routes["POST /api/kbs/1/query"] = () => {
+      n += 1;
+      if (n === 2 || n === 4) return [503, { detail: "Gemini returned HTTP 503 (UNAVAILABLE) after one retry." }];
+      return [200, answer({ trace_id: 30 + n })];
+    };
+    const queries = () => calls.filter((c) => c.key === "POST /api/kbs/1/query").map((c) => c.body);
+    render(<App />);
+    await ask(FIRST); // ok, trace 31
+    await screen.findByText("Answered by Ollama (local)");
+    await ask("what is the answer"); // fails
+    await screen.findByText(/HTTP 503/);
+    await ask("what is the answer"); // retried by the user: linked to 31, not to the failure
+    await waitFor(() => expect(queries()).toHaveLength(3));
+    expect(queries()[2]).toEqual({ question: "what is the answer", provider: "ollama", previous_trace_id: 31 });
+
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole("button", { name: "New topic" }));
+    await ask("What is prudence?"); // new topic, and it fails
+    await waitFor(() => expect(queries()).toHaveLength(4));
+    expect(queries()[3]).toEqual({ question: "What is prudence?", provider: "ollama" });
+    await ask("explain it simply"); // must not reach back past the New topic boundary
+    await waitFor(() => expect(queries()).toHaveLength(5));
+    expect(queries()[4]).toEqual({ question: "explain it simply", provider: "ollama" });
+  });
+
   it("never sends another knowledge base's turn", async () => {
     const OTHER = { ...KB, id: 2, name: "Research Papers" };
     routes["GET /api/kbs"] = [200, [KB, OTHER]];
@@ -231,6 +259,16 @@ describe("follow-up questions", () => {
       question: "what is the answer",
       provider: "ollama",
     });
+  });
+});
+
+describe("linkableTraceId", () => {
+  const ok = (trace_id: number) => ({ question: "q", answer: answer({ trace_id }) });
+  it("skips failed turns and stops at a New topic boundary", () => {
+    expect(linkableTraceId([])).toBeUndefined();
+    expect(linkableTraceId([ok(1), { question: "q", error: "503" }])).toBe(1);
+    expect(linkableTraceId([ok(1), { question: "q", error: "503", newTopic: true }])).toBeUndefined();
+    expect(linkableTraceId([ok(1), { ...ok(2), newTopic: true }, { question: "q", error: "x" }])).toBe(2);
   });
 });
 

@@ -159,6 +159,28 @@ def visible_questions(text: str) -> tuple[list[tuple[int, int]], bool]:
     return found, len(letters) >= 2
 
 
+def option_text(evidence_texts: list[str], number: int, letter: str) -> str | None:
+    """The text of option `letter` of question `number`, from the evidence, on one line."""
+    for text in evidence_texts:
+        for block in option_blocks(text):
+            start = block["a"][0]
+            numbers = list(_QUESTION_NUMBER.finditer(text, max(0, start - 800), start))
+            if numbers and int(numbers[-1].group(1)) == number and letter in block:
+                a, b = block[letter]
+                option = " ".join(text[a:b].split())
+                return option[:150] or None
+    return None
+
+
+def restate_option(answer: str, letter: str, text: str) -> str:
+    """Add the option's text after its letter when the answer gives the letter alone:
+    "1. (a)" -> "1. (a) Nil". Unchanged if the text is already there or the letter isn't."""
+    if " ".join(text.lower().split()) in " ".join(answer.lower().split()):
+        return answer
+    marker = re.compile(rf"(?<![\w)])\({letter}\)", re.IGNORECASE)
+    return marker.sub(lambda m: f"{m.group(0)} {text}", answer, count=1)
+
+
 def parse_key(text: str) -> dict[int, str]:
     """Question number -> keyed letter from a list like "1. (a) 2. (b) ... 6 (a) 7 (b)"."""
     return {int(m.group(1)): m.group(2).lower() for m in _KEY_ITEM.finditer(text)}

@@ -28,7 +28,8 @@ chapter, unit or document). With such a key, give the keyed option with its text
 question and the key, with status "answered". Without one, do not pick, recommend or hint at any \
 option, even when the user's question is the multiple-choice question in other words or you are \
 sure which option is right: say that the correct option isn't given in the documents, cite where \
-the question appears, and use status "partial".
+the question appears, and use status "partial". Whenever you give an option, write its letter \
+and its text from the evidence, like "(a) Nil", never the letter alone.
 - cited_ids lists every evidence ID you cited."""
 
 # Stage 5 switch (decision 47). Aimed at reading the wrong cell of the right table.
@@ -103,7 +104,8 @@ def build_messages(
             '"Ans.", or a solution in any evidence block, including a separate list like '
             '"1. (a) 2. (b)". If one covers the question, answer with that option and cite '
             "both blocks. If none does, do not choose an option, not even if you know it: say the "
-            "correct option isn't given in the documents, with status partial."
+            "correct option isn't given in the documents, with status partial. When you give an "
+            'option, write its letter and its text, like "(a) Nil".'
         )
     if uncovered_parts:
         # Written by our code from the user's question, never from document text.

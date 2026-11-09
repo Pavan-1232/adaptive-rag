@@ -15,7 +15,9 @@ from adaptive_rag.mcq import (
     NOT_GIVEN_MESSAGE,
     NOT_GIVEN_WARNING,
     contradicts_key,
+    option_text,
     picks_unkeyed_option,
+    restate_option,
 )
 from adaptive_rag.providers.cloud import cloud_llm
 from adaptive_rag.retrieval import Evidence, RetrievedChunk, retrieve_evidence
@@ -212,6 +214,14 @@ def answer_question(
     elif status != "insufficient" and picks_unkeyed_option(answer, texts):
         status, answer = "partial", NOT_GIVEN_MESSAGE
         warnings = [*warnings, NOT_GIVEN_WARNING]
+    elif status != "insufficient":
+        # A bare "1. (a)" gets the keyed option's text from the evidence: "1. (a) Nil". Only
+        # when the question is certain, so the text is always the keyed option's own.
+        for link in retrieved.info.get("answer_keys", []):
+            if link["question"] is not None and link["keyed"]:
+                text = option_text(texts, link["question"], link["keyed"])
+                if text:
+                    answer = restate_option(answer, link["keyed"], text)
     trace_id = _write_trace(
         ctx,
         kb,

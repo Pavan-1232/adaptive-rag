@@ -23,6 +23,14 @@ def settings(tmp_path):
 
 
 @pytest.fixture(autouse=True)
+def retry_pauses(monkeypatch):
+    """Cloud retries never sleep in tests; the requested pauses are recorded instead."""
+    pauses: list[float] = []
+    monkeypatch.setattr("adaptive_rag.providers.cloud._pause", pauses.append)
+    return pauses
+
+
+@pytest.fixture(autouse=True)
 def memory_keyring():
     """Tests never touch the real OS keychain."""
     previous = keyring.get_keyring()

@@ -11,7 +11,18 @@ import {
 } from "./api";
 import Documents from "./Documents";
 
-export type Turn = { question: string; answer?: Answer; error?: string };
+// newTopic: asked after "New topic", so follow-ups never reach back past it.
+export type Turn = { question: string; answer?: Answer; error?: string; newTopic?: boolean };
+
+/** The trace to link a follow-up to: the last successful turn, skipping failed ones, but never
+ * crossing a "New topic" boundary. Turns are this knowledge base's chat only. */
+export function linkableTraceId(turns: Turn[]): number | undefined {
+  for (let i = turns.length - 1; i >= 0; i--) {
+    if (turns[i].answer) return turns[i].answer!.trace_id;
+    if (turns[i].newTopic) return undefined;
+  }
+  return undefined;
+}
 
 type Props = {
   kb: KnowledgeBase;
@@ -82,14 +93,13 @@ export default function Chat({ kb, turns, setTurns, onKbChange, onKbDeleted }: P
     event.preventDefault();
     const text = question.trim();
     if (!text || busy) return;
-    // Only the immediately preceding turn of this knowledge base's chat; the server decides
-    // whether the question is a follow-up and checks the knowledge base.
-    const previous = turns[turns.length - 1];
-    const previousTraceId = newTopic ? undefined : previous?.answer?.trace_id;
+    // The last successful turn of this knowledge base's chat (a failed turn doesn't break the
+    // chain); the server decides whether the question is a follow-up and checks the KB.
+    const previousTraceId = newTopic ? undefined : linkableTraceId(turns);
     setQuestion("");
-    setNewTopic(false);
     setBusy(true);
-    setTurns((all) => [...all, { question: text }]);
+    setTurns((all) => [...all, { question: text, newTopic }]);
+    setNewTopic(false);
     let result: Partial<Turn>;
     try {
       result = { answer: await api.ask(kb.id, text, provider, previousTraceId) };

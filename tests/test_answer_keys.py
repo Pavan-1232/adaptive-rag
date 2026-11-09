@@ -10,7 +10,13 @@ from adaptive_rag.answering import answer_question
 from adaptive_rag.evaluation.runner import resume_conflicts
 from adaptive_rag.ingest import register_upload, run_ingest_job
 from adaptive_rag.knowledge_bases import create_knowledge_base
-from adaptive_rag.mcq import KEY_MISMATCH_MESSAGE, parse_key, visible_questions
+from adaptive_rag.mcq import (
+    KEY_MISMATCH_MESSAGE,
+    option_text,
+    parse_key,
+    restate_option,
+    visible_questions,
+)
 from adaptive_rag.retrieval import RetrievedChunk, retrieve_evidence
 from adaptive_rag.retrieval.answer_keys import link_answer_keys
 
@@ -266,3 +272,31 @@ def test_explicit_number_still_checks_the_key(ctx, make_kb):
     ctx.llm.queue(answer="Question 2: (b) Timeliness [E1, E2].", cited_ids=["E1", "E2"])
     result = answer_question(ctx, kb, "In the Unit 1 MCQs, what is the answer to question 2?")
     assert result.status == "partial" and result.answer == KEY_MISMATCH_MESSAGE
+
+
+# Real use (2026-11-09): a follow-up answer was just "1. (a)"; the option text is restated.
+def test_option_text_and_restatement():
+    assert option_text([QUESTIONS], 1, "a") == "Operating activities"
+    assert option_text([QUESTIONS], 2, "b") == "investing cash inflow"
+    assert option_text([QUESTIONS], 3, "a") is None
+    assert restate_option("1. (a) [E1, E2]", "a", "Operating activities") == (
+        "1. (a) Operating activities [E1, E2]"
+    )
+    already = "The answer is (a) Operating activities [E1]."
+    assert restate_option(already, "a", "Operating activities") == already
+    assert restate_option("See Section 135(a) [E1].", "a", "Nil") == "See Section 135(a) [E1]."
+
+
+def test_a_bare_keyed_letter_gets_its_option_text(ctx, make_kb):
+    kb = make_kb(filler("Opening") + QUESTIONS + filler("Theory") + unrelated() + KEY)
+    ctx.llm.queue(answer="1. (a) [E1, E2]", cited_ids=["E1", "E2"])
+    result = answer_question(ctx, kb, VEGA + " This is question 1.")
+    assert result.status == "answered"
+    assert result.answer == "1. (a) Operating activities [E1, E2]"
+
+
+def test_no_restatement_when_the_question_is_ambiguous(ctx, make_kb):
+    kb = make_kb(filler("Opening") + QUESTIONS + filler("Theory") + unrelated() + KEY)
+    ctx.llm.queue(answer="(a) [E1, E2]", cited_ids=["E1", "E2"])
+    result = answer_question(ctx, kb, VEGA)  # questions 1 and 2 in view, no number given
+    assert result.answer == "(a) [E1, E2]"
