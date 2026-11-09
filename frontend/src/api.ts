@@ -32,6 +32,9 @@ export type Answer = {
   citations: Citation[];
   warnings: string[];
   provider: string;
+  trace_id: number;
+  // What retrieval searched; differs from the question for a follow-up.
+  searched_question?: string;
 };
 
 export type Provider = "ollama" | "openai" | "gemini" | "anthropic";
@@ -104,8 +107,12 @@ export const api = {
   listDocs: (kbId: number) => request<Doc[]>(`/kbs/${kbId}/documents`),
   deleteDoc: (id: number) => request<void>(`/documents/${id}`, json("DELETE")),
   job: (id: number) => request<Job>(`/jobs/${id}`),
-  ask: (kbId: number, question: string, provider: Provider) =>
-    request<Answer>(`/kbs/${kbId}/query`, json("POST", { question, provider })),
+  // previousTraceId: the chat's previous turn in this knowledge base, for follow-ups.
+  ask: (kbId: number, question: string, provider: Provider, previousTraceId?: number) =>
+    request<Answer>(
+      `/kbs/${kbId}/query`,
+      json("POST", previousTraceId ? { question, provider, previous_trace_id: previousTraceId } : { question, provider }),
+    ),
   keySources: () => request<KeySources>("/keys"),
   // The key goes straight into the request body; callers must not keep it anywhere.
   saveKey: (provider: CloudProvider, key: string) =>

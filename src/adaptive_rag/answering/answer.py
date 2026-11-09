@@ -21,6 +21,7 @@ from adaptive_rag.providers.cloud import cloud_llm
 from adaptive_rag.retrieval import Evidence, RetrievedChunk, retrieve_evidence
 
 from .citations import Citation, build_citation, ids_in_text, strip_unknown_ids
+from .followup import Resolved, resolve
 from .prompts import ANSWER_SCHEMA, build_messages, evidence_id, has_table
 
 INSUFFICIENT_MESSAGE = "I couldn't find enough evidence in this knowledge base to answer that."
@@ -62,6 +63,7 @@ class AnswerResult:
     output_tokens: int | None
     timings_ms: dict[str, float]
     trace_id: int
+    searched_question: str  # what retrieval searched (differs for a follow-up)
 
 
 def _resolve(
@@ -88,7 +90,7 @@ def _resolve(
 def _write_trace(
     ctx: AppContext,
     kb: sqlite3.Row,
-    question: str,
+    resolved: Resolved,
     status: str,
     evidence: Evidence,
     used: list[RetrievedChunk],
@@ -113,39 +115,58 @@ def _write_trace(
     with ctx.db() as conn:
         return conn.execute(
             "INSERT INTO query_traces (kb_id, question, status, retrieved, input_tokens,"
-            " output_tokens, timings_ms, retrieval) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            " output_tokens, timings_ms, retrieval, searched_question, base_question,"
+            " follows_trace_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 kb["id"],
-                question,
+                resolved.question,
                 status,
                 json.dumps(rows),
                 input_tokens,
                 output_tokens,
                 json.dumps(timings),
                 json.dumps(evidence.info),
+                resolved.searched,
+                resolved.base,
+                resolved.follows_trace_id,
             ),
         ).lastrowid
 
 
 def answer_question(
-    ctx: AppContext, kb: sqlite3.Row, question: str, provider: str = "ollama"
+    ctx: AppContext,
+    kb: sqlite3.Row,
+    question: str,
+    provider: str = "ollama",
+    previous_trace_id: int | None = None,
 ) -> AnswerResult:
     settings = ctx.settings
     timings: dict[str, float] = {}
     llm = _choose_llm(ctx, kb, provider)
+    # A follow-up searches its chain's first question plus itself; same knowledge base only.
+    resolved = resolve(ctx, kb, question, previous_trace_id)
+    notes = [resolved.warning] if resolved.warning else []
 
     started = time.perf_counter()
-    retrieved = retrieve_evidence(ctx, kb, question)
+    retrieved = retrieve_evidence(ctx, kb, resolved.searched)
     timings["retrieval"] = round((time.perf_counter() - started) * 1000, 1)
 
     # Gate 1: clearly weak evidence gets no LLM call.
     top = retrieved.top_score
     if top is None or not retrieved.used or top < settings.floor_for(kb["embedding_model"]):
         trace_id = _write_trace(
-            ctx, kb, question, "insufficient", retrieved, [], None, None, timings
+            ctx, kb, resolved, "insufficient", retrieved, [], None, None, timings
         )
         return AnswerResult(
-            "insufficient", INSUFFICIENT_MESSAGE, [], [], None, None, timings, trace_id
+            "insufficient",
+            INSUFFICIENT_MESSAGE,
+            [],
+            notes,
+            None,
+            None,
+            timings,
+            trace_id,
+            resolved.searched,
         )
 
     used = retrieved.used
@@ -157,7 +178,7 @@ def answer_question(
 
     # Gate 2 is the model's own status. Gate 3 is citation validation in _resolve.
     result = llm.generate(
-        build_messages(question, used, uncovered, table_rule),
+        build_messages(question, used, uncovered, table_rule, resolved.earlier),
         schema=ANSWER_SCHEMA,
         max_tokens=settings.max_answer_tokens,
     )
@@ -169,7 +190,7 @@ def answer_question(
         _write_trace(
             ctx,
             kb,
-            question,
+            resolved,
             "failed",
             retrieved,
             used,
@@ -194,7 +215,7 @@ def answer_question(
     trace_id = _write_trace(
         ctx,
         kb,
-        question,
+        resolved,
         status,
         retrieved,
         used,
@@ -206,9 +227,10 @@ def answer_question(
         status,
         answer,
         citations,
-        warnings,
+        [*notes, *warnings],
         result.input_tokens,
         result.output_tokens,
         timings,
         trace_id,
+        resolved.searched,
     )

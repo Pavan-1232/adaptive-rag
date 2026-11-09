@@ -27,7 +27,7 @@ def test_migrate_is_idempotent(settings):
     migrate(conn)
     migrate(conn)
     latest = max(int(path.name.split("_", 1)[0]) for path in MIGRATIONS_DIR.glob("*.sql"))
-    assert conn.execute("PRAGMA user_version").fetchone()[0] == latest == 6
+    assert conn.execute("PRAGMA user_version").fetchone()[0] == latest == 7
     conn.close()
 
 

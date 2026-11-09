@@ -46,6 +46,8 @@ export default function Chat({ kb, turns, setTurns, onKbChange, onKbDeleted }: P
   const [provider, setProvider] = useState<Provider>("ollama");
   const [keys, setKeys] = useState<KeySources | null>(null);
   const [busy, setBusy] = useState(false);
+  // "New topic": the next question isn't linked to the previous turn.
+  const [newTopic, setNewTopic] = useState(false);
   const [showDocs, setShowDocs] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [error, setError] = useState("");
@@ -80,12 +82,17 @@ export default function Chat({ kb, turns, setTurns, onKbChange, onKbDeleted }: P
     event.preventDefault();
     const text = question.trim();
     if (!text || busy) return;
+    // Only the immediately preceding turn of this knowledge base's chat; the server decides
+    // whether the question is a follow-up and checks the knowledge base.
+    const previous = turns[turns.length - 1];
+    const previousTraceId = newTopic ? undefined : previous?.answer?.trace_id;
     setQuestion("");
+    setNewTopic(false);
     setBusy(true);
     setTurns((all) => [...all, { question: text }]);
     let result: Partial<Turn>;
     try {
-      result = { answer: await api.ask(kb.id, text, provider) };
+      result = { answer: await api.ask(kb.id, text, provider, previousTraceId) };
     } catch (e) {
       result = { error: (e as Error).message };
     }
@@ -163,6 +170,9 @@ export default function Chat({ kb, turns, setTurns, onKbChange, onKbDeleted }: P
               {turns.map((turn, i) => (
                 <div key={i} className="space-y-3">
                   <div className="ml-auto w-fit max-w-[85%] rounded-2xl bg-zinc-100 px-4 py-2 text-sm">{turn.question}</div>
+                  {turn.answer?.searched_question && turn.answer.searched_question !== turn.question && (
+                    <p className="ml-auto w-fit max-w-[85%] text-xs text-zinc-500">Searched: {turn.answer.searched_question}</p>
+                  )}
                   {turn.answer && <AnswerView answer={turn.answer} />}
                   {turn.error && (
                     <div role="alert" className="rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700">
@@ -214,6 +224,19 @@ export default function Chat({ kb, turns, setTurns, onKbChange, onKbDeleted }: P
                   Ask
                 </button>
               </div>
+              {turns.length > 0 && (
+                <div className="mt-2 flex items-center gap-2 text-xs text-zinc-500">
+                  <button
+                    type="button"
+                    onClick={() => setNewTopic((v) => !v)}
+                    aria-pressed={newTopic}
+                    className={`rounded-md border px-2 py-0.5 ${newTopic ? "border-zinc-900 bg-zinc-900 text-white" : "border-zinc-200 hover:bg-zinc-50"}`}
+                  >
+                    New topic
+                  </button>
+                  <span>{newTopic ? "The next question starts a new topic." : "Short follow-ups use the previous question."}</span>
+                </div>
+              )}
               {cloudWithKeys.length > 0 && !kb.allow_cloud && (
                 <p className="mt-2 text-xs text-zinc-500">
                   Cloud models are off for this knowledge base. Turn on "Allow cloud models" to use them.
@@ -267,6 +290,9 @@ export function AnswerView({ answer }: { answer: Answer }) {
       <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm" role="status">
         <p className="font-medium text-amber-900">Not enough evidence</p>
         <p className="mt-1 text-amber-800">{answer.answer || "The documents don't contain enough information to answer this."}</p>
+        {answer.warnings.map((w) => (
+          <p key={w} className="mt-1 text-xs text-amber-700">{w}</p>
+        ))}
       </div>
     );
   }

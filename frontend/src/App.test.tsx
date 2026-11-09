@@ -54,6 +54,7 @@ const answer = (overrides: Partial<Answer> = {}): Answer => ({
   ],
   warnings: [],
   provider: "ollama",
+  trace_id: 1,
   ...overrides,
 });
 
@@ -183,6 +184,53 @@ describe("questions and citations", () => {
     const picker = (await screen.findByLabelText("Answer model")) as HTMLSelectElement;
     await waitFor(() => expect(calls.some((c) => c.key === "GET /api/keys")).toBe(true));
     expect(picker.value).toBe("ollama");
+  });
+});
+
+describe("follow-up questions", () => {
+  const FIRST = "Can you give me a solution to question 1, the Vega Ltd question?";
+
+  it("links a follow-up to the previous turn, shows what was searched, and New topic unlinks", async () => {
+    let next = 11;
+    routes["POST /api/kbs/1/query"] = (body) => {
+      const { question, previous_trace_id } = body as { question: string; previous_trace_id?: number };
+      const searched = previous_trace_id ? `${FIRST} — ${question}` : question;
+      return [200, answer({ trace_id: next++, searched_question: searched })];
+    };
+    render(<App />);
+    await ask(FIRST);
+    expect(await screen.findAllByText("Answered by Ollama (local)")).toHaveLength(1);
+    expect(screen.queryByText(/^Searched:/)).toBeNull(); // same as typed: not shown
+
+    await ask("what is the answer");
+    expect(await screen.findByText(`Searched: ${FIRST} — what is the answer`)).toBeInTheDocument();
+    const queries = () => calls.filter((c) => c.key === "POST /api/kbs/1/query").map((c) => c.body);
+    expect(queries()[1]).toEqual({ question: "what is the answer", provider: "ollama", previous_trace_id: 11 });
+
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "New topic" }));
+    expect(screen.getByText("The next question starts a new topic.")).toBeInTheDocument();
+    await ask("explain it simply");
+    await waitFor(() => expect(queries()).toHaveLength(3));
+    expect(queries()[2]).toEqual({ question: "explain it simply", provider: "ollama" }); // unlinked
+  });
+
+  it("never sends another knowledge base's turn", async () => {
+    const OTHER = { ...KB, id: 2, name: "Research Papers" };
+    routes["GET /api/kbs"] = [200, [KB, OTHER]];
+    routes["POST /api/kbs/1/query"] = [200, answer({ trace_id: 21 })];
+    routes["POST /api/kbs/2/query"] = [200, answer({ trace_id: 22 })];
+    render(<App />);
+    await ask(FIRST);
+    await screen.findByText("Answered by Ollama (local)");
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "Research Papers" }));
+    await ask("what is the answer");
+    await waitFor(() => expect(calls.some((c) => c.key === "POST /api/kbs/2/query")).toBe(true));
+    expect(calls.find((c) => c.key === "POST /api/kbs/2/query")?.body).toEqual({
+      question: "what is the answer",
+      provider: "ollama",
+    });
   });
 });
 

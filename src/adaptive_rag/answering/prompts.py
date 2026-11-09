@@ -89,6 +89,7 @@ def build_messages(
     chunks: list[RetrievedChunk],
     uncovered_parts: list[str] | None = None,
     table_rule: bool = False,
+    earlier_question: str | None = None,
 ) -> list[dict[str, str]]:
     blocks = "\n\n".join(_fence(position, chunk) for position, chunk in enumerate(chunks))
     # Repeated after the evidence, since the last thing read carries more weight.
@@ -111,6 +112,14 @@ def build_messages(
             f"\nSearch found no strong evidence for these parts of the question: {listed}. "
             "If the evidence doesn't answer them, use status partial and say what is missing."
         )
-    user = f"{blocks}\n\n{reminder}\n\nQuestion: {json.dumps(question, ensure_ascii=False)}"
+    asked = f"Question: {json.dumps(question, ensure_ascii=False)}"
+    if earlier_question:
+        # The user's own earlier question in this chat, never document text.
+        earlier = json.dumps(earlier_question, ensure_ascii=False)
+        asked = (
+            f"This is a follow-up. The user's earlier question in this chat was: {earlier}\n"
+            "Answer the follow-up about that earlier question.\n" + asked
+        )
+    user = f"{blocks}\n\n{reminder}\n\n{asked}"
     system = SYSTEM_PROMPT + (TABLE_RULE if table_rule else "")
     return [{"role": "system", "content": system}, {"role": "user", "content": user}]

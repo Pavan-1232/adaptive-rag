@@ -81,6 +81,9 @@ class QueryRequest(BaseModel):
     question: str = Field(min_length=1, max_length=2000)
     # Ollama is local and the default. Cloud providers need a key and the KB's allow_cloud.
     provider: Literal["ollama", "openai", "gemini", "anthropic"] = "ollama"
+    # The chat's previous turn in this knowledge base. Used only if that trace belongs to the
+    # same knowledge base and the question is a follow-up (answering/followup.py).
+    previous_trace_id: int | None = Field(default=None, ge=1)
 
     @field_validator("question")
     @classmethod
@@ -116,6 +119,7 @@ class QueryResponse(BaseModel):
     timings_ms: dict[str, float]
     trace_id: int
     provider: str
+    searched_question: str
 
 
 class HealthOut(BaseModel):

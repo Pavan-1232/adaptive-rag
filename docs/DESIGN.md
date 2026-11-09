@@ -230,6 +230,17 @@ Stage 4 measures the regret of reuse: quality lost by reusing a config instead o
 5. Gate 4 uses the keyed letter only when there is a target: an answer that picks options, none of them the keyed one, is withheld.
 6. **Future work:** cross-document linking (a question bank's source label, such as "Source: Study Unit 4, Practice Q.7", to the study-material PDF in the same knowledge base).
 
+### Follow-up questions (approved 2026-11-09)
+
+A short follow-up in the same chat ("what is the answer", "explain it simply") is answered with the previous question. Decisions (user, 2026-11-09): link by trace id on the server, rule-based detection, previous answer not used.
+
+1. The chat sends `previous_trace_id`: the immediately preceding answered turn of this knowledge base's chat (none after **New topic**). The server uses it only if that trace exists and belongs to the same knowledge base; otherwise the question is answered on its own, with a warning. A follow-up can't reach into another knowledge base.
+2. Follow-up rule (`answering/followup.py`, no LLM call): no words beyond filler and reference words ("what is the answer", "why?"), or a leading continuation ("and question 2?", "what about part (b)?"). A question with its own subject stands alone.
+3. Retrieval searches the chain's **base** question (its first question) plus the follow-up, joined by " — ", so chains don't pile up. Answer-key linking still sees the question number.
+4. The prompt adds, written by code, "This is a follow-up. The user's earlier question in this chat was: …" before the follow-up, JSON-quoted like the question. It is the user's own text, never document text.
+5. The response returns `searched_question`; the UI shows "Searched: …" when it differs from what was typed. Traces store `searched_question`, `base_question` and `follows_trace_id` (migration 007).
+6. Not used: the previous answer (traces don't store answer text). Open option if "explain it simply" proves weak in real use.
+
 ### Per-part retrieval (added 2026-11-04)
 
 1. Rules split a multi-part question into parts: at "and" between clauses, "while also", "both … and", a second question mark, or a list of items. No LLM call.
