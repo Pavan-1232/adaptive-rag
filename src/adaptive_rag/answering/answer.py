@@ -163,7 +163,9 @@ def answer_question(
 
     # Gate 1: clearly weak evidence gets no LLM call.
     top = retrieved.top_score
-    if top is None or not retrieved.used or top < settings.floor_for(kb["embedding_model"]):
+    exact = bool(retrieved.info.get("lookup", {}).get("added"))  # an exact match isn't weak
+    weak = top is None or top < settings.floor_for(kb["embedding_model"])
+    if not retrieved.used or (weak and not exact):
         tutor = _explain_if_asked(
             explain, llm, question, resolved, "insufficient", INSUFFICIENT_MESSAGE, settings
         )

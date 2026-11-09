@@ -22,6 +22,8 @@ from adaptive_rag.vectorstore.process import start_store_process
 
 SETUPS = {
     "baseline": {"retrieval": "baseline"},
+    "base+lookup": {"retrieval": "baseline", "structured_lookup": True},
+    "adapt+lookup": {"retrieval": "adaptive", "structured_lookup": True},
     "adaptive": {"retrieval": "adaptive", "adaptive_hybrid": False},
     "hybrid": {"retrieval": "adaptive", "adaptive_hybrid": True},
     "hyb+phrases": {

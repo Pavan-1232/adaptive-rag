@@ -21,6 +21,7 @@ from adaptive_rag.loaders import LOADERS, ExtractionError, validate_upload
 from adaptive_rag.optimizer.candidates import BY_ID, build_chunks
 from adaptive_rag.optimizer.choose import choose_chunking
 from adaptive_rag.providers import EmbeddingInputTooLong, ProviderUnavailable
+from adaptive_rag.structure import save_structure
 
 logger = logging.getLogger(__name__)
 
@@ -241,6 +242,8 @@ def _ingest(ctx: AppContext, document_id: int) -> None:
                 for chunk_id, chunk in zip(ids, chunks, strict=True)
             ],
         )
+        # Stage 5b: contents rows and reference labels, for exact lookups.
+        save_structure(conn, document_id, extracted.text, extracted.units)
         conn.execute(
             "INSERT INTO optimization_runs (document_id, registry_id, action, candidate_id,"
             " detail, seconds) VALUES (?, ?, ?, ?, ?, ?)",

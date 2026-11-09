@@ -13,6 +13,7 @@ from .adaptive import AdaptiveParams, retrieve_adaptive
 from .answer_keys import link_answer_keys
 from .baseline import retrieve_baseline
 from .budget import fit_to_budget
+from .lookup import add_lookups
 from .types import RetrievedChunk
 
 
@@ -31,6 +32,10 @@ class Evidence:
 
 def retrieve_evidence(ctx: AppContext, kb: sqlite3.Row, question: str) -> Evidence:
     evidence = _retrieve(ctx, kb, question)
+    if ctx.settings.structured_lookup:
+        evidence.used, evidence.info["lookup"] = add_lookups(
+            ctx, kb, evidence.used, question, ctx.settings.evidence_max_tokens
+        )
     if ctx.settings.answer_keys:
         evidence.used, links = link_answer_keys(
             ctx, evidence.used, question, ctx.settings.evidence_max_tokens

@@ -230,6 +230,15 @@ Stage 4 measures the regret of reuse: quality lost by reusing a config instead o
 5. Gate 4 uses the keyed letter only when there is a target: an answer that picks options, none of them the keyed one, is withheld.
 6. **Future work:** cross-document linking (a question bank's source label, such as "Source: Study Unit 4, Practice Q.7", to the study-material PDF in the same knowledge base).
 
+### Exact lookups: contents rows and reference labels (Stage 5b, approved 2026-11-09)
+
+Decisions (user, 2026-11-09): text-line parsers + SQLite + exact lookup, no new dependency (PyMuPDF rejected: AGPL; pdfplumber's table finder merges or splits columns on these layouts); opt-in setting `structured_lookup`, off by default, in both retrieval modes, until measured; generic labels plus ICAI patterns, all in one module; backfill for existing documents; printed counts only, listing by the printed question index.
+
+1. **Parsing at upload** (`adaptive_rag/structure.py`, the only place with layout patterns): contents rows ("<label> <title> [<count>] <page>[ - <page>]", in runs of 5+ with rising pages; the column header above the run is kept) and reference labels at line starts (ICAI-style source headers and index lines such as "03 RTP - Nov 2023, Q.2 Notebook Page No."; generic "Table/Figure/Illustration/Question/Item/Section/Exhibit N" captions and headings; entries on contents pages or in a list of tables are index entries, not captions). Stored in `doc_contents` and `doc_references` (migration 008) with character offsets into the canonical text, so a row maps to whichever chunk holds it under any chunking. The printed-to-physical page offset is estimated from where titles reappear; references get their chapter from it.
+2. **Backfill:** `python -m adaptive_rag.backfill_structure [DATA_DIR]` parses ready documents from the canonical text stored at upload (the text the chunks were cut from), with no re-upload or re-embedding.
+3. **Lookup** (`retrieval/lookup.py`), after normal retrieval and before answer-key linking: a reference in the question is matched exactly against stored labels (narrowed by "Chapter N[, Unit M]"; more than 3 candidates is ambiguous and skipped); a contents question ("which pages", "how many questions") picks the best-matching row (an "AS n" match weighs most; ties between documents are broken by how the question names a document) and attaches the index's column header as context when the chunk lacks it; a listing question returns the chapter's printed question index. Found chunks go first, marked `lookup`, within the hard token maximum (weaker search hits make room). An exact match passes the similarity gate.
+4. Counts are only those printed in the document. Evaluation runs set `--lookup` explicitly and record `structured_lookup` in run metadata.
+
 ### Follow-up questions (approved 2026-11-09)
 
 A short follow-up in the same chat ("what is the answer", "explain it simply") is answered with the previous question. Decisions (user, 2026-11-09): link by trace id on the server, rule-based detection, previous answer not used.

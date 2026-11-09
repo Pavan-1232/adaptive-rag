@@ -113,6 +113,18 @@ describe("questions and citations", () => {
     expect(screen.getByRole("figure", { name: "Cited passage" })).toHaveTextContent("neighboring passage");
   });
 
+  it("labels a passage found by exact reference", async () => {
+    const base = answer();
+    routes["POST /api/kbs/1/query"] = [
+      200,
+      answer({ citations: [{ ...base.citations[0], source: "lookup" }], answer: "Found it [E1]." }),
+    ];
+    render(<App />);
+    const user = await ask("What does RTP May 2025 Q.5 ask?");
+    await user.click(await screen.findByRole("button", { name: /Source 1/ }));
+    expect(screen.getByRole("figure", { name: "Cited passage" })).toHaveTextContent("found by exact reference");
+  });
+
   it("shows insufficient evidence as its own state", async () => {
     routes["POST /api/kbs/1/query"] = [
       200,

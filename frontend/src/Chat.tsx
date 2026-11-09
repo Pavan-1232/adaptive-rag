@@ -385,6 +385,7 @@ export function AnswerView({ answer }: { answer: Answer }) {
             {open.section_heading && <span>· {open.section_heading}</span>}
             {open.source === "expansion" && <span>· neighboring passage</span>}
             {open.source === "answer_key" && <span>· answer key, added for the question</span>}
+            {open.source === "lookup" && <span>· found by exact reference</span>}
           </figcaption>
           <blockquote className="max-h-72 overflow-y-auto whitespace-pre-wrap text-zinc-700">{open.passage}</blockquote>
         </figure>

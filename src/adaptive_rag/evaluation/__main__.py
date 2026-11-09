@@ -162,6 +162,7 @@ def _metadata(args, settings, embedder, split, question_source, judge_model) -> 
         "retrieval": settings.retrieval,
         "table_prompt": settings.table_prompt,
         "answer_keys": settings.answer_keys,
+        "structured_lookup": settings.structured_lookup,
         "adaptive_params": _adaptive_params(settings),
         "chunking": getattr(args, "chunking", "fixed"),
         "set": split,
@@ -196,6 +197,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     settings.adaptive_keyword_query = args.keyword_query
     settings.adaptive_fusion = args.fusion
     settings.adaptive_keyword_bypass = args.keyword_bypass
+    settings.structured_lookup = args.lookup
     embedder, llm = _providers(settings)
     documents = load_manifest(split=args.set)
     ctx, kb, indexed = build_index(
@@ -227,6 +229,7 @@ def cmd_run(args: argparse.Namespace) -> int:
         suffix += "_S" if args.retrieval == "adaptive" else ""
         suffix += "_tblprompt" if args.table_prompt else ""
         suffix += "" if args.no_answer_keys else "_anskeys"
+        suffix += "_lookup" if args.lookup else ""
         model = args.embedding_model.replace(":", "_")
         path = RESULTS / f"{args.set}_{model}{suffix}_{stamp}.json"
         print(f"Saving progress to {path}. To resume after a stop, add: --resume {path}")
@@ -339,6 +342,7 @@ def main() -> int:
     run.add_argument("--keyword-query", default="words", choices=["words", "phrases"])
     run.add_argument("--fusion", default="weighted", choices=["weighted", "rrf"])
     run.add_argument("--keyword-bypass", action="store_true", help="best numeric-phrase match")
+    run.add_argument("--lookup", action="store_true", help="Stage 5b exact lookups")
     run.add_argument(
         "--no-answer-keys",
         action="store_true",
