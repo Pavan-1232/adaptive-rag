@@ -16,16 +16,36 @@ _STOP = frozenset(
 )
 
 
-def match_query(text: str) -> str | None:
-    words = [w for w in _WORD.findall(text.lower()) if w not in _STOP and len(w) > 1]
-    return " OR ".join(f'"{w}"' for w in dict.fromkeys(words)) or None
+def match_query(text: str, style: str = "words") -> str | None:
+    """ "words": an OR of single words, stop words and one-letter words dropped (Stage 5).
+    "phrases" (2026-11-09, real use): also keeps a stop word or short token next to a number,
+    so "AS 20" and "Q.5" survive, and adds adjacent kept words as quoted phrases."""
+    tokens = _WORD.findall(text.lower())
+    if style == "words":
+        words = [w for w in tokens if w not in _STOP and len(w) > 1]
+        return " OR ".join(f'"{w}"' for w in dict.fromkeys(words)) or None
+    if style != "phrases":
+        raise ValueError(f"unknown keyword query style: {style}")
+
+    def number(i: int) -> bool:
+        return 0 <= i < len(tokens) and tokens[i].isdigit()
+
+    keep = [
+        w.isdigit() or (w not in _STOP and len(w) > 1) or number(i - 1) or number(i + 1)
+        for i, w in enumerate(tokens)
+    ]
+    pairs = [
+        f'"{tokens[i]} {tokens[i + 1]}"' for i in range(len(tokens) - 1) if keep[i] and keep[i + 1]
+    ]
+    words = [f'"{w}"' for w, kept in zip(tokens, keep, strict=True) if kept]
+    return " OR ".join(dict.fromkeys(pairs + words)) or None
 
 
 def keyword_search(
-    ctx: AppContext, text: str, n: int, document_ids: list[int]
+    ctx: AppContext, text: str, n: int, document_ids: list[int], style: str = "words"
 ) -> list[tuple[str, float]]:
     """(chunk_id, strength) best first, strength = BM25 relative to the best hit, in 0..1."""
-    query = match_query(text)
+    query = match_query(text, style)
     if query is None or not document_ids:
         return []
     placeholders = ",".join("?" * len(document_ids))

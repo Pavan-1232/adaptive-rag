@@ -99,6 +99,14 @@ class Settings(BaseSettings):
     adaptive_hybrid: bool = False
     adaptive_keyword_weight: float = 0.05
     adaptive_keyword_pool: int = 10
+    # 2026-11-09 (real use; approved change to the hybrid design, defaults kept until measured).
+    # "words" | "phrases": see retrieval/keyword.py match_query.
+    adaptive_keyword_query: str = "words"
+    # "weighted": cosine + keyword_weight * BM25 strength (Stage 5). "rrf": rank-based fusion,
+    # 1/(k + vector rank) + 1/(k + keyword rank); the top keyword hits also pass the floor and gap.
+    adaptive_fusion: str = "weighted"
+    adaptive_rrf_k: int = 60
+    adaptive_strong_keyword_rank: int = 2
     # Name parts with no evidence above the floor in the prompt, so the answer can be partial.
     adaptive_part_notice: bool = True
     # Ask the model to name the row label and column header for every number it reports.

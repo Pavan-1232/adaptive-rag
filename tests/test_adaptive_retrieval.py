@@ -559,3 +559,44 @@ def test_hybrid_pool_scores_keyword_only_hits_by_cosine(ctx, kb, tmp_path):
     result = retrieve_adaptive(ctx, kb, "Lathrop", params)
     assert result.candidates and all(-1 <= c.score <= 1 for c in result.candidates)
     assert result.tokens > 0
+
+
+# ------------------------------------------- keyword query "phrases" and RRF fusion (2026-11-09)
+
+
+def test_phrase_query_keeps_identifiers_and_stays_safe():
+    query = match_query("What does Paper 4 May 2025 Q.5 ask in Chapter 1?", "phrases")
+    for term in ('"may 2025"', '"q 5"', '"chapter 1"', '"5"', '"1"'):
+        assert term in query.split(" OR ")
+    assert '"as 20"' in match_query("Which pages cover AS 20?", "phrases")
+    assert '"as"' not in match_query("Which pages cover as much?", "phrases").split(" OR ")
+    # Still only quoted \w+ words: user text can't become FTS5 syntax.
+    assert match_query('NEAR("alpha" OR beta*) AND -gamma', "phrases") == (
+        '"near alpha" OR "near" OR "alpha" OR "beta" OR "gamma"'
+    )
+    assert match_query("the of and", "phrases") is None
+    assert match_query("What is alpha?") == '"alpha"'  # "words" is unchanged
+
+
+def test_rrf_puts_a_strong_keyword_hit_in_past_the_floor():
+    plan = analyze("What is Paper 4 May 2025 Q.5?")
+    dense = [chunk(f"d{i}", 0.6 - i * 0.01) for i in range(6)]
+    dense[0] = replace(dense[0], keyword=0.5)  # keyword rank 2
+    exact = replace(chunk("exact", 0.1), keyword=1.0)  # keyword rank 1; far below the floor
+    noise = replace(chunk("noise", 0.1), keyword=0.2)  # keyword rank 3: not strong
+    pool = [*dense, exact, noise]
+    rrf = AdaptiveParams(budget=5000, delta=None, min_chunks=1, hybrid=True, fusion="rrf", **OFF)
+    chosen = [c.chunk_id for c in select(plan, [pool], rrf)[0]]
+    assert chosen[:2] == ["d0", "exact"]  # both strong hits first, by fused rank
+    assert "noise" not in chosen and len(chosen) == 5  # rank 3 isn't strong; the limit holds
+    weighted = AdaptiveParams(budget=5000, delta=None, min_chunks=1, hybrid=True, **OFF)
+    assert "exact" not in [c.chunk_id for c in select(plan, [pool], weighted)[0]]
+
+
+def test_rrf_respects_the_budget_and_off_means_unchanged():
+    plan = analyze("What is alpha?")
+    exact = replace(chunk("exact", 0.1, tokens=900), keyword=1.0)
+    rrf = AdaptiveParams(budget=500, delta=None, min_chunks=1, hybrid=True, fusion="rrf", **OFF)
+    assert "exact" not in [c.chunk_id for c in select(plan, [[chunk("a", 0.6), exact]], rrf)[0]]
+    no_hybrid = AdaptiveParams(budget=5000, delta=None, min_chunks=1, fusion="rrf", **OFF)
+    assert [c.chunk_id for c in select(plan, [[chunk("a", 0.6), exact]], no_hybrid)[0]] == ["a"]

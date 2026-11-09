@@ -61,6 +61,12 @@ class AdaptiveParams:
     hybrid: bool = False
     keyword_weight: float = 0.1
     keyword_pool: int = 10
+    keyword_query: str = "words"  # "words" | "phrases" (keyword.match_query)
+    # "weighted": rank by cosine + keyword_weight * strength. "rrf": rank-based fusion, and
+    # keyword hits ranked <= strong_keyword_rank go in first, past the floor and the gap cut.
+    fusion: str = "weighted"
+    rrf_k: int = 60
+    strong_keyword_rank: int = 2
 
     @classmethod
     def from_settings(cls, settings: Settings, embedding_model: str) -> "AdaptiveParams":
@@ -82,6 +88,10 @@ class AdaptiveParams:
             hybrid=settings.adaptive_hybrid,
             keyword_weight=settings.adaptive_keyword_weight,
             keyword_pool=settings.adaptive_keyword_pool,
+            keyword_query=settings.adaptive_keyword_query,
+            fusion=settings.adaptive_fusion,
+            rrf_k=settings.adaptive_rrf_k,
+            strong_keyword_rank=settings.adaptive_strong_keyword_rank,
         )
 
 
@@ -196,6 +206,33 @@ def _gap_cut(eligible: list[RetrievedChunk], params: AdaptiveParams, limit: int,
     return eligible[position].chunk_id
 
 
+def ranking(pools: list[list[RetrievedChunk]], params: AdaptiveParams):
+    """The ranking function, and the chunk ids of strong keyword hits (RRF only).
+    RRF ranks within each pool (the full question, then each part); a chunk keeps its best."""
+    if not params.hybrid:
+        return (lambda c: c.score), set()
+    if params.fusion == "weighted":
+        return (lambda c: c.score + params.keyword_weight * c.keyword), set()
+    if params.fusion != "rrf":
+        raise ValueError(f"unknown fusion: {params.fusion}")
+    fused: dict[str, float] = {}
+    strong: set[str] = set()
+    for pool in pools:
+        by_vector = sorted(pool, key=lambda c: (-c.score, c.chunk_id))
+        by_keyword = sorted(
+            (c for c in pool if c.keyword > 0), key=lambda c: (-c.keyword, c.chunk_id)
+        )
+        keyword_rank = {c.chunk_id: i + 1 for i, c in enumerate(by_keyword)}
+        for i, chunk in enumerate(by_vector):
+            value = 1 / (params.rrf_k + i + 1)
+            if chunk.chunk_id in keyword_rank:
+                value += 1 / (params.rrf_k + keyword_rank[chunk.chunk_id])
+                if keyword_rank[chunk.chunk_id] <= params.strong_keyword_rank:
+                    strong.add(chunk.chunk_id)
+            fused[chunk.chunk_id] = max(fused.get(chunk.chunk_id, 0.0), value)
+    return (lambda c: fused[c.chunk_id]), strong
+
+
 def select(
     plan: QueryPlan,
     pools: list[list[RetrievedChunk]],
@@ -203,10 +240,17 @@ def select(
 ) -> tuple[list[RetrievedChunk], dict]:
     """Choose direct hits from per-query pools. pools[0] is the full question; pools[1:] are
     the parts, when the question was split. Pure function, so the rules are unit-tested.
-    Floors use cosine score; ranking, delta and gap use score + keyword weight."""
+    Floors use cosine score. Weighted hybrid: ranking, delta and gap use score + keyword
+    weight. RRF: ranking and gap use the fused rank, delta stays on cosine (its tuned scale),
+    and strong keyword hits go in first, past the floor and the gap cut."""
+    rank, strong = ranking(pools, params)
+    rrf = params.hybrid and params.fusion == "rrf"
 
-    def rank(chunk: RetrievedChunk) -> float:
-        return chunk.score + (params.keyword_weight * chunk.keyword if params.hybrid else 0.0)
+    def level(chunk: RetrievedChunk) -> float:  # what the delta cut-off compares
+        return chunk.score if rrf else rank(chunk)
+
+    def below_floor_(chunk: RetrievedChunk) -> bool:
+        return chunk.score < params.floor and chunk.chunk_id not in strong
 
     best: dict[str, RetrievedChunk] = {}
     for pool in pools:
@@ -242,29 +286,34 @@ def select(
         chosen_words.append(words)
         return "added"
 
+    # Strong keyword hits first (RRF only): an exact-term match the vectors rank low.
+    for chunk in ranked:
+        if chunk.chunk_id in strong and len(chosen) < limit:
+            try_add(chunk)
+
     # Coverage first: the best chunk for each part, if it clears the floor.
     for pool in pools[1:]:
         for chunk in sorted(pool, key=lambda c: -rank(c)):
-            if chunk.score < params.floor:
+            if below_floor_(chunk):
                 continue
             if try_add(best[chunk.chunk_id]) in ("added", "chosen"):
                 break
 
-    eligible = [c for c in ranked if c.score >= params.floor]
+    eligible = [c for c in ranked if not below_floor_(c)]
     gap_cut = _gap_cut(eligible, params, limit, rank) if params.gap_cutoff else None
     capped = params.doc_cap is not None and plan.kind in DIVERSE_KINDS
     deferred: list[RetrievedChunk] = []
-    top = rank(ranked[0]) if ranked else 0.0
+    top = max((level(c) for c in ranked), default=0.0)
     below_floor = False
     for chunk in ranked:
         if len(chosen) >= limit:
             stats["stop_reason"] = "max chunks"
             break
-        if chunk.score < params.floor:
+        if below_floor_(chunk):
             below_floor = True  # with hybrid, a later chunk can still clear the floor
             continue
         if len(chosen) >= params.min_chunks:
-            if params.delta is not None and rank(chunk) < top - params.delta:
+            if params.delta is not None and level(chunk) < top - params.delta:
                 stats["stop_reason"] = "delta"
                 break
             if chunk.chunk_id == gap_cut:
@@ -344,7 +393,9 @@ def _pool(ctx: AppContext, kb, text: str, params: AdaptiveParams, document_ids: 
     scored = [(h.chunk_id, h.score) for h in hits]
     if not params.hybrid:
         return load_chunks(ctx, scored)
-    strength = dict(keyword_search(ctx, text, params.keyword_pool, document_ids))
+    strength = dict(
+        keyword_search(ctx, text, params.keyword_pool, document_ids, params.keyword_query)
+    )
     known = {chunk_id for chunk_id, _ in scored}
     missing = [chunk_id for chunk_id in strength if chunk_id not in known]
     cosine = ctx.store.similarity(kb["collection_name"], embedding, missing)
@@ -377,7 +428,12 @@ def retrieve_adaptive(
         for chunk in pool:
             if chunk.chunk_id not in merged or chunk.score > merged[chunk.chunk_id].score:
                 merged[chunk.chunk_id] = chunk
-    candidates = sorted(merged.values(), key=lambda c: (-c.score, c.chunk_id))
+    rank, _ = ranking(pools, params)
+    # Cosine order, as before, except with RRF, where the fused order is what was used.
+    if params.hybrid and params.fusion == "rrf":
+        candidates = sorted(merged.values(), key=lambda c: (-rank(c), c.chunk_id))
+    else:
+        candidates = sorted(merged.values(), key=lambda c: (-c.score, c.chunk_id))
     saved = sum(p.evidence_tokens for c in chunks for p in c.pieces) - sum(
         c.evidence_tokens for c in chunks
     )
