@@ -163,6 +163,12 @@ def _references(conn, documents: list[int], question: str, info: dict):
     best = max(len(asked & set(r["ref_key"].split())) for r in rows)
     rows = [r for r in rows if len(asked & set(r["ref_key"].split())) == best]
     headers = [r for r in rows if r["is_header"]] or rows
+    if len({r["document_id"] for r in headers}) > 1:
+        # Same tie-break as contents rows: keep the document the question names, if it names one.
+        hints = _document_hint(conn, list({r["document_id"] for r in headers}), question)
+        strongest = max(hints.values())
+        if strongest > 0:
+            headers = [r for r in headers if hints[r["document_id"]] == strongest]
     if len(headers) > MAX_MATCHES:
         info["skipped"].append(
             {"kind": "reference", "key": rows[0]["short_key"], "candidates": len(headers)}

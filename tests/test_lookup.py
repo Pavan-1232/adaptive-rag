@@ -306,3 +306,27 @@ def test_a_row_cut_by_a_chunk_boundary_comes_from_the_chunk_holding_it_whole(ctx
     [match] = info["matches"]
     assert match["chunk"] == f"{document_id}-1"
     assert "5 Lease Topics 6 10 - 11" in used[0].text
+
+
+def test_a_named_document_breaks_a_reference_tie(ctx, tmp_path):
+    ctx.settings.structured_lookup = True
+    kb = create_knowledge_base(ctx, "Two books")
+    header = ("01 RTP - May 2025, Q.5 Notebook Page No.", 9)
+    books = {
+        "Book of Questions.pdf": ["Leases", "Inventories", "Revenue"],
+        "Revision Notes.pdf": ["Segments"],
+    }
+    for name, topics in books.items():
+        pages = [[(topic, 12), header, (FILLER, 9)] for topic in topics]
+        _, job_id, _ = register_upload(ctx, kb, make_pdf(tmp_path / name, pages), name)
+        run_ingest_job(ctx, job_id)
+    with ctx.db() as conn:
+        ids = dict(conn.execute("SELECT filename, id FROM documents").fetchall())
+
+    unnamed = retrieve_evidence(ctx, kb, "What is RTP May 2025 Q.5?")
+    assert not lookups(unnamed)  # 4 candidates across both books: ambiguous, skipped
+    assert unnamed.info["lookup"]["skipped"][0]["candidates"] == 4
+
+    named = retrieve_evidence(ctx, kb, "What is RTP May 2025 Q.5 in the Revision Notes?")
+    [match] = named.info["lookup"]["matches"]
+    assert match["chunk"].startswith(f"{ids['Revision Notes.pdf']}-")
