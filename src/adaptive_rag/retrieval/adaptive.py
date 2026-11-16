@@ -167,10 +167,19 @@ def merge_block(group: list[RetrievedChunk]) -> RetrievedChunk:
             text += "\n" + chunk.text
         end = max(end, chunk.end_char)
     direct = [c for c in group if c.source == "direct"]
-    # shortcut: later members' C7 header context is dropped; the first member's is kept.
+    # Each member's C7 header, once, unless the merged text already holds it (text stays a
+    # slice of the canonical text, so headers go before the block).
+    headers = [c.context_text for c in group if c.context_text and c.context_text not in text]
+    context = "\n".join(dict.fromkeys(headers)) or None
+    if context == group[0].context_text:
+        context_tokens = group[0].context_tokens
+    else:
+        context_tokens = count_tokens(context + "\n") if context else 0
     return replace(
         group[0],
         text=text,
+        context_text=context,
+        context_tokens=context_tokens,
         token_count=count_tokens(text),
         end_char=end,
         locator_start=min(c.locator_start for c in group),

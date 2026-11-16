@@ -641,3 +641,26 @@ def test_exact_hit_matches_only_numeric_phrases(ctx, kb, tmp_path):
         ).fetchone()[0]
     assert name == "papers.txt"
     assert exact_hit(ctx, "What is a cash flow statement?", documents) is None
+
+
+def test_merged_block_keeps_every_members_table_header_once():
+    doc = "Table 1 | Year | Revenue\n2023 | 10\nTable 2 | Year | Cost\n2023 | 4\n2024 | 5\n2025 | 6"
+    t2 = doc.index("Table 2")
+    rows = doc.index("2023 | 4")
+    first = "Table 1 | Year | Revenue"
+    a = replace(text_chunk("a", doc, 0, t2, 0, 0.9), context_text="Caption | Region")
+    b = replace(text_chunk("b", doc, t2, rows + 9, 1, 0.8), context_text=first)  # in a's text
+    c = replace(
+        text_chunk("c", doc, rows + 9, len(doc), 2, 0.7), context_text="Table 2 | Year | Cost"
+    )
+    assert merge_block([a, b, c]).context_text == "Caption | Region"  # c's header is in b
+    c_alone_after_a = merge_block([a, c])  # the Table 2 header isn't in the merged text
+    assert c_alone_after_a.context_text == "Caption | Region\nTable 2 | Year | Cost"
+    assert c_alone_after_a.context_tokens == count_tokens(
+        "Caption | Region\nTable 2 | Year | Cost\n"
+    )
+    assert c_alone_after_a.evidence_text.startswith("Caption | Region\nTable 2 | Year | Cost\n")
+    plain = merge_block(
+        [text_chunk("p", DOC, 0, 600, 0, 0.9), text_chunk("q", DOC, 500, 1100, 1, 0.8)]
+    )
+    assert plain.context_text is None and plain.context_tokens == 0  # no headers: unchanged
