@@ -4,7 +4,8 @@ Chroma's HNSW index files can be written from buffers that still hold old proces
 API process that memory can contain an API key, which then lands in data/chroma/. The store
 therefore runs in a separate, freshly spawned process that never holds a key:
 - "spawn" starts a new interpreter, so none of the parent's memory is copied into it;
-- environment variables holding API keys are removed while it starts, so it can't inherit them;
+- environment variables that look like secrets (API_KEY, SECRET, TOKEN, PASSWORD, CREDENTIAL in
+  the name) are removed while it starts, so it can't inherit them;
 - only the Chroma path, chunk ids, vectors and metadata are ever sent to it.
 It exits on shutdown(), at normal interpreter exit, or when its parent process dies.
 """
@@ -38,9 +39,16 @@ def _exit_with_parent(parent_pid: int) -> None:
     threading.Thread(target=watch, daemon=True).start()
 
 
+_SECRET_WORDS = ("API_KEY", "SECRET", "TOKEN", "PASSWORD", "CREDENTIAL")
+
+
 @contextmanager
 def _api_keys_removed_from_environ():
-    saved = {name: os.environ.pop(name) for name in list(os.environ) if "API_KEY" in name.upper()}
+    saved = {
+        name: os.environ.pop(name)
+        for name in list(os.environ)
+        if any(word in name.upper() for word in _SECRET_WORDS)
+    }
     try:
         yield
     finally:

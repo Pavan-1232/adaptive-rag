@@ -319,6 +319,9 @@ def test_store_process_starts_without_api_key_variables(monkeypatch):
 
     monkeypatch.setenv("GEMINI_API_KEY", CANARY)
     monkeypatch.setenv("ADAPTIVE_RAG_OPENAI_API_KEY", CANARY)
+    others = ["AWS_SECRET_ACCESS_KEY", "HF_TOKEN", "DB_PASSWORD", "GOOGLE_APPLICATION_CREDENTIALS"]
+    for name in others:
+        monkeypatch.setenv(name, CANARY)
     spawn = multiprocessing.get_context("spawn")
     queue = spawn.Queue()
     with _api_keys_removed_from_environ():
@@ -327,8 +330,10 @@ def test_store_process_starts_without_api_key_variables(monkeypatch):
     names = queue.get(timeout=30)
     child.join()
     assert "GEMINI_API_KEY" not in names and "ADAPTIVE_RAG_OPENAI_API_KEY" not in names
+    assert not set(others) & set(names)
     assert "PATH" in names
     assert os.environ["GEMINI_API_KEY"] == CANARY  # restored in this process
+    assert all(os.environ[name] == CANARY for name in others)
 
 
 def test_store_process_serves_the_app_and_stops(ctx):
