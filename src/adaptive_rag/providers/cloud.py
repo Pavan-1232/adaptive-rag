@@ -58,7 +58,7 @@ class _CloudLLM:
         self.model = model
         self._key = key
         self._timeout_s = timeout_s
-        self._client = httpx.Client(timeout=timeout_s, transport=transport)
+        self._transport = transport
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(model={self.model!r})"
@@ -85,34 +85,36 @@ class _CloudLLM:
     ) -> LLMResult:
         system, user = _split(messages)
         started = time.perf_counter()
-        for attempt in (1, 2):
-            retried = " after one retry" if attempt == 2 else ""
-            try:
-                response = self._client.post(
-                    self._url(),
-                    headers=self._headers(),
-                    json=self._body(system, user, schema, max_tokens),
-                )
-            except httpx.TimeoutException:
-                if attempt == 1:
-                    _pause(RETRY_WAIT_S)
+        # A client per call, closed on every exit: adapters are built per query (answer.py).
+        with httpx.Client(timeout=self._timeout_s, transport=self._transport) as client:
+            for attempt in (1, 2):
+                retried = " after one retry" if attempt == 2 else ""
+                try:
+                    response = client.post(
+                        self._url(),
+                        headers=self._headers(),
+                        json=self._body(system, user, schema, max_tokens),
+                    )
+                except httpx.TimeoutException:
+                    if attempt == 1:
+                        _pause(RETRY_WAIT_S)
+                        continue
+                    raise ProviderUnavailable(
+                        f"{self.display} did not answer within {self._timeout_s:g} s{retried}."
+                    ) from None
+                except httpx.HTTPError as exc:
+                    raise ProviderUnavailable(
+                        f"Could not reach {self.display} ({type(exc).__name__})."
+                    ) from None
+                if response.status_code in RETRY_STATUS and attempt == 1:
+                    _pause(_retry_wait(response))
                     continue
-                raise ProviderUnavailable(
-                    f"{self.display} did not answer within {self._timeout_s:g} s{retried}."
-                ) from None
-            except httpx.HTTPError as exc:
-                raise ProviderUnavailable(
-                    f"Could not reach {self.display} ({type(exc).__name__})."
-                ) from None
-            if response.status_code in RETRY_STATUS and attempt == 1:
-                _pause(_retry_wait(response))
-                continue
-            if response.status_code >= 400:
-                raise ProviderUnavailable(
-                    f"{self.display} returned HTTP {response.status_code}"
-                    f" ({_error_type(response)}){retried}."
-                ) from None
-            break
+                if response.status_code >= 400:
+                    raise ProviderUnavailable(
+                        f"{self.display} returned HTTP {response.status_code}"
+                        f" ({_error_type(response)}){retried}."
+                    ) from None
+                break
         try:
             text, input_tokens, output_tokens, finish = self._parse(response.json())
         except (ValueError, KeyError, TypeError, IndexError, AttributeError):

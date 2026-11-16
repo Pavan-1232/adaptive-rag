@@ -460,3 +460,23 @@ def test_env_example_holds_no_real_keys():
         name, _, value = line.lstrip("# ").partition("=")
         if name.strip().endswith("_API_KEY"):
             assert value.strip() == "", f"{name.strip()} has a value in .env.example"
+
+
+class ClosingTransport(httpx.MockTransport):
+    closed = 0
+
+    def close(self) -> None:
+        ClosingTransport.closed += 1
+
+
+@pytest.mark.parametrize("provider", PROVIDERS)
+def test_each_call_closes_its_http_client(settings, provider):
+    ClosingTransport.closed = 0
+    ok = ClosingTransport(lambda r: httpx.Response(200, json=ok_body(provider)))
+    llm = cloud_llm(with_keys(settings), provider, ok)
+    llm.generate(MESSAGES)
+    assert ClosingTransport.closed == 1
+    failing = ClosingTransport(lambda r: httpx.Response(401))
+    with pytest.raises(ProviderUnavailable):
+        cloud_llm(settings, provider, failing).generate(MESSAGES)
+    assert ClosingTransport.closed == 2  # closed on the error path too
