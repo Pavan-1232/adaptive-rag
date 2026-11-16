@@ -17,11 +17,18 @@ export default function Documents({ kb }: { kb: KnowledgeBase }) {
   }, [kb.id]);
 
   useEffect(refresh, [refresh]);
+  // Bumped on unmount or knowledge-base switch, so an upload started before it stops polling.
+  const run = useRef(0);
+  useEffect(() => () => {
+    run.current++;
+  }, [kb.id]);
 
   const update = (name: string, change: Partial<Upload>) =>
     setUploads((all) => all.map((u) => (u.name === name ? { ...u, ...change } : u)));
 
   async function upload(file: File) {
+    const mine = run.current;
+    const current = () => run.current === mine;
     setUploads((all) => [...all.filter((u) => u.name !== file.name), { name: file.name, progress: 0, stage: "uploading" }]);
     try {
       const result = await uploadFile(kb.id, file, (progress) => update(file.name, { progress }));
@@ -30,8 +37,9 @@ export default function Documents({ kb }: { kb: KnowledgeBase }) {
       } else if (result.job_id !== null) {
         update(file.name, { stage: "indexing", progress: 1 });
         refresh();
-        for (;;) {
+        while (current()) {
           const job = await api.job(result.job_id);
+          if (!current()) return;
           if (job.status === "succeeded") {
             update(file.name, { stage: "done", message: "Indexed." });
             break;
@@ -44,9 +52,9 @@ export default function Documents({ kb }: { kb: KnowledgeBase }) {
         }
       }
     } catch (e) {
-      update(file.name, { stage: "failed", message: (e as Error).message });
+      if (current()) update(file.name, { stage: "failed", message: (e as Error).message });
     }
-    refresh();
+    if (current()) refresh();
   }
 
   async function remove(doc: Doc) {

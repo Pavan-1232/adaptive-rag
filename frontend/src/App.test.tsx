@@ -458,6 +458,19 @@ describe("uploads", () => {
     expect(await screen.findByText("ready")).toBeInTheDocument();
   });
 
+  it("stops polling the job when the documents panel closes", async () => {
+    const doc = { id: 7, filename: "a.pdf", format: "pdf", status: "pending", error: null, warnings: [], version: 1 };
+    routes["GET /api/jobs/9"] = [200, { id: 9, status: "running", error: null }];
+    const xhr = await chooseFile("a.pdf");
+    xhr.respond(202, { document: doc, job_id: 9, duplicate: false });
+    const polls = () => calls.filter((c) => c.key === "GET /api/jobs/9").length;
+    await waitFor(() => expect(polls()).toBeGreaterThan(0));
+    await userEvent.setup().click(screen.getByRole("button", { name: "Documents" }));
+    const before = polls();
+    await new Promise((resolve) => setTimeout(resolve, 2500)); // over two POLL_MS intervals
+    expect(polls()).toBeLessThanOrEqual(before + 1); // at most the request already in flight
+  }, 10000);
+
   it("shows the API's rejection message as-is", async () => {
     const xhr = await chooseFile("scan.pdf");
     xhr.respond(400, { detail: "This PDF has no text layer. It looks scanned and needs OCR." });
