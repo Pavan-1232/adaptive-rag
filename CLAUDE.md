@@ -2,12 +2,6 @@
 
 This file holds the standing context and rules for the whole project. Read it at the start of every session.
 
-## About me
-- MBA student, beginner-to-intermediate in Python.
-- I have used: Python, ChromaDB, embeddings, chunking, semantic search, LangChain, Ollama, retrieval evaluation.
-- Explain important decisions and trade-offs. Skip line-by-line explanations.
-- If my idea is inefficient, incorrect, or overcomplicated, say so and propose something better. Sound engineering beats following my instructions blindly.
-
 ## What we're building
 A local-first, single-user RAG application for my GitHub portfolio and interviews. It may become commercial later, but do not build for enterprise needs now.
 
